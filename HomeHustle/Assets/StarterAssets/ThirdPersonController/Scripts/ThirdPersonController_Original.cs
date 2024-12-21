@@ -12,7 +12,7 @@ namespace StarterAssets
 #if ENABLE_INPUT_SYSTEM 
     [RequireComponent(typeof(PlayerInput))]
 #endif
-    public class ThirdPersonController : MonoBehaviour
+    public class ThirdPersonController_Original : MonoBehaviour
     {
         [Header("Player")]
         [Tooltip("Move speed of the character in m/s")]
@@ -156,8 +156,8 @@ namespace StarterAssets
         {
             _hasAnimator = TryGetComponent(out _animator);
 
-            //JumpAndGravity();
-            //GroundedCheck();
+            JumpAndGravity();
+            GroundedCheck();
             Move();
         }
 
@@ -213,45 +213,6 @@ namespace StarterAssets
 
         private void Move()
         {
-            // Calculate the target speed based on input (move when there is input)
-            float targetSpeed = _input.move != Vector2.zero ? MoveSpeed : 0.0f;
-
-            // Smooth acceleration and deceleration
-            _speed = Mathf.Lerp(_speed, targetSpeed, Time.deltaTime * SpeedChangeRate);
-
-            // Clamp small speed values to zero to avoid flickering animations
-            if (_speed < 0.01f) _speed = 0.0f;
-
-            // Normalize input direction
-            Vector3 inputDirection = new Vector3(_input.move.x, 0.0f, _input.move.y).normalized;
-
-            // Rotate player when moving
-            if (_input.move != Vector2.zero)
-            {
-                _targetRotation = Mathf.Atan2(inputDirection.x, inputDirection.z) * Mathf.Rad2Deg +
-                                  _mainCamera.transform.eulerAngles.y;
-
-                float rotation = Mathf.SmoothDampAngle(transform.eulerAngles.y, _targetRotation, ref _rotationVelocity,
-                    RotationSmoothTime);
-
-                // Apply rotation to face movement direction
-                transform.rotation = Quaternion.Euler(0.0f, rotation, 0.0f);
-            }
-
-            // Calculate movement direction
-            Vector3 targetDirection = Quaternion.Euler(0.0f, _targetRotation, 0.0f) * Vector3.forward;
-
-            // Move the character
-            _controller.Move(targetDirection.normalized * (_speed * Time.deltaTime) +
-                             new Vector3(0.0f, _verticalVelocity, 0.0f) * Time.deltaTime);
-
-            // Update the animator with the current speed
-            if (_hasAnimator)
-            {
-                _animator.SetFloat(_animIDSpeed, _speed / SprintSpeed); // Normalize speed for blending
-            }
-
-            /*
             // set target speed based on move speed, sprint speed and if sprint is pressed
             float targetSpeed = _input.sprint ? SprintSpeed : MoveSpeed;
 
@@ -316,7 +277,6 @@ namespace StarterAssets
                 _animator.SetFloat(_animIDSpeed, _animationBlend);
                 _animator.SetFloat(_animIDMotionSpeed, inputMagnitude);
             }
-            */
         }
 
         private void JumpAndGravity()
