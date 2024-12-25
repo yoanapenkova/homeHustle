@@ -1,4 +1,6 @@
-﻿ using UnityEngine;
+﻿using Cinemachine;
+using Unity.Netcode;
+using UnityEngine;
 #if ENABLE_INPUT_SYSTEM 
 using UnityEngine.InputSystem;
 #endif
@@ -12,7 +14,7 @@ namespace StarterAssets
 #if ENABLE_INPUT_SYSTEM 
     [RequireComponent(typeof(PlayerInput))]
 #endif
-    public class ThirdPersonController : MonoBehaviour
+    public class ThirdPersonController : NetworkBehaviour
     {
         [Header("Player")]
         [Tooltip("Move speed of the character in m/s")]
@@ -79,6 +81,8 @@ namespace StarterAssets
         private float _cinemachineTargetYaw;
         private float _cinemachineTargetPitch;
 
+        private Transform playerFollowCamera;
+
         // player
         private float _speed;
         private float _animationBlend;
@@ -104,7 +108,7 @@ namespace StarterAssets
         private Animator _animator;
         private CharacterController _controller;
         private StarterAssetsInputs _input;
-        private GameObject _mainCamera;
+        public GameObject _mainCamera;
 
         private const float _threshold = 0.01f;
 
@@ -134,6 +138,11 @@ namespace StarterAssets
 
         private void Start()
         {
+            if (!IsOwner) return;
+
+            playerFollowCamera = GameObject.Find("PlayerFollowCamera").transform;
+            playerFollowCamera.GetComponent<CinemachineVirtualCamera>().Follow = gameObject.transform.Find("PlayerCameraRoot").transform;
+
             _cinemachineTargetYaw = CinemachineCameraTarget.transform.rotation.eulerAngles.y;
             
             _hasAnimator = TryGetComponent(out _animator);
@@ -141,6 +150,9 @@ namespace StarterAssets
             _input = GetComponent<StarterAssetsInputs>();
 #if ENABLE_INPUT_SYSTEM 
             _playerInput = GetComponent<PlayerInput>();
+            // this next line was from a comment in the CodeMonkey's tutorial
+            // possibly because in the input system is setting for Xbox Controller
+            _playerInput.SwitchCurrentControlScheme("KeyboardMouse", Keyboard.current, Mouse.current);
 #else
 			Debug.LogError( "Starter Assets package is missing dependencies. Please use Tools/Starter Assets/Reinstall Dependencies to fix it");
 #endif
@@ -154,6 +166,8 @@ namespace StarterAssets
 
         private void Update()
         {
+            if (!IsOwner) return;
+
             _hasAnimator = TryGetComponent(out _animator);
 
             //JumpAndGravity();
