@@ -28,6 +28,11 @@ public class PlayerActions : NetworkBehaviour
         {
             despawnObjectServerRpc();
         }
+
+        if (Input.GetKeyUp(KeyCode.R))
+        {
+            getSmallServerRpc();
+        }
     }
 
     [ServerRpc]
@@ -42,5 +47,18 @@ public class PlayerActions : NetworkBehaviour
     {
         objectInScene.GetComponent<NetworkObject>().Despawn(true);
         Destroy(objectInScene.gameObject);
+    }
+
+    [ServerRpc]
+    void getSmallServerRpc()
+    {
+        gameObject.transform.localScale = new Vector3(0.5f,0.5f,0.5f);
+        seeSmallClientRpc();
+    }
+
+    [ClientRpc]
+    void seeSmallClientRpc()
+    {
+        gameObject.transform.localScale = new Vector3(0.5f, 0.5f, 0.5f);
     }
 }
