@@ -23,20 +23,7 @@ public class RelayConfig : NetworkBehaviour
 
     [Header("UI Management")]
     [SerializeField]
-    private GameObject homeScreen;
-    [SerializeField]
-    private GameObject preGameScreen;
-    [SerializeField]
-    private TMP_Text playersCounterText;
-    //[SerializeField]
-    //private TMP_Text playersNamesTexts;
-    [SerializeField]
     private TMP_Text joinCodeText;
-    [SerializeField]
-    private TMP_Text startingGameText;
-
-    private NetworkVariable<int> connectedPlayers = new NetworkVariable<int>(
-       0, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Owner);
 
     private string[] funnyCharacterNames = new string[]{
     "Wobble","Snort","Pickle","Spud","Doofus","Giggles","Noodle","Tater","Fluffy","Wiggles",
@@ -50,11 +37,11 @@ public class RelayConfig : NetworkBehaviour
     {
         hostButton.onClick.AddListener(() => {
             CreateRelay();
-            UpdateUI();
+            UIManager.Instance.GetPreScreen();
         });
         clientButton.onClick.AddListener(() => {
             JoinRelay(codeInput.text);
-            UpdateUI();
+            UIManager.Instance.GetPreScreen();
         });
     }
 
@@ -83,7 +70,7 @@ public class RelayConfig : NetworkBehaviour
     {
         try
         {
-            Allocation allocation = await RelayService.Instance.CreateAllocationAsync(7);
+            Allocation allocation = await RelayService.Instance.CreateAllocationAsync(UIManager.Instance.maxPlayers-1);
             joinCode = await RelayService.Instance.GetJoinCodeAsync(allocation.AllocationId);
             Debug.Log(joinCode);
 
@@ -94,25 +81,14 @@ public class RelayConfig : NetworkBehaviour
 
             NetworkManager.Singleton.StartHost();
 
-            NetworkManager.Singleton.OnClientConnectedCallback += OnClientConnected;
-            NetworkManager.Singleton.OnClientDisconnectCallback += OnClientDisconnected;
-            connectedPlayers.OnValueChanged += OnPlayerCountChanged;
+            NetworkManager.Singleton.OnClientConnectedCallback += UIManager.Instance.OnClientConnected;
+            NetworkManager.Singleton.OnClientDisconnectCallback += UIManager.Instance.OnClientDisconnected;
+            UIManager.Instance.connectedPlayers.OnValueChanged += UIManager.Instance.OnPlayerCountChanged;
         } catch (RelayServiceException e)
         {
             Debug.Log(e);
         }
         
-    }
-
-    void UpdateUI()
-    {
-        connectedPlayers.Value++;
-        homeScreen.SetActive(false);
-        preGameScreen.SetActive(true);
-
-        Debug.Log("CONNECTED PLAYERS: " + connectedPlayers.Value);
-
-        //playersNamesTexts.text = AuthenticationService.Instance.PlayerName;
     }
 
     private async void JoinRelay(string joinCode)
@@ -127,9 +103,9 @@ public class RelayConfig : NetworkBehaviour
 
             NetworkManager.Singleton.StartClient();
 
-            NetworkManager.Singleton.OnClientConnectedCallback += OnClientConnected;
-            NetworkManager.Singleton.OnClientDisconnectCallback += OnClientDisconnected;
-            connectedPlayers.OnValueChanged += OnPlayerCountChanged;
+            NetworkManager.Singleton.OnClientConnectedCallback += UIManager.Instance.OnClientConnected;
+            NetworkManager.Singleton.OnClientDisconnectCallback += UIManager.Instance.OnClientDisconnected;
+            UIManager.Instance.connectedPlayers.OnValueChanged += UIManager.Instance.OnPlayerCountChanged;
         }
         catch (RelayServiceException e)
         {
@@ -140,56 +116,8 @@ public class RelayConfig : NetworkBehaviour
 
     private void OnDisable()
     {
-        NetworkManager.Singleton.OnClientConnectedCallback -= OnClientConnected;
-        NetworkManager.Singleton.OnClientDisconnectCallback -= OnClientDisconnected;
-        connectedPlayers.OnValueChanged -= OnPlayerCountChanged;
-    }
-
-    private void OnClientConnected(ulong clientId)
-    {
-        Debug.Log("Hello");
-        if (NetworkManager.Singleton.IsClient)
-        {
-            // Increment the counter for each new client
-            connectedPlayers.Value++;
-
-            // Ensure late-joining client gets the correct value immediately
-            SendPlayerCountToClientServerRpc(clientId);
-        }
-    }
-
-    private void OnClientDisconnected(ulong clientId)
-    {
-        if (NetworkManager.Singleton.IsServer)
-        {
-            // Decrement the counter when a client disconnects
-            connectedPlayers.Value--;
-        }
-    }
-
-    private void OnPlayerCountChanged(int oldCount, int newCount)
-    {
-        Debug.Log("ON PLAYER COUNT CHANGED");
-        Debug.Log("OLD COUNT: " + oldCount);
-        Debug.Log("NEW COUNT: " + newCount);
-        // Update the UI text on all clients when the value changes
-        playersCounterText.text = $"Players {newCount}/8";
-    }
-
-    // Custom RPC to send the current count to a specific client
-    [ServerRpc(RequireOwnership = false)]
-    private void SendPlayerCountToClientServerRpc(ulong clientId)
-    {
-        PlayerCountClientRpc(connectedPlayers.Value, new ClientRpcParams
-        {
-            Send = new ClientRpcSendParams { TargetClientIds = new[] { clientId } }
-        });
-    }
-
-    // ClientRPC to update the text on late-joining clients
-    [ClientRpc]
-    private void PlayerCountClientRpc(int count, ClientRpcParams clientRpcParams = default)
-    {
-        playersCounterText.text = $"Players {count}/8";
+        NetworkManager.Singleton.OnClientConnectedCallback -= UIManager.Instance.OnClientConnected;
+        NetworkManager.Singleton.OnClientDisconnectCallback -= UIManager.Instance.OnClientDisconnected;
+        UIManager.Instance.connectedPlayers.OnValueChanged -= UIManager.Instance.OnPlayerCountChanged;
     }
 }
