@@ -10,7 +10,7 @@ public class OutlineOnLook : MonoBehaviour
     private GameObject currentObject; // Currently highlighted object
 
     // A dictionary to store original materials for multiple child renderers
-    private Dictionary<Renderer, Material> originalMaterials = new Dictionary<Renderer, Material>();
+    private Dictionary<Renderer, Material[]> originalMaterials = new Dictionary<Renderer, Material[]>();
 
     void Update()
     {
@@ -27,6 +27,15 @@ public class OutlineOnLook : MonoBehaviour
             {
                 ClearOutline(); // Remove outline from previous object
                 ApplyOutline(hitObject);
+            }
+
+            //Debug.Log(hitObject.gameObject.name);
+
+            // Check object is on watch for UI hints
+            Interactable interactableProperties = hitObject.GetComponent<Interactable>();
+            if (interactableProperties != null)
+            {
+                interactableProperties.isOnWatch = true;
             }
         }
         else
@@ -47,11 +56,20 @@ public class OutlineOnLook : MonoBehaviour
         {
             if (renderer != null && !originalMaterials.ContainsKey(renderer))
             {
-                // Save the original material
-                originalMaterials[renderer] = renderer.material;
+                // Save the original materials array
+                originalMaterials[renderer] = renderer.materials;
 
-                // Apply the outline material
-                renderer.material = outlineMaterial;
+                // Create a new materials array with the same length
+                Material[] outlineMaterials = new Material[renderer.materials.Length];
+
+                // Replace each material with the outline material
+                for (int i = 0; i < renderer.materials.Length; i++)
+                {
+                    outlineMaterials[i] = outlineMaterial;
+                }
+
+                // Apply the new materials array
+                renderer.materials = outlineMaterials;
             }
         }
     }
@@ -65,8 +83,15 @@ public class OutlineOnLook : MonoBehaviour
         {
             if (entry.Key != null)
             {
-                entry.Key.material = entry.Value;
+                entry.Key.materials = entry.Value; // Restore the original materials array
             }
+        }
+
+        // Uncheck object is on watch for UI hints
+        Interactable interactableProperties = currentObject.GetComponent<Interactable>();
+        if (interactableProperties != null)
+        {
+            interactableProperties.isOnWatch = false;
         }
 
         // Clear the state
