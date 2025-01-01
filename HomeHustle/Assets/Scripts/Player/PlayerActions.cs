@@ -24,10 +24,12 @@ public class PlayerActions : NetworkBehaviour
             spawnObjectServerRpc();
         }
 
+        /*
         if (Input.GetKeyUp(KeyCode.E))
         {
             despawnObjectServerRpc();
         }
+        */
 
         if (Input.GetKeyUp(KeyCode.R))
         {
