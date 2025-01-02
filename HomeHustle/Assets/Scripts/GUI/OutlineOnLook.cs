@@ -12,6 +12,10 @@ public class OutlineOnLook : MonoBehaviour
     // A dictionary to store original materials for multiple child renderers
     private Dictionary<Renderer, Material[]> originalMaterials = new Dictionary<Renderer, Material[]>();
 
+    [Header("UI Management")]
+    [SerializeField]
+    private GameObject actionsInstructions;
+
     void Update()
     {
         // Perform a Raycast
@@ -97,5 +101,8 @@ public class OutlineOnLook : MonoBehaviour
         // Clear the state
         originalMaterials.Clear();
         currentObject = null;
+
+        // Clear the UI
+        actionsInstructions.SetActive(false);
     }
 }

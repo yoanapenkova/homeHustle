@@ -12,54 +12,6 @@ public class DoorAction : NetworkBehaviour, SimpleAction
     // Networked variable to track if the door is open
     private NetworkVariable<bool> isOpening = new NetworkVariable<bool>(false);
 
-    public void Outcome()
-    {
-        // If we are the server, we handle the state change
-        if (IsServer)
-        {
-            ToggleDoorState();
-        }
-        // If we are a client, request the server to toggle the door state
-        else
-        {
-            ToggleDoorStateServerRpc();
-        }
-    }
-
-    // ServerRpc: Used by clients to request the server to toggle the door state
-    [ServerRpc(RequireOwnership = false)]
-    private void ToggleDoorStateServerRpc()
-    {
-        ToggleDoorState();
-    }
-
-    // Handles the logic to toggle the door's state (open/close)
-    private void ToggleDoorState()
-    {
-        // Toggle the door's opening state
-        isOpening.Value = !isOpening.Value;
-        opened = isOpening.Value;
-
-        // Notify all clients that the door state has changed
-        DoorStateChangedClientRpc(isOpening.Value);
-    }
-
-    // This method is called when the network variable 'isOpening' changes
-    private void OnDoorStateChanged(bool previousValue, bool newValue)
-    {
-        // Update the animator when the door's state changes
-        animator.SetBool("isOpening", newValue);
-    }
-
-    // ClientRpc: Used to notify clients of the door state change
-    [ClientRpc]
-    private void DoorStateChangedClientRpc(bool newState)
-    {
-        // Only the client who receives the RPC will update its own animator
-        animator.SetBool("isOpening", newState);
-
-    }
-
     // Start is called before the first frame update
     void Start()
     {
@@ -73,13 +25,15 @@ public class DoorAction : NetworkBehaviour, SimpleAction
     // Update is called once per frame
     void Update()
     {
-        // Allow any client to trigger door actions
-        if (Input.GetKeyDown(KeyCode.E) && interactable.isOnWatch)
+        if (interactable.isOnWatch)
         {
-            Outcome();
+            UpdateInstructions();
+            // Allow any client to trigger door actions
+            if (Input.GetKeyDown(KeyCode.E))
+            {
+                Outcome();
+            }
         }
-
-        UpdateInstructions();
     }
 
     // Ensure that NetworkVariable changes are propagated to clients
@@ -99,22 +53,66 @@ public class DoorAction : NetworkBehaviour, SimpleAction
         isOpening.OnValueChanged -= OnDoorStateChanged;
     }
 
-    void UpdateInstructions()
+    public void Outcome()
     {
-        if (interactable.isOnWatch)
+        // If we are the server, we handle the state change
+        if (IsServer)
         {
-            interactable.actionsInstructions.SetActive(true);
-            if (opened)
-            {
-                interactable.mainInstructionsText.text = actions[1];
-            } else
-            {
-                interactable.mainInstructionsText.text = actions[0];
-            }
-        } else
+            ToggleDoorState();
+        }
+        // If we are a client, request the server to toggle the door state
+        else
         {
-            interactable.actionsInstructions.SetActive(false);
-            interactable.mainInstructionsText.text = "";
+            ToggleDoorStateServerRpc();
         }
     }
+
+    public void UpdateInstructions()
+    {
+        interactable.actionsInstructions.SetActive(true);
+        if (opened)
+        {
+            interactable.mainInstructionsText.text = actions[1];
+        }
+        else
+        {
+            interactable.mainInstructionsText.text = actions[0];
+        }
+    }
+
+    // Handles the logic to toggle the door's state (open/close)
+    private void ToggleDoorState()
+    {
+        // Toggle the door's opening state
+        isOpening.Value = !isOpening.Value;
+        opened = isOpening.Value;
+
+        // Notify all clients that the door state has changed
+        DoorStateChangedClientRpc(isOpening.Value);
+    }
+
+    // ServerRpc: Used by clients to request the server to toggle the door state
+    [ServerRpc(RequireOwnership = false)]
+    private void ToggleDoorStateServerRpc()
+    {
+        ToggleDoorState();
+    }
+
+    // This method is called when the network variable 'isOpening' changes
+    private void OnDoorStateChanged(bool previousValue, bool newValue)
+    {
+        // Update the animator when the door's state changes
+        animator.SetBool("isOpening", newValue);
+    }
+
+    // ClientRpc: Used to notify clients of the door state change
+    [ClientRpc]
+    private void DoorStateChangedClientRpc(bool newState)
+    {
+        // Only the client who receives the RPC will update its own animator
+        animator.SetBool("isOpening", newState);
+
+    }
+
+    
 }
