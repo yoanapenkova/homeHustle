@@ -9,11 +9,17 @@ public class LightSwitchAction : NetworkBehaviour, SimpleAction
 
     [SerializeField]
     private Light lightObject;
+    [SerializeField]
+    private GameObject lampObject;
+    [SerializeField]
+    private Material emissionMaterial;
 
     private string[] actions = { "Turn on", "Turn off" };
     private bool turnedOn = false;
     private Animator animator;
     private Interactable interactable;
+    private Renderer lampRenderer;
+    private Material glassMaterial;
 
     // Networked variable to track if the light is turned on
     private NetworkVariable<bool> isTurned = new NetworkVariable<bool>(false);
@@ -23,6 +29,11 @@ public class LightSwitchAction : NetworkBehaviour, SimpleAction
     {
         animator = GetComponent<Animator>();
         interactable = GetComponent<Interactable>();
+        lampRenderer = lampObject.GetComponent<Renderer>();
+        if (lampRenderer != null )
+        {
+            glassMaterial = lampRenderer.materials[0];
+        }
 
         // Subscribe to the NetworkVariable's value change event
         isTurned.OnValueChanged += OnLightStateChanged;
@@ -110,6 +121,17 @@ public class LightSwitchAction : NetworkBehaviour, SimpleAction
         // Update the animator when the light's state changes
         animator.SetBool("isTurned", newValue);
         lightObject.gameObject.SetActive(newValue);
+        if (newValue)
+        {
+            Material[] materials = lampRenderer.materials;
+            materials[0] = emissionMaterial;
+            lampRenderer.materials = materials;
+        } else
+        {
+            Material[] materials = lampRenderer.materials;
+            materials[0] = glassMaterial;
+            lampRenderer.materials = materials;
+        }
     }
 
     // ClientRpc: Used to notify clients of the light state change
@@ -119,5 +141,17 @@ public class LightSwitchAction : NetworkBehaviour, SimpleAction
         // Only the client who receives the RPC will update its own animator
         animator.SetBool("isTurned", newState);
         lightObject.gameObject.SetActive(newState);
+        if (newState)
+        {
+            Material[] materials = lampRenderer.materials;
+            materials[0] = emissionMaterial;
+            lampRenderer.materials = materials;
+        }
+        else
+        {
+            Material[] materials = lampRenderer.materials;
+            materials[0] = glassMaterial;
+            lampRenderer.materials = materials;
+        }
     }
 }
