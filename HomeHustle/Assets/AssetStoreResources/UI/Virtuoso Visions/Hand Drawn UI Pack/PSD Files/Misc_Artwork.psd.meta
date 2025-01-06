@@ -3,7 +3,7 @@ guid: e846c1febfa8a55478fa3dabb192e584
 TextureImporter:
   internalIDToNameTable: []
   externalObjects: {}
-  serializedVersion: 12
+  serializedVersion: 13
   mipmaps:
     mipMapMode: 0
     enableMipMap: 0
@@ -43,7 +43,7 @@ TextureImporter:
   nPOTScale: 0
   lightmap: 0
   compressionQuality: 50
-  spriteMode: 1
+  spriteMode: 2
   spriteExtrude: 1
   spriteMeshType: 1
   alignment: 0
@@ -121,7 +121,175 @@ TextureImporter:
     forceMaximumCompressionQuality_BC6H_BC7: 0
   spriteSheet:
     serializedVersion: 2
-    sprites: []
+    sprites:
+    - serializedVersion: 2
+      name: Misc_Artwork_0
+      rect:
+        serializedVersion: 2
+        x: 109
+        y: 662
+        width: 400
+        height: 421
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 966c6370d56f20c4abccba5f6808a050
+      internalID: 1638185900
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Misc_Artwork_1
+      rect:
+        serializedVersion: 2
+        x: 714
+        y: 659
+        width: 378
+        height: 428
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: b27a5a99334cf6e448e4027009a0680c
+      internalID: 831853528
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Misc_Artwork_2
+      rect:
+        serializedVersion: 2
+        x: 1270
+        y: 709
+        width: 466
+        height: 243
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: d9ff06d6367b85342921729cfcf45e55
+      internalID: 812538639
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Misc_Artwork_3
+      rect:
+        serializedVersion: 2
+        x: 1866
+        y: 708
+        width: 471
+        height: 249
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: f327af255e9a5c844bb4e8cbf108f4be
+      internalID: 1569599229
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Misc_Artwork_4
+      rect:
+        serializedVersion: 2
+        x: 115
+        y: 54
+        width: 400
+        height: 421
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: f10fb6933f3ce914d9abda48155e79ab
+      internalID: 940090632
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Misc_Artwork_5
+      rect:
+        serializedVersion: 2
+        x: 719
+        y: 52
+        width: 377
+        height: 427
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: b42eaa49b92ac714284db2b9a44968d7
+      internalID: -1178990396
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Misc_Artwork_6
+      rect:
+        serializedVersion: 2
+        x: 1268
+        y: 85
+        width: 467
+        height: 243
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 4c32db1ecae13d745bb65edc26d1401a
+      internalID: 1122509195
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Misc_Artwork_7
+      rect:
+        serializedVersion: 2
+        x: 1865
+        y: 81
+        width: 472
+        height: 251
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 0360d514ad745af4781cc59df3dd4309
+      internalID: -1880373922
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
     outline: []
     physicsShape: []
     bones: []
@@ -132,7 +300,15 @@ TextureImporter:
     edges: []
     weights: []
     secondaryTextures: []
-    nameFileIdTable: {}
+    nameFileIdTable:
+      Misc_Artwork_0: 1638185900
+      Misc_Artwork_1: 831853528
+      Misc_Artwork_2: 812538639
+      Misc_Artwork_3: 1569599229
+      Misc_Artwork_4: 940090632
+      Misc_Artwork_5: -1178990396
+      Misc_Artwork_6: 1122509195
+      Misc_Artwork_7: -1880373922
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

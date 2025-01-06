@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using Unity.Collections.LowLevel.Unsafe;
 using Unity.Netcode;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class LightSwitchAction : NetworkBehaviour, SimpleAction
 {
@@ -87,6 +88,7 @@ public class LightSwitchAction : NetworkBehaviour, SimpleAction
     public void UpdateInstructions()
     {
         interactable.actionsInstructions.SetActive(true);
+        interactable.mainKeyBackground.SetActive(true);
         if (turnedOn)
         {
             interactable.mainInstructionsText.text = actions[1];
@@ -95,6 +97,9 @@ public class LightSwitchAction : NetworkBehaviour, SimpleAction
         {
             interactable.mainInstructionsText.text = actions[0];
         }
+        interactable.auxKeyBackground.SetActive(false);
+        interactable.mainKey.GetComponent<Image>().color = Color.white;
+        interactable.mainInstructionsText.color = Color.white;
     }
 
     // Handles the logic to toggle the light's state (open/close)

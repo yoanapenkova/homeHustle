@@ -5,9 +5,10 @@ using UnityEngine;
 public class DoorAction : NetworkBehaviour, SimpleAction
 {
     private string[] actions = {"Open", "Close"};
-    private bool opened = false;
+    public bool opened = false;
     private Animator animator;
     private Interactable interactable;
+    private LockAction lockAction;
 
     // Networked variable to track if the door is open
     private NetworkVariable<bool> isOpening = new NetworkVariable<bool>(false);
@@ -17,6 +18,7 @@ public class DoorAction : NetworkBehaviour, SimpleAction
     {
         animator = GetComponent<Animator>();
         interactable = GetComponent<Interactable>();
+        lockAction = GetComponent<LockAction>();
 
         // Subscribe to the NetworkVariable's value change event
         isOpening.OnValueChanged += OnDoorStateChanged;
@@ -29,9 +31,12 @@ public class DoorAction : NetworkBehaviour, SimpleAction
         {
             UpdateInstructions();
             // Allow any client to trigger door actions
-            if (Input.GetKeyDown(KeyCode.E))
+            if (Input.GetKeyDown(KeyCode.E) && !lockAction.locked)
             {
                 Outcome();
+            } else if (lockAction.locked)
+            {
+                //TODO: Incluir ruido de prohibido al intentar abrir una puerta bloqueada.
             }
         }
     }
@@ -70,6 +75,7 @@ public class DoorAction : NetworkBehaviour, SimpleAction
     public void UpdateInstructions()
     {
         interactable.actionsInstructions.SetActive(true);
+        interactable.mainKeyBackground.SetActive(true);
         if (opened)
         {
             interactable.mainInstructionsText.text = actions[1];

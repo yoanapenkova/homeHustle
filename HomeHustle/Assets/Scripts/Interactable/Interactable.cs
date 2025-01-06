@@ -9,12 +9,22 @@ public class Interactable : MonoBehaviour
     public GameObject actionsInstructions;
 
     [SerializeField]
+    public GameObject mainKeyBackground;
+
+    [SerializeField]
+    public GameObject mainKey;
+
+    [SerializeField]
     public TMP_Text mainInstructionsText;
 
-    /*
+    [SerializeField]
+    public GameObject auxKeyBackground;
+
+    [SerializeField]
+    public GameObject auxKey;
+
     [SerializeField]
     public TMP_Text auxInstructionsText;
-    */
 
     // Start is called before the first frame update
     void Start()

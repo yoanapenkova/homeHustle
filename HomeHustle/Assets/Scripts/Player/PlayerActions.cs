@@ -19,10 +19,12 @@ public class PlayerActions : NetworkBehaviour
     // Update is called once per frame
     void Update()
     {
+        /*
         if (Input.GetKeyUp(KeyCode.Q))
         {
             spawnObjectServerRpc();
         }
+        */
 
         /*
         if (Input.GetKeyUp(KeyCode.E))
