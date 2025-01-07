@@ -494,6 +494,80 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 100, y: 100}
   m_Pivot: {x: 0.5, y: 0.5}
+--- !u!1001 &35776711
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 342309733}
+    m_Modifications:
+    - target: {fileID: -6536306270390264661, guid: 6dee6b2c3f19cb548bb7facd7db94957, type: 3}
+      propertyPath: GlobalObjectIdHash
+      value: 2251188404
+      objectReference: {fileID: 0}
+    - target: {fileID: -6536306270390264661, guid: 6dee6b2c3f19cb548bb7facd7db94957, type: 3}
+      propertyPath: InScenePlacedSourceGlobalObjectIdHash
+      value: 4031951710
+      objectReference: {fileID: 0}
+    - target: {fileID: 6529028909935420585, guid: 6dee6b2c3f19cb548bb7facd7db94957, type: 3}
+      propertyPath: m_Name
+      value: Shower
+      objectReference: {fileID: 0}
+    - target: {fileID: 6529028909935420585, guid: 6dee6b2c3f19cb548bb7facd7db94957, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8663090779897332776, guid: 6dee6b2c3f19cb548bb7facd7db94957, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: -0.50636244
+      objectReference: {fileID: 0}
+    - target: {fileID: 8663090779897332776, guid: 6dee6b2c3f19cb548bb7facd7db94957, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: -0.31179598
+      objectReference: {fileID: 0}
+    - target: {fileID: 8663090779897332776, guid: 6dee6b2c3f19cb548bb7facd7db94957, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 2.935851
+      objectReference: {fileID: 0}
+    - target: {fileID: 8663090779897332776, guid: 6dee6b2c3f19cb548bb7facd7db94957, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 0.25615862
+      objectReference: {fileID: 0}
+    - target: {fileID: 8663090779897332776, guid: 6dee6b2c3f19cb548bb7facd7db94957, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: -0.03751981
+      objectReference: {fileID: 0}
+    - target: {fileID: 8663090779897332776, guid: 6dee6b2c3f19cb548bb7facd7db94957, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: -0.95860374
+      objectReference: {fileID: 0}
+    - target: {fileID: 8663090779897332776, guid: 6dee6b2c3f19cb548bb7facd7db94957, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0.11854918
+      objectReference: {fileID: 0}
+    - target: {fileID: 8663090779897332776, guid: 6dee6b2c3f19cb548bb7facd7db94957, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8663090779897332776, guid: 6dee6b2c3f19cb548bb7facd7db94957, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: -180
+      objectReference: {fileID: 0}
+    - target: {fileID: 8663090779897332776, guid: 6dee6b2c3f19cb548bb7facd7db94957, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0.741
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: 6dee6b2c3f19cb548bb7facd7db94957, type: 3}
+--- !u!4 &35776712 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 8663090779897332776, guid: 6dee6b2c3f19cb548bb7facd7db94957, type: 3}
+  m_PrefabInstance: {fileID: 35776711}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &37495672
 GameObject:
   m_ObjectHideFlags: 0
@@ -4469,9 +4543,10 @@ Transform:
   - {fileID: 18026931}
   - {fileID: 1888477104}
   - {fileID: 1176693547}
-  - {fileID: 553698167}
   - {fileID: 1355031842}
+  - {fileID: 553698167}
   - {fileID: 123038363956512047}
+  - {fileID: 35776712}
   - {fileID: 1180135426}
   - {fileID: 1755191176}
   - {fileID: 307932624}
@@ -10694,6 +10769,11 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 750161216}
   m_CullTransparentMesh: 1
+--- !u!198 &751795127 stripped
+ParticleSystem:
+  m_CorrespondingSourceObject: {fileID: 6091366238246045381, guid: 6dee6b2c3f19cb548bb7facd7db94957, type: 3}
+  m_PrefabInstance: {fileID: 35776711}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &766722210
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -31717,27 +31797,6 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!65 &543496171307848615
-BoxCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3510680345511743610}
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
-  m_IsTrigger: 0
-  m_ProvidesContacts: 0
-  m_Enabled: 1
-  serializedVersion: 3
-  m_Size: {x: 0.18286783, y: 0.18286784, z: 0.106451616}
-  m_Center: {x: -0.000000033527613, y: -0.000000059604645, z: -0.053225785}
 --- !u!23 &606875420203528639
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -31805,13 +31864,92 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 123038363956512047}
-  m_Layer: 0
+  - component: {fileID: 792297160697700247}
+  - component: {fileID: 792297160697700246}
+  - component: {fileID: 792297160697700249}
+  - component: {fileID: 792297160697700248}
+  m_Layer: 7
   m_Name: ShowerTemperature
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 2147483647
   m_IsActive: 1
+--- !u!114 &792297160697700246
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 792297160697700245}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d5a57f767e5e46a458fc5d3c628d0cbb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  GlobalObjectIdHash: 386563744
+  InScenePlacedSourceGlobalObjectIdHash: 0
+  AlwaysReplicateAsRoot: 0
+  SynchronizeTransform: 1
+  ActiveSceneSynchronization: 0
+  SceneMigrationSynchronization: 1
+  SpawnWithObservers: 1
+  DontDestroyWithOwner: 0
+  AutoObjectParentSync: 1
+--- !u!65 &792297160697700247
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 792297160697700245}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 0.21604514, y: 0.33761215, z: 0.79096496}
+  m_Center: {x: 0.09370958, y: 0.022521133, z: 0.24473006}
+--- !u!114 &792297160697700248
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 792297160697700245}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e16420eefecf5a842957d95ab4226c1e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  particleEffects: {fileID: 751795127}
+--- !u!114 &792297160697700249
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 792297160697700245}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: df69631cd51faa346985f2a1153a9640, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  isOnWatch: 0
+  actionsInstructions: {fileID: 1699679470}
+  mainKeyBackground: {fileID: 799210352}
+  mainKey: {fileID: 130115879}
+  mainInstructionsText: {fileID: 1372703732}
+  auxKeyBackground: {fileID: 1983827682}
+  auxKey: {fileID: 2034238833}
+  auxInstructionsText: {fileID: 750161218}
 --- !u!1 &822463110367054822
 GameObject:
   m_ObjectHideFlags: 0
@@ -31880,27 +32018,6 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
---- !u!65 &980529165349467774
-BoxCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1970134440405172642}
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
-  m_IsTrigger: 0
-  m_ProvidesContacts: 0
-  m_Enabled: 1
-  serializedVersion: 3
-  m_Size: {x: 0.18286783, y: 0.18286784, z: 0.106451616}
-  m_Center: {x: -0.000000033527613, y: -0.000000059604645, z: -0.053225785}
 --- !u!23 &1015764978918939856
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -32151,8 +32268,7 @@ GameObject:
   - component: {fileID: 6658514367948592401}
   - component: {fileID: 6808455735582829293}
   - component: {fileID: 4779440933894284045}
-  - component: {fileID: 980529165349467774}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: showerTemperature
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -32753,8 +32869,7 @@ GameObject:
   - component: {fileID: 5985145356792398965}
   - component: {fileID: 6828082891681564183}
   - component: {fileID: 2315316987448753167}
-  - component: {fileID: 543496171307848615}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: waterGarden_temperature
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -32963,27 +33078,6 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
---- !u!65 &3835162461701777909
-BoxCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3950243517621239614}
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
-  m_IsTrigger: 0
-  m_ProvidesContacts: 0
-  m_Enabled: 1
-  serializedVersion: 3
-  m_Size: {x: 0.18286781, y: 0.18286781, z: 0.22950964}
-  m_Center: {x: 0, y: -1.458015e-22, z: 0.114754684}
 --- !u!1 &3917943210025902990
 GameObject:
   m_ObjectHideFlags: 0
@@ -33013,8 +33107,7 @@ GameObject:
   - component: {fileID: 7988995207505668319}
   - component: {fileID: 2333078005405952934}
   - component: {fileID: 8798210737708529038}
-  - component: {fileID: 3835162461701777909}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: waterGarden_faucet
   m_TagString: Untagged
   m_Icon: {fileID: 0}
