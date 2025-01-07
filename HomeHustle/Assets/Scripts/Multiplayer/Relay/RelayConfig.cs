@@ -8,6 +8,7 @@ using Unity.Services.Relay.Models;
 using TMPro;
 using Unity.Netcode.Transports.UTP;
 using Unity.Networking.Transport.Relay;
+using Cinemachine;
 
 public class RelayConfig : NetworkBehaviour
 {
@@ -24,6 +25,10 @@ public class RelayConfig : NetworkBehaviour
     [Header("UI Management")]
     [SerializeField]
     private TMP_Text joinCodeText;
+
+    [Header("Player Prefabs")]
+    [SerializeField]
+    private GameObject[] playerPrefabs; // Array to store different player prefabs
 
     private string[] funnyCharacterNames = new string[]{
     "Wobble","Snort","Pickle","Spud","Doofus","Giggles","Noodle","Tater","Fluffy","Wiggles",
@@ -81,6 +86,10 @@ public class RelayConfig : NetworkBehaviour
 
             NetworkManager.Singleton.StartHost();
 
+            // Spawn the host's player object
+            SpawnPlayerPrefab(NetworkManager.Singleton.LocalClientId);
+
+            NetworkManager.Singleton.OnClientConnectedCallback += OnClientConnected;
             NetworkManager.Singleton.OnClientConnectedCallback += UIManager.Instance.OnClientConnected;
             NetworkManager.Singleton.OnClientDisconnectCallback += UIManager.Instance.OnClientDisconnected;
             UIManager.Instance.connectedPlayers.OnValueChanged += UIManager.Instance.OnPlayerCountChanged;
@@ -90,6 +99,32 @@ public class RelayConfig : NetworkBehaviour
         }
         
     }
+
+    private void OnClientConnected(ulong clientId)
+    {
+        if (IsServer)
+        {
+            SpawnPlayerPrefab(clientId);
+        }
+    }
+
+    private void SpawnPlayerPrefab(ulong clientId)
+    {
+        int prefabIndex = (int)(clientId % (ulong)playerPrefabs.Length); // Cycle through available prefabs
+        Debug.Log(prefabIndex);
+        GameObject playerInstance = Instantiate(playerPrefabs[prefabIndex]);
+
+        var networkObject = playerInstance.GetComponent<NetworkObject>();
+        if (networkObject != null)
+        {
+            networkObject.SpawnAsPlayerObject(clientId, true);
+        }
+        else
+        {
+            Debug.LogError("Assigned prefab does not contain a NetworkObject component.");
+        }
+    }
+
 
     private async void JoinRelay(string joinCode)
     {
