@@ -8040,13 +8040,15 @@ MonoBehaviour:
   clientButton: {fileID: 323324946}
   codeInput: {fileID: 319194258}
   joinCodeText: {fileID: 1196897128}
-  playerFollowCameraObject: {fileID: 1599309600}
   playerPrefabs:
   - {fileID: 6522310770964685636, guid: 3d8e9e332f5f99d40b6bf9006763851f, type: 3}
   - {fileID: 6522310770964685636, guid: b18a4b7c351a7684d9fa4b0b2122ea1b, type: 3}
   - {fileID: 6522310770964685636, guid: ce85da179fedfc145be3cc961f91ae09, type: 3}
+  - {fileID: 6522310770964685636, guid: 57358c4acfe12c4408c98d63cd275350, type: 3}
   - {fileID: 6522310770964685636, guid: 9e31c71e739b54548b500e40f85d9db5, type: 3}
+  - {fileID: 6522310770964685636, guid: 9b15c92d8da885b43a9801eae7abe286, type: 3}
   - {fileID: 6522310770964685636, guid: cee26621d4c8916489f4ba622b8d6b5b, type: 3}
+  - {fileID: 6522310770964685636, guid: 29a236ef2232dc4479930aae90380add, type: 3}
 --- !u!4 &546051304
 Transform:
   m_ObjectHideFlags: 0
@@ -21198,7 +21200,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2070925442191277752, guid: a1a802ecaf6775746bb2a929fb554ad8, type: 3}
       propertyPath: CameraSide
-      value: 0.5
+      value: 0.65
       objectReference: {fileID: 0}
     - target: {fileID: 2070925442191277752, guid: a1a802ecaf6775746bb2a929fb554ad8, type: 3}
       propertyPath: CameraDistance
@@ -23721,11 +23723,6 @@ MonoBehaviour:
   InLocalSpace: 0
   Interpolate: 1
   SlerpPosition: 0
---- !u!1 &1599309600 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 2070925441746177671, guid: a1a802ecaf6775746bb2a929fb554ad8, type: 3}
-  m_PrefabInstance: {fileID: 1433453090}
-  m_PrefabAsset: {fileID: 0}
 --- !u!1 &1612174005
 GameObject:
   m_ObjectHideFlags: 0
