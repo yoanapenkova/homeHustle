@@ -33,10 +33,12 @@ public class PlayerActions : NetworkBehaviour
         }
         */
 
+        /*
         if (Input.GetKeyUp(KeyCode.R))
         {
             getSmallServerRpc();
         }
+        */
     }
 
     [ServerRpc]
