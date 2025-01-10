@@ -16,7 +16,7 @@ public class LightSwitchAction : NetworkBehaviour, SimpleAction
     private Material emissionMaterial;
 
     private string[] actions = { "Turn on", "Turn off" };
-    private bool turnedOn = false;
+    public bool turnedOn = false;
     private Animator animator;
     private Interactable interactable;
     private Renderer lampRenderer;
@@ -145,6 +145,7 @@ public class LightSwitchAction : NetworkBehaviour, SimpleAction
     {
         // Only the client who receives the RPC will update its own animator
         animator.SetBool("isTurned", newState);
+        turnedOn = newState;
         lightObject.gameObject.SetActive(newState);
         if (newState)
         {
