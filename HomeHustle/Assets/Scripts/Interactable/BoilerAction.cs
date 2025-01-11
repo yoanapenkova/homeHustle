@@ -4,12 +4,12 @@ using Unity.Netcode;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class PlugAction : NetworkBehaviour, SimpleAction
+public class BoilerAction : NetworkBehaviour, SimpleAction
 {
     private string[] actions = { "Connect" };
 
     [SerializeField]
-    private GameObject lightsManagementPanel;
+    private GameObject boilerManagementPanel;
     [SerializeField]
     private Button cancelButton;
 
@@ -28,7 +28,7 @@ public class PlugAction : NetworkBehaviour, SimpleAction
         if (interactable.isOnWatch && !panelOpened)
         {
             UpdateInstructions();
-            // Allow any client to trigger plug actions
+            // Allow any client to trigger boiler actions
             if (Input.GetKeyDown(KeyCode.E))
             {
                 Outcome();
@@ -42,11 +42,11 @@ public class PlugAction : NetworkBehaviour, SimpleAction
         Cursor.lockState = CursorLockMode.None;
         Cursor.visible = true;
 
-        lightsManagementPanel.SetActive(true);
+        boilerManagementPanel.SetActive(true);
 
         // Clear previous listeners before adding new ones
         cancelButton.onClick.RemoveAllListeners();
-        cancelButton.onClick.AddListener(() => HideLightsManagementPanel());
+        cancelButton.onClick.AddListener(() => HideBoilerManagementPanel());
     }
 
     public void UpdateInstructions()
@@ -60,9 +60,9 @@ public class PlugAction : NetworkBehaviour, SimpleAction
         interactable.mainInstructionsText.color = Color.white;
     }
 
-    void HideLightsManagementPanel()
+    void HideBoilerManagementPanel()
     {
-        lightsManagementPanel.SetActive(false);
+        boilerManagementPanel.SetActive(false);
 
         // Disable the mouse cursor (optional)
         Cursor.lockState = CursorLockMode.Locked;
