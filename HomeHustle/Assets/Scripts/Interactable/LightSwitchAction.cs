@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using Unity.Collections.LowLevel.Unsafe;
 using Unity.Netcode;
 using UnityEngine;
+using UnityEngine.InputSystem.LowLevel;
 using UnityEngine.UI;
 
 public class LightSwitchAction : NetworkBehaviour, SimpleAction
@@ -23,7 +24,7 @@ public class LightSwitchAction : NetworkBehaviour, SimpleAction
     private Material glassMaterial;
 
     // Networked variable to track if the light is turned on
-    private NetworkVariable<bool> isTurned = new NetworkVariable<bool>(false);
+    private NetworkVariable<bool> isTurned = new NetworkVariable<bool>(true);
 
     // Start is called before the first frame update
     void Start()
@@ -52,6 +53,14 @@ public class LightSwitchAction : NetworkBehaviour, SimpleAction
                 Outcome();
             }
         }
+    }
+
+    public override void OnNetworkSpawn()
+    {
+        base.OnNetworkSpawn();
+
+        // Ensure clients get the latest light state when they connect
+        OnLightStateChanged(false, isTurned.Value);
     }
 
     // Ensure that NetworkVariable changes are propagated to clients
@@ -125,6 +134,7 @@ public class LightSwitchAction : NetworkBehaviour, SimpleAction
     {
         // Update the animator when the light's state changes
         animator.SetBool("isTurned", newValue);
+        turnedOn = newValue;
         lightObject.gameObject.SetActive(newValue);
         if (newValue)
         {
