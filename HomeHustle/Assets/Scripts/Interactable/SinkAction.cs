@@ -12,8 +12,9 @@ public class SinkAction : NetworkBehaviour, SimpleAction
     private ParticleSystem particleEffects;
 
     private string[] actions = { "Open", "Close" };
-    private bool open = false;
+    public bool open = false;
     private Interactable interactable;
+    private WaterComponentAction waterComponentAction;
 
     // Networked variable to track if the tap is runnning
     private NetworkVariable<bool> isRunning = new NetworkVariable<bool>(false);
@@ -22,6 +23,7 @@ public class SinkAction : NetworkBehaviour, SimpleAction
     void Start()
     {
         interactable = GetComponent<Interactable>();
+        waterComponentAction = GetComponent<WaterComponentAction>();
 
         // Subscribe to the NetworkVariable's value change event
         isRunning.OnValueChanged += OnSinkStateChanged;
@@ -34,7 +36,7 @@ public class SinkAction : NetworkBehaviour, SimpleAction
         {
             UpdateInstructions();
             // Allow any client to trigger sink actions
-            if (Input.GetKeyDown(KeyCode.E))
+            if (Input.GetKeyDown(KeyCode.E) && !waterComponentAction.broken)
             {
                 Outcome();
             }
@@ -84,9 +86,6 @@ public class SinkAction : NetworkBehaviour, SimpleAction
         {
             interactable.mainInstructionsText.text = actions[0];
         }
-        interactable.auxKeyBackground.SetActive(false);
-        interactable.mainKey.GetComponent<Image>().color = Color.white;
-        interactable.mainInstructionsText.color = Color.white;
     }
 
     // Handles the logic to toggle the sink's state (open/close)
@@ -120,7 +119,7 @@ public class SinkAction : NetworkBehaviour, SimpleAction
         }
     }
 
-    // ClientRpc: Used to notify clients of the door state change
+    // ClientRpc: Used to notify clients of the sink state change
     [ClientRpc]
     private void SinkStateChangedClientRpc(bool newState)
     {
