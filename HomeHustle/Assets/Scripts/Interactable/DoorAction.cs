@@ -30,13 +30,21 @@ public class DoorAction : NetworkBehaviour, SimpleAction
         if (interactable.isOnWatch)
         {
             UpdateInstructions();
-            // Allow any client to trigger door actions
-            if (Input.GetKeyDown(KeyCode.E) && !lockAction.locked)
-            {
-                Outcome();
-            } else if (lockAction.locked)
-            {
-                //TODO: Incluir ruido de prohibido al intentar abrir una puerta bloqueada.
+
+            if (Input.GetKeyDown(KeyCode.E)) {
+                if (lockAction != null)
+                {
+                    if (!lockAction.locked)
+                    {
+                        Outcome(); 
+                    } else if (lockAction.locked)
+                    {
+                        //TODO: Incluir ruido de prohibido al intentar abrir una puerta bloqueada.
+                    }
+                } else
+                {
+                    Outcome();
+                }
             }
         }
     }
@@ -83,6 +91,11 @@ public class DoorAction : NetworkBehaviour, SimpleAction
         else
         {
             interactable.mainInstructionsText.text = actions[0];
+        }
+
+        if (lockAction == null)
+        {
+            interactable.auxKeyBackground.SetActive(false);
         }
     }
 
