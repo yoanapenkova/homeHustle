@@ -5,7 +5,7 @@ using Unity.Netcode;
 using System;
 using TMPro;
 
-public class PlayerPoints : NetworkBehaviour
+public class PlayerManager : NetworkBehaviour
 {
     [SerializeField]
     public bool isHuman;
@@ -20,6 +20,35 @@ public class PlayerPoints : NetworkBehaviour
     private TMP_Text pointsText;
 
     void Start()
+    {
+        
+    }
+
+    void Update()
+    {
+        if (IsOwner) // Only update UI for the owner
+        {
+            UpdateCoins();
+        }
+    }
+
+    private void OnEnable()
+    {
+        if (GameManager.Instance != null)
+        {
+            GameManager.Instance.OnGameStarted += SetupPoints;
+        }
+    }
+
+    private void OnDisable()
+    {
+        if (GameManager.Instance != null)
+        {
+            GameManager.Instance.OnGameStarted -= SetupPoints;
+        }
+    }
+
+    private void SetupPoints()
     {
         if (!IsOwner) return; // Ensure the script runs only on the owner of the object
 
@@ -41,14 +70,6 @@ public class PlayerPoints : NetworkBehaviour
         StartIncrementing();
     }
 
-    void Update()
-    {
-        if (IsOwner) // Only update UI for the owner
-        {
-            UpdateCoins();
-        }
-    }
-
     private void StartIncrementing()
     {
         StartCoroutine(IncrementPoints());
@@ -68,6 +89,9 @@ public class PlayerPoints : NetworkBehaviour
 
     private void UpdateCoins()
     {
-        pointsText.text = points.ToString();
+        if (pointsText != null)
+        {
+            pointsText.text = points.ToString();
+        }
     }
 }

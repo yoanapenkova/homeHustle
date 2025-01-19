@@ -2,6 +2,7 @@ using System.Collections;
 using TMPro;
 using Unity.Netcode;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class UIManager : NetworkBehaviour
 {
@@ -11,7 +12,7 @@ public class UIManager : NetworkBehaviour
 
     [Header("Pre-game")]
     [SerializeField]
-    public int maxPlayers = 8;
+    public int maxPlayers = 4;
     [SerializeField]
     private GameObject homeScreen;
     [SerializeField]
@@ -27,9 +28,22 @@ public class UIManager : NetworkBehaviour
     [SerializeField]
     private GameObject hudScreen;
     [SerializeField]
-    private TMP_Text countdownTimerText;
+    private TMP_Text countdownTimerHumansText;
+    [SerializeField]
+    private TMP_Text countdownTimerObjectsText;
+    [SerializeField]
+    private Slider sliderHumans;
+    [SerializeField]
+    private Slider sliderObjects;
+    [SerializeField]
+    private ParticleSystem sparksHumans;
+    [SerializeField]
+    private ParticleSystem sparksObjects;
     [SerializeField]
     private int countdownDuration = 600;
+
+    public int timeHumans;
+    public int timeObjects;
 
     public static UIManager Instance; // Singleton instance
 
@@ -51,6 +65,9 @@ public class UIManager : NetworkBehaviour
     {
         // Initially update the player list UI for the current client at the start
         UpdatePlayerListUI(playerList);
+
+        timeHumans = countdownDuration;
+        timeObjects = countdownDuration; 
     }
 
     ///////////////////////////////////////
@@ -179,22 +196,39 @@ public class UIManager : NetworkBehaviour
         preGameScreen.SetActive(false);
         hudScreen.SetActive(true);
 
-        StartCoroutine(StartCountdown());
+        StartCoroutine(StartCountdownHumans());
+        StartCoroutine(StartCountdownObjects());
     }
 
-    private IEnumerator StartCountdown()
+    private IEnumerator StartCountdownHumans()
     {
-        int currentTime = countdownDuration;
-
-        while (currentTime > 0)
+        sparksHumans.Play();
+        while (timeHumans > 0)
         {
-            int minutes = Mathf.FloorToInt(currentTime / 60); // Calculate the minutes
-            int seconds = Mathf.FloorToInt(currentTime % 60); // Calculate the seconds
+            int minutes = Mathf.FloorToInt(timeHumans / 60); // Calculate the minutes
+            int seconds = Mathf.FloorToInt(timeHumans % 60); // Calculate the seconds
 
-            countdownTimerText.text = $"{minutes:00}:{seconds:00}"; // Format as MM:SS
+            countdownTimerHumansText.text = $"{minutes:00}:{seconds:00}"; // Format as MM:SS
+            sliderHumans.value = timeHumans;
             
             yield return new WaitForSeconds(1);
-            currentTime--;
+            timeHumans--;
+        }
+    }
+
+    private IEnumerator StartCountdownObjects()
+    {
+        sparksObjects.Play();
+        while (timeObjects > 0)
+        {
+            int minutes = Mathf.FloorToInt(timeObjects / 60); // Calculate the minutes
+            int seconds = Mathf.FloorToInt(timeObjects % 60); // Calculate the seconds
+
+            countdownTimerObjectsText.text = $"{minutes:00}:{seconds:00}"; // Format as MM:SS
+            sliderObjects.value = timeObjects;
+
+            yield return new WaitForSeconds(1);
+            timeObjects--;
         }
     }
 }

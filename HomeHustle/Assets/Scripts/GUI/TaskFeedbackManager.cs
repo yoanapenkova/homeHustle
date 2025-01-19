@@ -8,14 +8,19 @@ public class TaskFeedbackManager : MonoBehaviour
     [Header("Tasks UI")]
     [SerializeField]
     private GameObject lightsOffDone;
+    [SerializeField]
+    private GameObject waterSystemOkDone;
 
     private GameObject[] lightsObj;
+    private GameObject[] waterObj;
     public bool lightsTask = false;
+    public bool waterTask = true;
 
     // Start is called before the first frame update
     void Start()
     {
         lightsObj = GameObject.FindGameObjectsWithTag("Light");
+        waterObj = GameObject.FindGameObjectsWithTag("WaterComponent");
     }
 
     void Update()
@@ -30,17 +35,29 @@ public class TaskFeedbackManager : MonoBehaviour
         foreach (GameObject lightObj in lightsObj)
         {
             LightSwitchAction light = lightObj.GetComponent<LightSwitchAction>();
-            //Debug.Log(lightObj.name + ": " + light.turnedOn);
             if (light != null)
             {
                 lightsTurnedOn = lightsTurnedOn && !light.turnedOn;
             }
         }
         lightsTask = lightsTurnedOn;
+
+        bool waterBroken = true;
+        foreach (GameObject component in waterObj)
+        {
+            WaterComponentAction waterComponent = component.GetComponent<WaterComponentAction>();
+            if (waterComponent != null)
+            {
+                waterBroken = waterBroken && !waterComponent.broken;
+            }
+        }
+
+        waterTask = waterBroken;
     }
 
     void UpdateUI()
     {
         lightsOffDone.SetActive(lightsTask);
+        waterSystemOkDone.SetActive(waterTask);
     }
 }

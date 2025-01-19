@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -6,7 +7,8 @@ public class GameManager : MonoBehaviour
 {
     public static GameManager Instance { get; private set; } // Singleton instance
 
-    
+    private bool gameStarted = false;
+    public event Action OnGameStarted;
 
     private void Awake()
     {
@@ -34,8 +36,24 @@ public class GameManager : MonoBehaviour
         
     }
 
+    public bool IsGameActive
+    {
+        get { return gameStarted; }
+        set
+        {
+            if (!gameStarted && value) // Check if transitioning to `true`
+            {
+                gameStarted = value;
+                OnGameStarted?.Invoke(); // Trigger the event
+            }
+        }
+    }
+
     public void StartGameSession()
     {
         UIManager.Instance.GetHUD();
+        TimePowerUpManager.Instance.PrepareSpawnPoints();
+
+        gameStarted = true;
     }
 }

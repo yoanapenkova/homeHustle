@@ -112,8 +112,6 @@ public class WaterComponentAction : NetworkBehaviour, SimpleAction
         isBroken.Value = !isBroken.Value;
         broken = isBroken.Value;
 
-        boilerPanelButton.interactable = !broken;
-
         // Notify all clients that the broken state has changed
         BrokenStateChangedClientRpc(isBroken.Value);
     }
@@ -128,15 +126,19 @@ public class WaterComponentAction : NetworkBehaviour, SimpleAction
     // This method is called when the network variable 'isBroken' changes
     private void OnBrokenStateChanged(bool previousValue, bool newValue)
     {
+        broken = newValue;
         warningSign.SetActive(newValue);
         warningSignUI.SetActive(newValue);
+        boilerPanelButton.interactable = !broken;
     }
 
     // ClientRpc: Used to notify clients of the broken state change
     [ClientRpc]
     private void BrokenStateChangedClientRpc(bool newState)
     {
+        broken = newState;
         warningSign.SetActive(newState);
         warningSignUI.SetActive(newState);
+        boilerPanelButton.interactable = !broken;
     }
 }
