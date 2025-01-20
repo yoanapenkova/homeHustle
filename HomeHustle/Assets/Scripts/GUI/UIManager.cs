@@ -125,6 +125,10 @@ public class UIManager : NetworkBehaviour
         connectedPlayers.Value++;
         homeScreen.SetActive(false);
         preGameScreen.SetActive(true);
+
+        // Disable the mouse cursor (optional)
+        Cursor.lockState = CursorLockMode.Locked;
+        Cursor.visible = false;
     }
 
     public void OnPlayerCountChanged(int oldCount, int newCount)

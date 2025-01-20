@@ -7,7 +7,7 @@ public class GameManager : MonoBehaviour
 {
     public static GameManager Instance { get; private set; } // Singleton instance
 
-    private bool gameStarted = false;
+    public bool gameStarted = false;
     public event Action OnGameStarted;
 
     private void Awake()

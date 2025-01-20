@@ -12,13 +12,13 @@ public class PickUpAction : NetworkBehaviour, SimpleAction
 {
     public bool pickedUp = false;
     [SerializeField]
-    private Image imagePrefab;
+    public Image imagePrefab;
     [SerializeField]
     private GameObject[] inventorySlots;
 
     private string[] actions = { "Pick up" };
     private Interactable interactable;
-    private Renderer renderer;
+    private Renderer[] renderers;
     private Collider collider;
     private Rigidbody rb;
 
@@ -29,7 +29,7 @@ public class PickUpAction : NetworkBehaviour, SimpleAction
     void Start()
     {
         interactable = GetComponent<Interactable>();
-        renderer = GetComponent<Renderer>();
+        renderers = GetComponentsInChildren<Renderer>();
         collider = GetComponent<Collider>();
         rb = GetComponent<Rigidbody>();
 
@@ -93,7 +93,12 @@ public class PickUpAction : NetworkBehaviour, SimpleAction
         interactable.mainKeyBackground.SetActive(true);
         interactable.mainInstructionsText.text = actions[0];
 
-        interactable.auxKeyBackground.SetActive(false);
+        DecayAction decayAction = gameObject.GetComponent<DecayAction>();
+        if (decayAction == null)
+        {
+            interactable.auxKeyBackground.SetActive(false);
+        }
+
         interactable.mainKey.GetComponent<Image>().color = Color.white;
         interactable.mainInstructionsText.color = Color.white;
     }
@@ -135,8 +140,11 @@ public class PickUpAction : NetworkBehaviour, SimpleAction
     {
         pickedUp = newValue;
 
-        //Debug.Log("New value: " + newValue);
-        renderer.enabled = !newValue;
+        // Loop through all child renderers and disable/enable them
+        foreach (Renderer rend in renderers)
+        {
+            rend.enabled = !newValue;
+        }
         collider.enabled = !newValue;
         rb.isKinematic = newValue;
     }
@@ -147,8 +155,11 @@ public class PickUpAction : NetworkBehaviour, SimpleAction
     {
         pickedUp = newState;
 
-        Debug.Log("New state: " + newState);
-        renderer.enabled = !newState;
+        // Loop through all child renderers and disable/enable them
+        foreach (Renderer rend in renderers)
+        {
+            rend.enabled = !newState;
+        }
         collider.enabled = !newState;
         rb.isKinematic = newState;
     }
