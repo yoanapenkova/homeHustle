@@ -26,6 +26,13 @@ public class OutlineOnLook : MonoBehaviour
         {
             GameObject hitObject = hit.collider.gameObject;
 
+            // Check object is on watch for UI hints
+            Interactable interactableProperties = hitObject.GetComponent<Interactable>();
+            if (interactableProperties != null)
+            {
+                interactableProperties.isOnWatch = true;
+            }
+
             // If the hit object is new, apply the outline
             if (hitObject != currentObject)
             {
@@ -34,13 +41,6 @@ public class OutlineOnLook : MonoBehaviour
             }
 
             //Debug.Log(hitObject.gameObject.name);
-
-            // Check object is on watch for UI hints
-            Interactable interactableProperties = hitObject.GetComponent<Interactable>();
-            if (interactableProperties != null)
-            {
-                interactableProperties.isOnWatch = true;
-            }
         }
         else
         {
@@ -53,27 +53,32 @@ public class OutlineOnLook : MonoBehaviour
     {
         currentObject = obj;
 
-        // Find all Renderers on the object and its children
-        Renderer[] renderers = obj.GetComponentsInChildren<Renderer>();
+        Interactable interactableProperties = currentObject.GetComponent<Interactable>();
 
-        foreach (Renderer renderer in renderers)
+        if (interactableProperties.enabled)
         {
-            if (renderer != null && !originalMaterials.ContainsKey(renderer))
+            // Find all Renderers on the object and its children
+            Renderer[] renderers = obj.GetComponentsInChildren<Renderer>();
+
+            foreach (Renderer renderer in renderers)
             {
-                // Save the original materials array
-                originalMaterials[renderer] = renderer.materials;
-
-                // Create a new materials array with the same length
-                Material[] outlineMaterials = new Material[renderer.materials.Length];
-
-                // Replace each material with the outline material
-                for (int i = 0; i < renderer.materials.Length; i++)
+                if (renderer != null && !originalMaterials.ContainsKey(renderer))
                 {
-                    outlineMaterials[i] = outlineMaterial;
-                }
+                    // Save the original materials array
+                    originalMaterials[renderer] = renderer.materials;
 
-                // Apply the new materials array
-                renderer.materials = outlineMaterials;
+                    // Create a new materials array with the same length
+                    Material[] outlineMaterials = new Material[renderer.materials.Length];
+
+                    // Replace each material with the outline material
+                    for (int i = 0; i < renderer.materials.Length; i++)
+                    {
+                        outlineMaterials[i] = outlineMaterial;
+                    }
+
+                    // Apply the new materials array
+                    renderer.materials = outlineMaterials;
+                }
             }
         }
     }

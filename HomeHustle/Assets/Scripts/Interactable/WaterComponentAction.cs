@@ -21,6 +21,15 @@ public class WaterComponentAction : NetworkBehaviour, SimpleAction
     private Interactable interactable;
     private SinkAction sinkAction;
 
+    // Cooldown logic
+    private bool isBeingRepaired = false;
+    private int timesBroken;
+    [SerializeField]
+    private ParticleSystem smokeFX;
+    [SerializeField]
+    private GameObject cooldownSignUI;
+
+
     // Networked variable to track if the water component is broken
     private NetworkVariable<bool> isBroken = new NetworkVariable<bool>(false);
 
@@ -66,6 +75,7 @@ public class WaterComponentAction : NetworkBehaviour, SimpleAction
 
     public void Outcome()
     {
+        timesBroken++;
         // If we are the server, we handle the state change
         if (IsServer)
         {
@@ -84,7 +94,7 @@ public class WaterComponentAction : NetworkBehaviour, SimpleAction
         interactable.auxKeyBackground.SetActive(true);
         interactable.auxInstructionsText.text = actions[0];
 
-        if (broken)
+        if (broken || isBeingRepaired)
         {
             interactable.auxKey.GetComponent<Image>().color = Color.white;
             interactable.auxInstructionsText.color = Color.white;
@@ -129,7 +139,19 @@ public class WaterComponentAction : NetworkBehaviour, SimpleAction
         broken = newValue;
         warningSign.SetActive(newValue);
         warningSignUI.SetActive(newValue);
-        boilerPanelButton.interactable = !broken;
+
+        if (!broken)
+        {
+            interactable.enabled = false;
+            smokeFX.gameObject.SetActive(true);
+            cooldownSignUI.SetActive(true);
+            isBeingRepaired = true;
+            StartCoroutine(Repair());
+            StartCoroutine(ActivateIcon());
+        } else
+        {
+            boilerPanelButton.interactable = !broken;
+        }
     }
 
     // ClientRpc: Used to notify clients of the broken state change
@@ -139,6 +161,43 @@ public class WaterComponentAction : NetworkBehaviour, SimpleAction
         broken = newState;
         warningSign.SetActive(newState);
         warningSignUI.SetActive(newState);
+
+        if (!broken)
+        {
+            smokeFX.gameObject.SetActive(true);
+            smokeFX.Play();
+            isBeingRepaired = true;
+            StartCoroutine(Repair());
+            StartCoroutine(ActivateIcon());
+        } else
+        {
+            boilerPanelButton.interactable = !broken;
+        }
+    }
+
+    private IEnumerator Repair()
+    {
+        yield return new WaitForSeconds(5);
+        AudioManager.Instance.PlaySpecificSound(AudioManager.Instance.bellSound);
+        smokeFX.gameObject.SetActive(false);
+        isBeingRepaired = false;
+        interactable.enabled = true;
+    }
+
+    private IEnumerator ActivateIcon()
+    {
+
+        if (timesBroken == 1)
+        {
+            yield return new WaitForSeconds(30);
+        } else if (timesBroken == 2)
+        {
+            yield return new WaitForSeconds(45);
+        } else if (timesBroken > 2)
+        {
+            yield return new WaitForSeconds(60);
+        }
+        cooldownSignUI.SetActive(false);
         boilerPanelButton.interactable = !broken;
     }
 }

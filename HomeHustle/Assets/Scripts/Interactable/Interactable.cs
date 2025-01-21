@@ -4,6 +4,7 @@ using UnityEngine;
 public class Interactable : MonoBehaviour
 {
     public bool isOnWatch = false;
+    public bool enabled = true;
 
     [SerializeField]
     public GameObject actionsInstructions;

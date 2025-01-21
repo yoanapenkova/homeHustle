@@ -2,18 +2,18 @@ using UnityEngine;
 
 public class AudioManager : MonoBehaviour
 {
-    public static AudioManager instance;
+    public static AudioManager Instance;
 
     public AudioSource ambientSound; // Referencia al AudioSource para el sonido ambiente
     public AudioSource sfxSource;    // Referencia al AudioSource para los efectos de sonido
     public AudioClip ambient;
-
+    public AudioClip bellSound;
 
     private void Awake()
     {
-        if (instance == null)
+        if (Instance == null)
         {
-            instance = this;
+            Instance = this;
             DontDestroyOnLoad(gameObject); // Mantener el AudioManager al cambiar de escena
         }
         else
