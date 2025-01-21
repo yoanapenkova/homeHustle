@@ -3,12 +3,22 @@ using System.Collections.Generic;
 using System.Net.Sockets;
 using Unity.Collections.LowLevel.Unsafe;
 using Unity.Netcode;
+using Unity.Services.Lobbies.Models;
+using Unity.VisualScripting;
+using UnityEditor.PackageManager;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.UI;
 
 public class WaterComponentAction : NetworkBehaviour, SimpleAction
 {
+    [SerializeField]
+    private int costPerHuman = 8;
+    [SerializeField]
+    private int costPerObject = 10;
+
+    private PlayerManager playerManager;
+
     [SerializeField]
     private Button boilerPanelButton;
     [SerializeField]
@@ -28,7 +38,6 @@ public class WaterComponentAction : NetworkBehaviour, SimpleAction
     private ParticleSystem smokeFX;
     [SerializeField]
     private GameObject cooldownSignUI;
-
 
     // Networked variable to track if the water component is broken
     private NetworkVariable<bool> isBroken = new NetworkVariable<bool>(false);
@@ -54,6 +63,11 @@ public class WaterComponentAction : NetworkBehaviour, SimpleAction
                 Outcome();
             }
         }
+
+        if (playerManager == null)
+        {
+            CheckForNetworkAndPlayer();
+        }
     }
 
     // Ensure that NetworkVariable changes are propagated to clients
@@ -75,16 +89,35 @@ public class WaterComponentAction : NetworkBehaviour, SimpleAction
 
     public void Outcome()
     {
-        timesBroken++;
-        // If we are the server, we handle the state change
-        if (IsServer)
+        bool isAllowed = playerManager.isHuman ? ((playerManager.points - costPerHuman) >= 0) : ((playerManager.points - costPerObject) >= 0);
+
+        if (isAllowed)
         {
-            ToggleBrokenState();
+            timesBroken++;
+            // If we are the server, we handle the state change
+            if (IsServer)
+            {
+                ToggleBrokenState();
+            }
+            // If we are a client, request the server to toggle the broken state
+            else
+            {
+                ToggleBrokenStateServerRpc();
+            }
+
+            if (playerManager.isHuman)
+            {
+                playerManager.points -= costPerHuman;
+            }
+            else
+            {
+                playerManager.points += costPerObject;
+            }
         }
-        // If we are a client, request the server to toggle the broken state
         else
         {
-            ToggleBrokenStateServerRpc();
+            // TODO: show message that there are not enough points (coins or energy)
+            Debug.Log("Not enough coins/energy to perform this action.");
         }
     }
 
@@ -199,5 +232,30 @@ public class WaterComponentAction : NetworkBehaviour, SimpleAction
         }
         cooldownSignUI.SetActive(false);
         boilerPanelButton.interactable = !broken;
+    }
+
+    void CheckForNetworkAndPlayer()
+    {
+        if (NetworkManager.Singleton.LocalClientId != null)
+        {
+            SearchPlayerManagerServerRpc(OwnerClientId);
+        }
+    }
+
+    [ServerRpc(RequireOwnership = false)]
+    void SearchPlayerManagerServerRpc(ulong clientId)
+    {
+        if (clientId == NetworkManager.Singleton.LocalClientId)
+        {
+            // Get the player object for the specified client ID
+            if (NetworkManager.Singleton.ConnectedClients.TryGetValue(clientId, out var client))
+            {
+                playerManager = client.PlayerObject.gameObject.GetComponent<PlayerManager>();
+            }
+            else
+            {
+                Debug.LogError($"Client ID {clientId} not found!");
+            }
+        }
     }
 }

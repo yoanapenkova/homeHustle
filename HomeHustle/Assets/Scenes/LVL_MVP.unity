@@ -1337,6 +1337,7 @@ Transform:
   - {fileID: 1439907400}
   - {fileID: 1703012542}
   - {fileID: 436162451}
+  - {fileID: 1729438830}
   - {fileID: 543450651744598010}
   m_Father: {fileID: 1094270992}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -1599,6 +1600,7 @@ GameObject:
   - component: {fileID: 61288921}
   - component: {fileID: 61288920}
   - component: {fileID: 61288922}
+  - component: {fileID: 61288923}
   m_Layer: 5
   m_Name: WC
   m_TagString: Untagged
@@ -1720,6 +1722,27 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
+--- !u!114 &61288923
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 61288918}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d5a57f767e5e46a458fc5d3c628d0cbb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  GlobalObjectIdHash: 2691806435
+  InScenePlacedSourceGlobalObjectIdHash: 0
+  AlwaysReplicateAsRoot: 0
+  SynchronizeTransform: 1
+  ActiveSceneSynchronization: 0
+  SceneMigrationSynchronization: 1
+  SpawnWithObservers: 1
+  DontDestroyWithOwner: 0
+  AutoObjectParentSync: 1
 --- !u!1001 &62407191
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -3784,8 +3807,8 @@ RectTransform:
   m_GameObject: {fileID: 203917786}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 0.6056146, y: 0.6056146, z: 0.6056146}
-  m_ConstrainProportionsScale: 0
+  m_LocalScale: {x: 0.6, y: 0.6, z: 0.6}
+  m_ConstrainProportionsScale: 1
   m_Children: []
   m_Father: {fileID: 1485883985}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -3837,7 +3860,19 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 203917790}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 1662057618}
+        m_TargetAssemblyTypeName: PowerAction, Assembly-CSharp
+        m_MethodName: Outcome
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &203917790
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -5811,6 +5846,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: be69eecc66550434690b0b466f345b69, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  costPerHuman: 8
+  costPerObject: 10
   boilerPanelButton: {fileID: 1642339523}
   warningSign: {fileID: 880554901}
   warningSignUI: {fileID: 1097553297}
@@ -8076,6 +8113,7 @@ GameObject:
   - component: {fileID: 398848392}
   - component: {fileID: 398848391}
   - component: {fileID: 398848390}
+  - component: {fileID: 398848399}
   m_Layer: 7
   m_Name: KidsBedroomSwitch
   m_TagString: Light
@@ -8294,6 +8332,21 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 398848388}
   m_Mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
+--- !u!114 &398848399
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 398848388}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9c7dccd2e71deb842a7077ed5ad60278, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  electricPanelButton: {fileID: 1259568384}
+  multipleObjects: 1
+  powered: 1
 --- !u!1001 &399272404
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -8348,7 +8401,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8849559848198870769, guid: 9f7af34db35871c4182c437a1aeb09e4, type: 3}
       propertyPath: m_Layer
-      value: 7
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -9602,6 +9655,42 @@ BoxCollider:
   serializedVersion: 3
   m_Size: {x: 0.0032578446, y: 0.0035264709, z: 0.0012836918}
   m_Center: {x: 0.00004901901, y: 0.000021813046, z: 0.00022487789}
+--- !u!114 &436162459
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 436162450}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d5a57f767e5e46a458fc5d3c628d0cbb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  GlobalObjectIdHash: 4242591101
+  InScenePlacedSourceGlobalObjectIdHash: 0
+  AlwaysReplicateAsRoot: 0
+  SynchronizeTransform: 1
+  ActiveSceneSynchronization: 0
+  SceneMigrationSynchronization: 1
+  SpawnWithObservers: 1
+  DontDestroyWithOwner: 0
+  AutoObjectParentSync: 1
+--- !u!114 &436162460
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 436162450}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9c7dccd2e71deb842a7077ed5ad60278, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  electricPanelButton: {fileID: 1300470340}
+  multipleObjects: 1
+  powered: 1
 --- !u!1001 &441055010
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -13459,6 +13548,7 @@ GameObject:
   - component: {fileID: 662970240}
   - component: {fileID: 662970239}
   - component: {fileID: 662970238}
+  - component: {fileID: 662970247}
   m_Layer: 7
   m_Name: KitchenSwitch
   m_TagString: Light
@@ -13677,6 +13767,21 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 662970236}
   m_Mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
+--- !u!114 &662970247
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 662970236}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9c7dccd2e71deb842a7077ed5ad60278, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  electricPanelButton: {fileID: 1259568384}
+  multipleObjects: 1
+  powered: 1
 --- !u!1 &664419019
 GameObject:
   m_ObjectHideFlags: 0
@@ -13952,7 +14057,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8849559848198870769, guid: 9f7af34db35871c4182c437a1aeb09e4, type: 3}
       propertyPath: m_Layer
-      value: 7
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -14384,6 +14489,9 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 4476818941290034795, guid: f767cce13dd852b4cbd5894364ae969e, type: 3}
       insertIndex: -1
       addedObject: {fileID: 686366509}
+    - targetCorrespondingSourceObject: {fileID: 4476818941290034795, guid: f767cce13dd852b4cbd5894364ae969e, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 686366512}
   m_SourcePrefab: {fileID: 100100000, guid: f767cce13dd852b4cbd5894364ae969e, type: 3}
 --- !u!4 &686366500 stripped
 Transform:
@@ -14402,6 +14510,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: be69eecc66550434690b0b466f345b69, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  costPerHuman: 8
+  costPerObject: 10
   boilerPanelButton: {fileID: 1778555985}
   warningSign: {fileID: 766730031}
   warningSignUI: {fileID: 1386944931}
@@ -14471,6 +14581,21 @@ BoxCollider:
   serializedVersion: 3
   m_Size: {x: 0.7290939, y: 1.0105008, z: 0.7107266}
   m_Center: {x: 0.01646115, y: -0.19585676, z: -0.28857636}
+--- !u!114 &686366512
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 314992186}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9c7dccd2e71deb842a7077ed5ad60278, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  electricPanelButton: {fileID: 1962999540}
+  multipleObjects: 0
+  powered: 1
 --- !u!1001 &688056686
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -14865,8 +14990,8 @@ RectTransform:
   m_GameObject: {fileID: 708935265}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 0.6056146, y: 0.6056146, z: 0.6056146}
-  m_ConstrainProportionsScale: 0
+  m_LocalScale: {x: 0.6, y: 0.6, z: 0.6}
+  m_ConstrainProportionsScale: 1
   m_Children: []
   m_Father: {fileID: 1485883985}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -14918,7 +15043,19 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 708935269}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 8176383647110785737}
+        m_TargetAssemblyTypeName: PowerAction, Assembly-CSharp
+        m_MethodName: Outcome
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &708935269
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -15324,6 +15461,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: be69eecc66550434690b0b466f345b69, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  costPerHuman: 8
+  costPerObject: 10
   boilerPanelButton: {fileID: 1542957272}
   warningSign: {fileID: 1968803154}
   warningSignUI: {fileID: 2098109011}
@@ -18913,8 +19052,8 @@ RectTransform:
   m_GameObject: {fileID: 912462464}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 0.6056146, y: 0.6056146, z: 0.6056146}
-  m_ConstrainProportionsScale: 0
+  m_LocalScale: {x: 0.6, y: 0.6, z: 0.6}
+  m_ConstrainProportionsScale: 1
   m_Children: []
   m_Father: {fileID: 1485883985}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -18966,7 +19105,19 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 912462468}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 1755191184}
+        m_TargetAssemblyTypeName: PowerAction, Assembly-CSharp
+        m_MethodName: Outcome
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &912462468
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -19295,7 +19446,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3609028012608208792, guid: 7bb52cc09c8c76e43a75786dccaf3fa4, type: 3}
       propertyPath: m_Layer
-      value: 7
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 4133749718763332898, guid: 7bb52cc09c8c76e43a75786dccaf3fa4, type: 3}
       propertyPath: m_LocalScale.x
@@ -19351,7 +19502,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7396622579569736765, guid: 7bb52cc09c8c76e43a75786dccaf3fa4, type: 3}
       propertyPath: m_Layer
-      value: 7
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -20711,6 +20862,7 @@ GameObject:
   - component: {fileID: 1004152456}
   - component: {fileID: 1004152455}
   - component: {fileID: 1004152454}
+  - component: {fileID: 1004152463}
   m_Layer: 7
   m_Name: LivingRoomSwitch
   m_TagString: Light
@@ -20929,6 +21081,21 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1004152452}
   m_Mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
+--- !u!114 &1004152463
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1004152452}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9c7dccd2e71deb842a7077ed5ad60278, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  electricPanelButton: {fileID: 1259568384}
+  multipleObjects: 1
+  powered: 1
 --- !u!1 &1007614761
 GameObject:
   m_ObjectHideFlags: 0
@@ -23240,6 +23407,11 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1097553297}
   m_CullTransparentMesh: 1
+--- !u!1 &1109798743 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 6202668810318017221, guid: 158f818f5cdf7f54f8cb6f3b74f535c8, type: 3}
+  m_PrefabInstance: {fileID: 1662057612}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &1113143758
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -24554,6 +24726,7 @@ GameObject:
   - component: {fileID: 1189018703}
   - component: {fileID: 1189018702}
   - component: {fileID: 1189018704}
+  - component: {fileID: 1189018705}
   m_Layer: 5
   m_Name: Shower
   m_TagString: Untagged
@@ -24675,6 +24848,27 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
+--- !u!114 &1189018705
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1189018700}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d5a57f767e5e46a458fc5d3c628d0cbb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  GlobalObjectIdHash: 3963839189
+  InScenePlacedSourceGlobalObjectIdHash: 0
+  AlwaysReplicateAsRoot: 0
+  SynchronizeTransform: 1
+  ActiveSceneSynchronization: 0
+  SceneMigrationSynchronization: 1
+  SpawnWithObservers: 1
+  DontDestroyWithOwner: 0
+  AutoObjectParentSync: 1
 --- !u!1 &1192347194
 GameObject:
   m_ObjectHideFlags: 0
@@ -25377,6 +25571,7 @@ GameObject:
   - component: {fileID: 1240531408}
   - component: {fileID: 1240531407}
   - component: {fileID: 1240531406}
+  - component: {fileID: 1240531415}
   m_Layer: 7
   m_Name: DiningSwitch
   m_TagString: Light
@@ -25595,6 +25790,21 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1240531404}
   m_Mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
+--- !u!114 &1240531415
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1240531404}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9c7dccd2e71deb842a7077ed5ad60278, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  electricPanelButton: {fileID: 1259568384}
+  multipleObjects: 1
+  powered: 1
 --- !u!1001 &1241448187
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -25889,8 +26099,8 @@ RectTransform:
   m_GameObject: {fileID: 1259568382}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 0.6056146, y: 0.6056146, z: 0.6056146}
-  m_ConstrainProportionsScale: 0
+  m_LocalScale: {x: 0.6, y: 0.6, z: 0.6}
+  m_ConstrainProportionsScale: 1
   m_Children: []
   m_Father: {fileID: 1485883985}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -25942,7 +26152,19 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 1259568386}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 1595146486}
+        m_TargetAssemblyTypeName: PowerAction, Assembly-CSharp
+        m_MethodName: Outcome
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &1259568386
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -26686,8 +26908,8 @@ RectTransform:
   m_GameObject: {fileID: 1300470338}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 0.6056146, y: 0.6056146, z: 0.6056146}
-  m_ConstrainProportionsScale: 0
+  m_LocalScale: {x: 0.6, y: 0.6, z: 0.6}
+  m_ConstrainProportionsScale: 1
   m_Children: []
   m_Father: {fileID: 1485883985}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -26739,7 +26961,19 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 1300470342}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 436162460}
+        m_TargetAssemblyTypeName: PowerAction, Assembly-CSharp
+        m_MethodName: Outcome
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &1300470342
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -29298,6 +29532,7 @@ GameObject:
   - component: {fileID: 1340217407}
   - component: {fileID: 1340217406}
   - component: {fileID: 1340217405}
+  - component: {fileID: 1340217414}
   m_Layer: 7
   m_Name: BathroomSwitch
   m_TagString: Light
@@ -29516,6 +29751,21 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1340217403}
   m_Mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
+--- !u!114 &1340217414
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1340217403}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9c7dccd2e71deb842a7077ed5ad60278, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  electricPanelButton: {fileID: 1259568384}
+  multipleObjects: 1
+  powered: 1
 --- !u!4 &1340331962 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 4041163057064476, guid: f1969e8867becad48968186262fbf790, type: 3}
@@ -29616,6 +29866,7 @@ GameObject:
   - component: {fileID: 1349105253}
   - component: {fileID: 1349105252}
   - component: {fileID: 1349105254}
+  - component: {fileID: 1349105255}
   m_Layer: 5
   m_Name: KitchenSink
   m_TagString: Untagged
@@ -29737,6 +29988,27 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
+--- !u!114 &1349105255
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1349105250}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d5a57f767e5e46a458fc5d3c628d0cbb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  GlobalObjectIdHash: 3080355611
+  InScenePlacedSourceGlobalObjectIdHash: 0
+  AlwaysReplicateAsRoot: 0
+  SynchronizeTransform: 1
+  ActiveSceneSynchronization: 0
+  SceneMigrationSynchronization: 1
+  SpawnWithObservers: 1
+  DontDestroyWithOwner: 0
+  AutoObjectParentSync: 1
 --- !u!1 &1351859701
 GameObject:
   m_ObjectHideFlags: 0
@@ -35455,6 +35727,10 @@ PrefabInstance:
       propertyPath: m_Layer
       value: 7
       objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: d6acd30b65bafc2429d6e86b1443f479, type: 3}
+      propertyPath: m_TagString
+      value: Plug
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -35468,6 +35744,12 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: d6acd30b65bafc2429d6e86b1443f479, type: 3}
       insertIndex: -1
       addedObject: {fileID: 436162456}
+    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: d6acd30b65bafc2429d6e86b1443f479, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 436162459}
+    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: d6acd30b65bafc2429d6e86b1443f479, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 436162460}
   m_SourcePrefab: {fileID: 100100000, guid: d6acd30b65bafc2429d6e86b1443f479, type: 3}
 --- !u!1 &1386944931
 GameObject:
@@ -38450,6 +38732,7 @@ GameObject:
   - component: {fileID: 1542957271}
   - component: {fileID: 1542957270}
   - component: {fileID: 1542957272}
+  - component: {fileID: 1542957273}
   m_Layer: 5
   m_Name: BathroomSink_R
   m_TagString: Untagged
@@ -38571,6 +38854,27 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
+--- !u!114 &1542957273
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1542957268}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d5a57f767e5e46a458fc5d3c628d0cbb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  GlobalObjectIdHash: 2535455475
+  InScenePlacedSourceGlobalObjectIdHash: 0
+  AlwaysReplicateAsRoot: 0
+  SynchronizeTransform: 1
+  ActiveSceneSynchronization: 0
+  SceneMigrationSynchronization: 1
+  SpawnWithObservers: 1
+  DontDestroyWithOwner: 0
+  AutoObjectParentSync: 1
 --- !u!1 &1547580014
 GameObject:
   m_ObjectHideFlags: 0
@@ -39383,6 +39687,7 @@ GameObject:
   - component: {fileID: 1595146485}
   - component: {fileID: 1595146484}
   - component: {fileID: 1595146483}
+  - component: {fileID: 1595146486}
   m_Layer: 7
   m_Name: HallwaySwitch
   m_TagString: Light
@@ -39601,6 +39906,21 @@ MonoBehaviour:
   InLocalSpace: 0
   Interpolate: 1
   SlerpPosition: 0
+--- !u!114 &1595146486
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1595146475}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9c7dccd2e71deb842a7077ed5ad60278, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  electricPanelButton: {fileID: 1259568384}
+  multipleObjects: 1
+  powered: 1
 --- !u!1 &1596824406
 GameObject:
   m_ObjectHideFlags: 0
@@ -40311,6 +40631,7 @@ GameObject:
   - component: {fileID: 1631787710}
   - component: {fileID: 1631787709}
   - component: {fileID: 1631787708}
+  - component: {fileID: 1631787717}
   m_Layer: 7
   m_Name: EntranceSwitch
   m_TagString: Light
@@ -40529,6 +40850,21 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1631787706}
   m_Mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
+--- !u!114 &1631787717
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1631787706}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9c7dccd2e71deb842a7077ed5ad60278, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  electricPanelButton: {fileID: 1259568384}
+  multipleObjects: 1
+  powered: 1
 --- !u!1001 &1635744015
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -40876,6 +41212,7 @@ GameObject:
   - component: {fileID: 1642339522}
   - component: {fileID: 1642339521}
   - component: {fileID: 1642339523}
+  - component: {fileID: 1642339524}
   m_Layer: 5
   m_Name: BathroomSink_L
   m_TagString: Untagged
@@ -40997,6 +41334,27 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
+--- !u!114 &1642339524
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1642339519}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d5a57f767e5e46a458fc5d3c628d0cbb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  GlobalObjectIdHash: 3452916630
+  InScenePlacedSourceGlobalObjectIdHash: 0
+  AlwaysReplicateAsRoot: 0
+  SynchronizeTransform: 1
+  ActiveSceneSynchronization: 0
+  SceneMigrationSynchronization: 1
+  SpawnWithObservers: 1
+  DontDestroyWithOwner: 0
+  AutoObjectParentSync: 1
 --- !u!1 &1643645473
 GameObject:
   m_ObjectHideFlags: 0
@@ -41968,13 +42326,55 @@ PrefabInstance:
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 6202668810318017221, guid: 158f818f5cdf7f54f8cb6f3b74f535c8, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1662057617}
+    - targetCorrespondingSourceObject: {fileID: 6202668810318017221, guid: 158f818f5cdf7f54f8cb6f3b74f535c8, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1662057618}
   m_SourcePrefab: {fileID: 100100000, guid: 158f818f5cdf7f54f8cb6f3b74f535c8, type: 3}
 --- !u!4 &1662057613 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 6728270949622622335, guid: 158f818f5cdf7f54f8cb6f3b74f535c8, type: 3}
   m_PrefabInstance: {fileID: 1662057612}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &1662057617
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1109798743}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d5a57f767e5e46a458fc5d3c628d0cbb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  GlobalObjectIdHash: 921521054
+  InScenePlacedSourceGlobalObjectIdHash: 0
+  AlwaysReplicateAsRoot: 0
+  SynchronizeTransform: 1
+  ActiveSceneSynchronization: 0
+  SceneMigrationSynchronization: 1
+  SpawnWithObservers: 1
+  DontDestroyWithOwner: 0
+  AutoObjectParentSync: 1
+--- !u!114 &1662057618
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1109798743}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9c7dccd2e71deb842a7077ed5ad60278, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  electricPanelButton: {fileID: 203917788}
+  multipleObjects: 0
+  powered: 1
 --- !u!1 &1666926696
 GameObject:
   m_ObjectHideFlags: 0
@@ -43267,6 +43667,188 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
+--- !u!1001 &1729438829
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 47155553}
+    m_Modifications:
+    - target: {fileID: -8679921383154817045, guid: d6acd30b65bafc2429d6e86b1443f479, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 2.186
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: d6acd30b65bafc2429d6e86b1443f479, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: -2.587
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: d6acd30b65bafc2429d6e86b1443f479, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0.787
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: d6acd30b65bafc2429d6e86b1443f479, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: -0.09797926
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: d6acd30b65bafc2429d6e86b1443f479, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0.7002858
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: d6acd30b65bafc2429d6e86b1443f479, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0.6562357
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: d6acd30b65bafc2429d6e86b1443f479, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: -0.26335275
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: d6acd30b65bafc2429d6e86b1443f479, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: d6acd30b65bafc2429d6e86b1443f479, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: -180.169
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: d6acd30b65bafc2429d6e86b1443f479, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 90
+      objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: d6acd30b65bafc2429d6e86b1443f479, type: 3}
+      propertyPath: m_Name
+      value: Plug (1)
+      objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: d6acd30b65bafc2429d6e86b1443f479, type: 3}
+      propertyPath: m_Layer
+      value: 7
+      objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: d6acd30b65bafc2429d6e86b1443f479, type: 3}
+      propertyPath: m_TagString
+      value: Plug
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: d6acd30b65bafc2429d6e86b1443f479, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1729438836}
+    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: d6acd30b65bafc2429d6e86b1443f479, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1729438835}
+    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: d6acd30b65bafc2429d6e86b1443f479, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1729438834}
+    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: d6acd30b65bafc2429d6e86b1443f479, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1729438833}
+    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: d6acd30b65bafc2429d6e86b1443f479, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1729438832}
+  m_SourcePrefab: {fileID: 100100000, guid: d6acd30b65bafc2429d6e86b1443f479, type: 3}
+--- !u!4 &1729438830 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: d6acd30b65bafc2429d6e86b1443f479, type: 3}
+  m_PrefabInstance: {fileID: 1729438829}
+  m_PrefabAsset: {fileID: 0}
+--- !u!1 &1729438831 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 919132149155446097, guid: d6acd30b65bafc2429d6e86b1443f479, type: 3}
+  m_PrefabInstance: {fileID: 1729438829}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &1729438832
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1729438831}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9c7dccd2e71deb842a7077ed5ad60278, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  electricPanelButton: {fileID: 1300470340}
+  multipleObjects: 1
+  powered: 1
+--- !u!114 &1729438833
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1729438831}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d5a57f767e5e46a458fc5d3c628d0cbb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  GlobalObjectIdHash: 1306338100
+  InScenePlacedSourceGlobalObjectIdHash: 0
+  AlwaysReplicateAsRoot: 0
+  SynchronizeTransform: 1
+  ActiveSceneSynchronization: 0
+  SceneMigrationSynchronization: 1
+  SpawnWithObservers: 1
+  DontDestroyWithOwner: 0
+  AutoObjectParentSync: 1
+--- !u!65 &1729438834
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1729438831}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 0.0032578446, y: 0.0035264709, z: 0.0012836918}
+  m_Center: {x: 0.00004901901, y: 0.000021813046, z: 0.00022487789}
+--- !u!114 &1729438835
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1729438831}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ec9f4ef93b003bd49ad212db175d811f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  lightsManagementPanel: {fileID: 27158735}
+  cancelButton: {fileID: 446421921}
+--- !u!114 &1729438836
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1729438831}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: df69631cd51faa346985f2a1153a9640, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  isOnWatch: 0
+  enabled: 1
+  actionsInstructions: {fileID: 1699679470}
+  mainKeyBackground: {fileID: 799210352}
+  mainKey: {fileID: 130115879}
+  mainInstructionsText: {fileID: 1372703732}
+  auxKeyBackground: {fileID: 1983827682}
+  auxKey: {fileID: 2034238833}
+  auxInstructionsText: {fileID: 750161218}
 --- !u!1 &1732054409
 GameObject:
   m_ObjectHideFlags: 0
@@ -43784,6 +44366,21 @@ BoxCollider:
   serializedVersion: 3
   m_Size: {x: 0.003500009, y: 0.0023542051, z: 0.008668904}
   m_Center: {x: -0.00067367725, y: 0.0011363875, z: 0.0026091149}
+--- !u!114 &1755191184
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1131642860}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9c7dccd2e71deb842a7077ed5ad60278, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  electricPanelButton: {fileID: 912462466}
+  multipleObjects: 0
+  powered: 1
 --- !u!1 &1756366329
 GameObject:
   m_ObjectHideFlags: 0
@@ -43962,6 +44559,9 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 3d634acab61afd042b1632506bb624fa, type: 3}
       insertIndex: -1
       addedObject: {fileID: 1755191179}
+    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 3d634acab61afd042b1632506bb624fa, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1755191184}
   m_SourcePrefab: {fileID: 100100000, guid: 3d634acab61afd042b1632506bb624fa, type: 3}
 --- !u!1 &1773060975
 GameObject:
@@ -44157,6 +44757,7 @@ GameObject:
   - component: {fileID: 1778555984}
   - component: {fileID: 1778555983}
   - component: {fileID: 1778555985}
+  - component: {fileID: 1778555986}
   m_Layer: 5
   m_Name: WashingMachine
   m_TagString: Untagged
@@ -44279,6 +44880,27 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
+--- !u!114 &1778555986
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1778555981}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d5a57f767e5e46a458fc5d3c628d0cbb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  GlobalObjectIdHash: 2484961771
+  InScenePlacedSourceGlobalObjectIdHash: 0
+  AlwaysReplicateAsRoot: 0
+  SynchronizeTransform: 1
+  ActiveSceneSynchronization: 0
+  SceneMigrationSynchronization: 1
+  SpawnWithObservers: 1
+  DontDestroyWithOwner: 0
+  AutoObjectParentSync: 1
 --- !u!1 &1788683265
 GameObject:
   m_ObjectHideFlags: 0
@@ -45210,7 +45832,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8849559848198870769, guid: 9f7af34db35871c4182c437a1aeb09e4, type: 3}
       propertyPath: m_Layer
-      value: 7
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -51394,6 +52016,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: be69eecc66550434690b0b466f345b69, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  costPerHuman: 8
+  costPerObject: 10
   boilerPanelButton: {fileID: 61288922}
   warningSign: {fileID: 172045457}
   warningSignUI: {fileID: 1290667745}
@@ -51614,8 +52238,8 @@ RectTransform:
   m_GameObject: {fileID: 1962999538}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 0.6056146, y: 0.6056146, z: 0.6056146}
-  m_ConstrainProportionsScale: 0
+  m_LocalScale: {x: 0.6, y: 0.6, z: 0.6}
+  m_ConstrainProportionsScale: 1
   m_Children: []
   m_Father: {fileID: 1485883985}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -51667,7 +52291,19 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 1962999542}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 686366512}
+        m_TargetAssemblyTypeName: PowerAction, Assembly-CSharp
+        m_MethodName: Outcome
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &1962999542
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -52201,6 +52837,7 @@ GameObject:
   - component: {fileID: 1991032172}
   - component: {fileID: 1991032171}
   - component: {fileID: 1991032170}
+  - component: {fileID: 1991032179}
   m_Layer: 7
   m_Name: BigBedroomSwitch
   m_TagString: Light
@@ -52419,6 +53056,21 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1991032168}
   m_Mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
+--- !u!114 &1991032179
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1991032168}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9c7dccd2e71deb842a7077ed5ad60278, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  electricPanelButton: {fileID: 1259568384}
+  multipleObjects: 1
+  powered: 1
 --- !u!1 &1996547614
 GameObject:
   m_ObjectHideFlags: 0
@@ -56619,6 +57271,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: be69eecc66550434690b0b466f345b69, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  costPerHuman: 8
+  costPerObject: 10
   boilerPanelButton: {fileID: 1189018704}
   warningSign: {fileID: 1046354274}
   warningSignUI: {fileID: 1534370115}
@@ -60561,6 +61215,8 @@ GameObject:
   - component: {fileID: 7515683319154295001}
   - component: {fileID: 5740371406321202195}
   - component: {fileID: 8176383647110785735}
+  - component: {fileID: 8176383647110785736}
+  - component: {fileID: 8176383647110785737}
   m_Layer: 0
   m_Name: Fridge_SBS
   m_TagString: Untagged
@@ -60685,6 +61341,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: be69eecc66550434690b0b466f345b69, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  costPerHuman: 8
+  costPerObject: 10
   boilerPanelButton: {fileID: 1349105254}
   warningSign: {fileID: 225840244}
   warningSignUI: {fileID: 1072403862}
@@ -62901,6 +63559,42 @@ MeshCollider:
   m_Convex: 0
   m_CookingOptions: 30
   m_Mesh: {fileID: 7946216644978258567, guid: 4ef85326d2b48fb48bee81014892b40d, type: 3}
+--- !u!114 &8176383647110785736
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6100434732904486342}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d5a57f767e5e46a458fc5d3c628d0cbb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  GlobalObjectIdHash: 2563991293
+  InScenePlacedSourceGlobalObjectIdHash: 0
+  AlwaysReplicateAsRoot: 0
+  SynchronizeTransform: 1
+  ActiveSceneSynchronization: 0
+  SceneMigrationSynchronization: 1
+  SpawnWithObservers: 1
+  DontDestroyWithOwner: 0
+  AutoObjectParentSync: 1
+--- !u!114 &8176383647110785737
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6100434732904486342}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9c7dccd2e71deb842a7077ed5ad60278, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  electricPanelButton: {fileID: 708935267}
+  multipleObjects: 0
+  powered: 1
 --- !u!4 &8192744795907076700
 Transform:
   m_ObjectHideFlags: 0

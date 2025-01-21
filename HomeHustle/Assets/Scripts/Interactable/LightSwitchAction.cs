@@ -20,6 +20,7 @@ public class LightSwitchAction : NetworkBehaviour, SimpleAction
     public bool turnedOn = false;
     private Animator animator;
     private Interactable interactable;
+    private PowerAction powerAction;
     private Renderer lampRenderer;
     private Material glassMaterial;
 
@@ -31,6 +32,7 @@ public class LightSwitchAction : NetworkBehaviour, SimpleAction
     {
         animator = GetComponent<Animator>();
         interactable = GetComponent<Interactable>();
+        powerAction = GetComponent<PowerAction>();
         lampRenderer = lampObject.GetComponent<Renderer>();
         if (lampRenderer != null )
         {
@@ -52,6 +54,14 @@ public class LightSwitchAction : NetworkBehaviour, SimpleAction
             {
                 Outcome();
             }
+        }
+
+        if (!powerAction.powered)
+        {
+            ChangeLightAppearance(false);
+        } else
+        {
+            ChangeLightAppearance(turnedOn);
         }
     }
 
@@ -135,18 +145,6 @@ public class LightSwitchAction : NetworkBehaviour, SimpleAction
         // Update the animator when the light's state changes
         animator.SetBool("isTurned", newValue);
         turnedOn = newValue;
-        lightObject.gameObject.SetActive(newValue);
-        if (newValue)
-        {
-            Material[] materials = lampRenderer.materials;
-            materials[0] = emissionMaterial;
-            lampRenderer.materials = materials;
-        } else
-        {
-            Material[] materials = lampRenderer.materials;
-            materials[0] = glassMaterial;
-            lampRenderer.materials = materials;
-        }
     }
 
     // ClientRpc: Used to notify clients of the light state change
@@ -156,8 +154,13 @@ public class LightSwitchAction : NetworkBehaviour, SimpleAction
         // Only the client who receives the RPC will update its own animator
         animator.SetBool("isTurned", newState);
         turnedOn = newState;
-        lightObject.gameObject.SetActive(newState);
-        if (newState)
+        
+    }
+
+    void ChangeLightAppearance(bool isOn)
+    {
+        lightObject.gameObject.SetActive(isOn);
+        if (isOn)
         {
             Material[] materials = lampRenderer.materials;
             materials[0] = emissionMaterial;

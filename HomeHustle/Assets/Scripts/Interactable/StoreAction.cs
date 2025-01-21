@@ -30,16 +30,6 @@ public class StoreAction : NetworkBehaviour
     {
         containerId = containerInventory.currentObjectInventory.gameObject.GetComponent<NetworkObject>().NetworkObjectId;
 
-        /*
-        foreach (var networkObject in NetworkManager.Singleton.SpawnManager.SpawnedObjects)
-        {
-            if (networkObject.Value.NetworkObjectId == containerId)
-            {
-                Debug.Log(networkObject.Value.gameObject.name);
-            }
-        }
-        */
-
         InventorySlot freeSlot = getFirstFreeSlot();
 
         if (freeSlot != null)

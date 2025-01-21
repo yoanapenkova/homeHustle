@@ -14,12 +14,14 @@ public class PlugAction : NetworkBehaviour, SimpleAction
     private Button cancelButton;
 
     private Interactable interactable;
+    private PowerAction powerAction;
     private bool panelOpened = false;
 
     // Start is called before the first frame update
     void Start()
     {
         interactable = GetComponent<Interactable>();
+        powerAction = GetComponent<PowerAction>();
     }
 
     // Update is called once per frame
@@ -29,9 +31,12 @@ public class PlugAction : NetworkBehaviour, SimpleAction
         {
             UpdateInstructions();
             // Allow any client to trigger plug actions
-            if (Input.GetKeyDown(KeyCode.E))
+            if (Input.GetKeyDown(KeyCode.E) && powerAction.powered)
             {
                 Outcome();
+            } else
+            {
+                //TODO: show message that there's no power.
             }
         }
     }
@@ -56,8 +61,17 @@ public class PlugAction : NetworkBehaviour, SimpleAction
         interactable.mainInstructionsText.text = actions[0];
 
         interactable.auxKeyBackground.SetActive(false);
-        interactable.mainKey.GetComponent<Image>().color = Color.white;
-        interactable.mainInstructionsText.color = Color.white;
+
+        if (!powerAction.powered)
+        {
+            interactable.mainKey.GetComponent<Image>().color = Color.grey;
+            interactable.mainInstructionsText.color = Color.grey;
+        }
+        else
+        {
+            interactable.mainKey.GetComponent<Image>().color = Color.white;
+            interactable.mainInstructionsText.color = Color.white;
+        }
     }
 
     void HideLightsManagementPanel()

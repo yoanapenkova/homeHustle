@@ -1,6 +1,7 @@
 using Unity.Collections.LowLevel.Unsafe;
 using Unity.Netcode;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class DoorAction : NetworkBehaviour, SimpleAction
 {
@@ -9,6 +10,7 @@ public class DoorAction : NetworkBehaviour, SimpleAction
     private Animator animator;
     private Interactable interactable;
     private LockAction lockAction;
+    private PowerAction parentPowerAction;
 
     // Networked variable to track if the door is open
     private NetworkVariable<bool> isOpening = new NetworkVariable<bool>(false);
@@ -19,7 +21,10 @@ public class DoorAction : NetworkBehaviour, SimpleAction
         animator = GetComponent<Animator>();
         interactable = GetComponent<Interactable>();
         lockAction = GetComponent<LockAction>();
-
+        if (gameObject.transform.parent != null)
+        {
+            parentPowerAction = gameObject.transform.parent.gameObject.GetComponent<PowerAction>();
+        }
         // Subscribe to the NetworkVariable's value change event
         isOpening.OnValueChanged += OnDoorStateChanged;
     }
@@ -29,9 +34,15 @@ public class DoorAction : NetworkBehaviour, SimpleAction
     {
         if (interactable.isOnWatch)
         {
+            bool hasPower = true;
+            if (parentPowerAction != null)
+            {
+                hasPower = parentPowerAction.powered;
+            }
+
             UpdateInstructions();
 
-            if (Input.GetKeyDown(KeyCode.E)) {
+            if (Input.GetKeyDown(KeyCode.E) && hasPower) {
                 if (lockAction != null)
                 {
                     if (!lockAction.locked)
@@ -96,6 +107,23 @@ public class DoorAction : NetworkBehaviour, SimpleAction
         if (lockAction == null)
         {
             interactable.auxKeyBackground.SetActive(false);
+        }
+
+        bool hasPower = true;
+        if (parentPowerAction != null)
+        {
+            hasPower = parentPowerAction.powered;
+        }
+
+        if (!hasPower)
+        {
+            interactable.mainKey.GetComponent<Image>().color = Color.grey;
+            interactable.mainInstructionsText.color = Color.grey;
+        }
+        else
+        {
+            interactable.mainKey.GetComponent<Image>().color = Color.white;
+            interactable.mainInstructionsText.color = Color.white;
         }
     }
 
