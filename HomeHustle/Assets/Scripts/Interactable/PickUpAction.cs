@@ -73,9 +73,10 @@ public class PickUpAction : NetworkBehaviour, SimpleAction
             freeSlot.elementIcon = imagePrefab;
 
             ChangePickUpState();
+            UIManager.Instance.ShowFeedback("Inventory is full!");
         } else
         {
-            // TODO: Display message saying inventory is full.
+            UIManager.Instance.ShowFeedback("Inventory is full!");
         }
     }
 

@@ -44,10 +44,11 @@ public class DoorAction : NetworkBehaviour, SimpleAction
                 {
                     if (!lockAction.locked)
                     {
+                        AudioManager.Instance.PlaySpecificSound(AudioManager.Instance.openDoor);
                         Outcome(); 
                     } else if (lockAction.locked)
                     {
-                        //TODO: Incluir ruido de prohibido al intentar abrir una puerta bloqueada.
+                        AudioManager.Instance.PlaySpecificSound(AudioManager.Instance.lockedDoor);
                     }
                 } else
                 {

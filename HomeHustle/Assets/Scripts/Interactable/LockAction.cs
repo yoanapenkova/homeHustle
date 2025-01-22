@@ -93,9 +93,8 @@ public class LockAction : NetworkBehaviour, SimpleAction
             locked = true;
 
             UpdateLockStateServerRpc(locked, usedCombination);
-
+            AudioManager.Instance.PlaySpecificSound(AudioManager.Instance.lockDoor);
             HideLockUnlockScreen();
-            Outcome();
         }
         else
         {
@@ -106,13 +105,14 @@ public class LockAction : NetworkBehaviour, SimpleAction
                 locked = false;
 
                 UpdateLockStateServerRpc(locked, usedCombination);
-
+                AudioManager.Instance.PlaySpecificSound(AudioManager.Instance.lockDoor);
                 HideLockUnlockScreen();
             }
             else
             {
                 Debug.Log("Incorrect combination.");
                 ProvideFeedback(inputCombinationInt);
+                AudioManager.Instance.PlaySpecificSound(AudioManager.Instance.lockedDoor);
             }
         }
     }

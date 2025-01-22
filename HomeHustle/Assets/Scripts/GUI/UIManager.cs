@@ -41,6 +41,11 @@ public class UIManager : NetworkBehaviour
     private ParticleSystem sparksObjects;
     [SerializeField]
     private int countdownDuration = 600;
+    [SerializeField]
+    private TMP_Text feedbackText;
+    public float feedbackDisplayDuration = 2f; // Duration to keep the text fully visible
+    public float feedbackFadeDuration = 2f;    // Duration for the fading effect
+    private Coroutine fadeCoroutine; // Store the current coroutine
 
     public int timeHumans;
     public int timeObjects;
@@ -208,5 +213,43 @@ public class UIManager : NetworkBehaviour
             yield return new WaitForSeconds(1);
             timeObjects--;
         }
+    }
+
+    ////////////////////////
+    ///Feedback on-screen///
+    ////////////////////////
+
+    public void ShowFeedback(string message)
+    {
+        if (fadeCoroutine != null)
+        {
+            StopCoroutine(fadeCoroutine);
+        }
+
+        feedbackText.text = message;
+        feedbackText.color = new Color(feedbackText.color.r, feedbackText.color.g, feedbackText.color.b, 1f);
+        feedbackText.gameObject.SetActive(true);
+
+        fadeCoroutine = StartCoroutine(FadeOutText());
+    }
+
+    private IEnumerator FadeOutText()
+    {
+        yield return new WaitForSeconds(feedbackDisplayDuration);
+
+        float elapsedTime = 0f;
+        Color originalColor = feedbackText.color;
+
+        while (elapsedTime < feedbackFadeDuration)
+        {
+            elapsedTime += Time.deltaTime;
+            float alpha = Mathf.Lerp(1f, 0f, elapsedTime / feedbackFadeDuration);
+            feedbackText.color = new Color(originalColor.r, originalColor.g, originalColor.b, alpha);
+            yield return null;
+        }
+
+        feedbackText.color = new Color(originalColor.r, originalColor.g, originalColor.b, 0f);
+        feedbackText.gameObject.SetActive(false);
+        fadeCoroutine = null;
     }
 }

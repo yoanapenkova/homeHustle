@@ -6,8 +6,15 @@ public class AudioManager : MonoBehaviour
 
     public AudioSource ambientSound;
     public AudioSource sfxSource;
+
+    [Header("Ambient")]
     public AudioClip ambient;
+
+    [Header("Sounds")]
     public AudioClip bellSound;
+    public AudioClip openDoor;
+    public AudioClip lockDoor;
+    public AudioClip lockedDoor;
 
     private void Awake()
     {
