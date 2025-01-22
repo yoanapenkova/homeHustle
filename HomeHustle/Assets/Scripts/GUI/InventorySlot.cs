@@ -10,13 +10,11 @@ public class InventorySlot : MonoBehaviour
 
     private bool occupied;
 
-    // Start is called before the first frame update
     void Start()
     {
         
     }
 
-    // Update is called once per frame
     void Update()
     {
         updateAppearance();
@@ -26,7 +24,6 @@ public class InventorySlot : MonoBehaviour
     {
         if (element != null && !occupied)
         {
-            Debug.Log("Setting image icon");
             elementIcon = Instantiate(elementIcon);
             elementIcon.gameObject.transform.SetParent(gameObject.transform);
 

@@ -5,32 +5,29 @@ using UnityEngine;
 
 public class GameManager : MonoBehaviour
 {
-    public static GameManager Instance { get; private set; } // Singleton instance
+    public static GameManager Instance { get; private set; }
 
     public bool gameStarted = false;
     public event Action OnGameStarted;
 
     private void Awake()
     {
-        // Ensure only one instance exists
         if (Instance == null)
         {
             Instance = this;
-            DontDestroyOnLoad(gameObject); // Persist across scenes
+            DontDestroyOnLoad(gameObject);
         }
         else
         {
-            Destroy(gameObject); // Destroy duplicate managers
+            Destroy(gameObject);
         }
     }
 
-    // Start is called before the first frame update
     void Start()
     {
         Debug.Log("GameManager Initialized!");
     }
 
-    // Update is called once per frame
     void Update()
     {
         
@@ -41,10 +38,10 @@ public class GameManager : MonoBehaviour
         get { return gameStarted; }
         set
         {
-            if (!gameStarted && value) // Check if transitioning to `true`
+            if (!gameStarted && value)
             {
                 gameStarted = value;
-                OnGameStarted?.Invoke(); // Trigger the event
+                OnGameStarted?.Invoke();
             }
         }
     }

@@ -8,6 +8,7 @@ public class BoilerAction : NetworkBehaviour, SimpleAction
 {
     private string[] actions = { "Connect" };
 
+    [Header("UI Management")]
     [SerializeField]
     private GameObject boilerManagementPanel;
     [SerializeField]
@@ -17,20 +18,18 @@ public class BoilerAction : NetworkBehaviour, SimpleAction
     private PowerAction powerAction;
     private bool panelOpened = false;
 
-    // Start is called before the first frame update
     void Start()
     {
         interactable = GetComponent<Interactable>();
         powerAction = GetComponent<PowerAction>();
     }
 
-    // Update is called once per frame
     void Update()
     {
         if (interactable.isOnWatch && !panelOpened)
         {
             UpdateInstructions();
-            // Allow any client to trigger boiler actions
+            
             if (Input.GetKeyDown(KeyCode.E) && powerAction.powered)
             {
                 Outcome();
@@ -43,13 +42,11 @@ public class BoilerAction : NetworkBehaviour, SimpleAction
 
     public void Outcome()
     {
-        // Enable the mouse cursor
         Cursor.lockState = CursorLockMode.None;
         Cursor.visible = true;
 
         boilerManagementPanel.SetActive(true);
 
-        // Clear previous listeners before adding new ones
         cancelButton.onClick.RemoveAllListeners();
         cancelButton.onClick.AddListener(() => HideBoilerManagementPanel());
     }
@@ -78,7 +75,6 @@ public class BoilerAction : NetworkBehaviour, SimpleAction
     {
         boilerManagementPanel.SetActive(false);
 
-        // Disable the mouse cursor (optional)
         Cursor.lockState = CursorLockMode.Locked;
         Cursor.visible = false;
     }

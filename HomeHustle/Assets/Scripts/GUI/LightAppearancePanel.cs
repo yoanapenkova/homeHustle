@@ -13,14 +13,12 @@ public class LightAppearancePanel : MonoBehaviour
     private Color colorTurnedOn = new Color(1.0f, 1.0f, 1.0f, 1.0f);
     private Color colorTurnedOff = new Color(0.25f, 0.25f, 0.25f, 1.0f);
 
-    // Start is called before the first frame update
     void Start()
     {
         gameObjImage = GetComponent<Image>();
         light = lightSwitch.GetComponent<LightSwitchAction>();
     }
 
-    // Update is called once per frame
     void Update()
     {
         if (light != null)
@@ -31,13 +29,6 @@ public class LightAppearancePanel : MonoBehaviour
 
     void UpdateAppearance()
     {
-        if (!light.turnedOn)
-        {
-            gameObjImage.color = colorTurnedOff;
-        }
-        else
-        {
-            gameObjImage.color = colorTurnedOn;
-        }
+        gameObjImage.color = !light.turnedOn ? colorTurnedOff : colorTurnedOn;
     }
 }

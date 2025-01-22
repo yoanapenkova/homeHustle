@@ -1,3 +1,4 @@
+using System;
 using System.Linq;
 using TMPro;
 using Unity.Netcode;
@@ -14,6 +15,7 @@ public class LockAction : NetworkBehaviour, SimpleAction
     private NetworkVariable<bool> isLocked = new NetworkVariable<bool>(false);
     private NetworkVariable<int> lockCombination = new NetworkVariable<int>(0);
 
+    [Header("UI Management")]
     [SerializeField]
     private GameObject lockUnlockScreen;
     [SerializeField]
@@ -27,13 +29,11 @@ public class LockAction : NetworkBehaviour, SimpleAction
     [SerializeField]
     private TMP_Text partialMatchesText;
 
-    // Start is called before the first frame update
     void Start()
     {
         interactable = GetComponent<Interactable>();
         doorAction = GetComponent<DoorAction>();
 
-        // Subscribe to the NetworkVariable's value change event
         isLocked.OnValueChanged += OnLockStateChanged;
         lockCombination.OnValueChanged += OnLockCombinationStateChanged;
     }
@@ -53,7 +53,6 @@ public class LockAction : NetworkBehaviour, SimpleAction
 
     public void ShowLockScreen()
     {
-        Debug.Log($"Showing lock/unlock screen. Used: {usedCombination} Lock: {lockCombination.Value}");
         lockUnlockScreen.SetActive(true);
 
         foreach (TMP_InputField lockNumber in lockNumbers)
@@ -64,11 +63,9 @@ public class LockAction : NetworkBehaviour, SimpleAction
         exactMatchesText.text = "-";
         partialMatchesText.text = "-";
 
-        // Enable the mouse cursor
         Cursor.lockState = CursorLockMode.None;
         Cursor.visible = true;
 
-        // Clear previous listeners before adding new ones
         cancelButton.onClick.RemoveAllListeners();
         enterButton.onClick.RemoveAllListeners();
 
@@ -80,15 +77,12 @@ public class LockAction : NetworkBehaviour, SimpleAction
     {
         lockUnlockScreen.SetActive(false);
 
-        // Disable the mouse cursor (optional)
         Cursor.lockState = CursorLockMode.Locked;
         Cursor.visible = false;
     }
 
     void lockUnlock()
     {
-        Debug.Log("Entering lockUnlock()");
-
         string inputCombination = string.Join("", lockNumbers.Select(input => input.text));
         int inputCombinationInt = int.Parse(inputCombination);
 
@@ -98,7 +92,6 @@ public class LockAction : NetworkBehaviour, SimpleAction
             usedCombination = inputCombinationInt;
             locked = true;
 
-            // Update both the lock combination and lock state on the server
             UpdateLockStateServerRpc(locked, usedCombination);
 
             HideLockUnlockScreen();
@@ -112,11 +105,9 @@ public class LockAction : NetworkBehaviour, SimpleAction
                 usedCombination = 0;
                 locked = false;
 
-                // Update both the lock combination and lock state on the server
                 UpdateLockStateServerRpc(locked, usedCombination);
 
                 HideLockUnlockScreen();
-                Outcome();
             }
             else
             {
@@ -144,7 +135,6 @@ public class LockAction : NetworkBehaviour, SimpleAction
         bool[] combinationUsed = new bool[combination.Length];
         bool[] guessUsed = new bool[guess.Length];
 
-        // First pass: Find exact matches
         for (int i = 0; i < combination.Length; i++)
         {
             if (guess[i] == combination[i])
@@ -155,7 +145,6 @@ public class LockAction : NetworkBehaviour, SimpleAction
             }
         }
 
-        // Second pass: Find partial matches
         for (int i = 0; i < guess.Length; i++)
         {
             if (!guessUsed[i])
@@ -186,11 +175,10 @@ public class LockAction : NetworkBehaviour, SimpleAction
         }
         else
         {
-            UpdateLockStateServerRpc(lockState, combination); // Trigger on the server
+            UpdateLockStateServerRpc(lockState, combination);
         }
     }
 
-    // ClientRPC to notify all clients of the lock state and combination change
     [ClientRpc]
     private void NotifyClientsLockStateChangedClientRpc(bool newState, int newCombination)
     {
@@ -200,22 +188,7 @@ public class LockAction : NetworkBehaviour, SimpleAction
 
     public void Outcome()
     {
-        if (IsServer)
-        {
-            Debug.Log("Server handling the outcome.");
-            // Handle any additional server logic here
-        }
-        else
-        {
-            Debug.Log("Client requesting the outcome.");
-            OutcomeServerRpc();
-        }
-    }
-
-    [ServerRpc(RequireOwnership = false)]
-    private void OutcomeServerRpc()
-    {
-        // Add additional server-side logic if necessary
+        throw new NotImplementedException();
     }
 
     public void UpdateInstructions()

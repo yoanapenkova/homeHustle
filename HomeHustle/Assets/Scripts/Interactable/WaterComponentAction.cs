@@ -12,6 +12,7 @@ using UnityEngine.UI;
 
 public class WaterComponentAction : NetworkBehaviour, SimpleAction
 {
+    [Header("Cost Management")]
     [SerializeField]
     private int costPerHuman = 8;
     [SerializeField]
@@ -19,6 +20,7 @@ public class WaterComponentAction : NetworkBehaviour, SimpleAction
 
     private PlayerManager playerManager;
 
+    [Header("UI Management")]
     [SerializeField]
     private Button boilerPanelButton;
     [SerializeField]
@@ -34,6 +36,7 @@ public class WaterComponentAction : NetworkBehaviour, SimpleAction
     // Cooldown logic
     private bool isBeingRepaired = false;
     private int timesBroken;
+    [Header("FX Management")]
     [SerializeField]
     private ParticleSystem smokeFX;
     [SerializeField]

@@ -21,8 +21,8 @@ public class UIManager : NetworkBehaviour
     private TMP_Text playersCounterText;
     [SerializeField]
     private TMP_Text startingGameText;
-    [SerializeField] private TMP_Text playersNamesText; // Reference to TMP_Text UI element
-    private static string playerList = "Players:\n"; // String to hold the list of players
+    [SerializeField] private TMP_Text playersNamesText;
+    private static string playerList = "Players:\n";
 
     [Header("In-game")]
     [SerializeField]
@@ -45,43 +45,39 @@ public class UIManager : NetworkBehaviour
     public int timeHumans;
     public int timeObjects;
 
-    public static UIManager Instance; // Singleton instance
+    public static UIManager Instance;
 
     private void Awake()
     {
-        // Ensure only one instance exists
         if (Instance == null)
         {
             Instance = this;
-            DontDestroyOnLoad(gameObject); // Persist across scenes
+            DontDestroyOnLoad(gameObject);
         }
         else
         {
-            Destroy(gameObject); // Destroy duplicate managers
+            Destroy(gameObject);
         }
     }
 
     private void Start()
     {
-        // Initially update the player list UI for the current client at the start
         UpdatePlayerListUI(playerList);
 
         timeHumans = countdownDuration;
         timeObjects = countdownDuration; 
     }
 
-    ///////////////////////////////////////
-    ///This is for the pre-screen
-    ///////////////////////////////////////
+    ////////////////////////////////
+    ///This is for the pre-screen///
+    ////////////////////////////////
 
     public void OnClientConnected(ulong clientId)
     {
         if (IsServer)
         {
-            // Increment the counter for each new client
             connectedPlayers.Value++;
 
-            // Ensure late-joining client gets the correct value immediately
             SendPlayerCountToClientServerRpc(clientId);
         }
     }
@@ -90,12 +86,10 @@ public class UIManager : NetworkBehaviour
     {
         if (NetworkManager.Singleton.IsServer)
         {
-            // Decrement the counter when a client disconnects
             connectedPlayers.Value--;
         }
     }
 
-    // Hook into the client connected callback to detect when a player connects
     private void OnEnable()
     {
         NetworkManager.Singleton.OnClientConnectedCallback += OnClientConnectedForNames;
@@ -106,16 +100,13 @@ public class UIManager : NetworkBehaviour
         NetworkManager.Singleton.OnClientConnectedCallback -= OnClientConnectedForNames;
     }
 
-    // When a client connects, call OnClientConnected to update the list
     private void OnClientConnectedForNames(ulong clientId)
     {
-        if (IsServer) // Only the server should manage the player list
+        if (IsServer)
         {
-            // Add the new player name to the list
-            string newPlayerName = "Player_" + clientId; // Replace this with the actual player name if available
+            string newPlayerName = "Player_" + clientId;
             playerList += newPlayerName + "\n";
 
-            // Send the updated list to all clients
             UpdatePlayerListClientRpc(playerList);
         }
     }
@@ -126,17 +117,12 @@ public class UIManager : NetworkBehaviour
         homeScreen.SetActive(false);
         preGameScreen.SetActive(true);
 
-        // Disable the mouse cursor (optional)
         Cursor.lockState = CursorLockMode.Locked;
         Cursor.visible = false;
     }
 
     public void OnPlayerCountChanged(int oldCount, int newCount)
     {
-        //Debug.Log("ON PLAYER COUNT CHANGED");
-        //Debug.Log("OLD COUNT: " + oldCount);
-        //Debug.Log("NEW COUNT: " + newCount);
-        // Update the UI text on all clients when the value changes
         playersCounterText.text = $"Players {newCount}/8";
 
         if(newCount == maxPlayers)
@@ -147,20 +133,12 @@ public class UIManager : NetworkBehaviour
 
     private IEnumerator PreparePlayers()
     {
-        // Show the message
         startingGameText.gameObject.SetActive(true);
-
-        // Wait for the specified duration
         yield return new WaitForSeconds(3f);
-
-        // Hide the message
         startingGameText.gameObject.SetActive(false);
-
-        // Execute your next action here
         GameManager.Instance.StartGameSession();
     }
 
-    // Custom RPC to send the current count to a specific client
     [ServerRpc(RequireOwnership = false)]
     private void SendPlayerCountToClientServerRpc(ulong clientId)
     {
@@ -170,31 +148,27 @@ public class UIManager : NetworkBehaviour
         });
     }
 
-    // ClientRPC to update the text on late-joining clients
     [ClientRpc]
     private void PlayerCountClientRpc(int count, ClientRpcParams clientRpcParams = default)
     {
         playersCounterText.text = $"Players {count}/8";
     }
 
-    // Broadcast the updated player list to all clients
     [ClientRpc]
     private void UpdatePlayerListClientRpc(string updatedList)
     {
         playersNamesText.text = updatedList;
     }
 
-    // Update the player list UI for the local client
     private void UpdatePlayerListUI(string updatedList)
     {
         playersNamesText.text = updatedList;
     }
 
     ///////////////////////////////////////
-    ///This is for the HUD (game screen)
+    ///This is for the HUD (game screen)///
     ///////////////////////////////////////
-    ///
-    
+
     public void GetHUD()
     {
         preGameScreen.SetActive(false);
@@ -209,10 +183,10 @@ public class UIManager : NetworkBehaviour
         sparksHumans.Play();
         while (timeHumans > 0)
         {
-            int minutes = Mathf.FloorToInt(timeHumans / 60); // Calculate the minutes
-            int seconds = Mathf.FloorToInt(timeHumans % 60); // Calculate the seconds
+            int minutes = Mathf.FloorToInt(timeHumans / 60);
+            int seconds = Mathf.FloorToInt(timeHumans % 60);
 
-            countdownTimerHumansText.text = $"{minutes:00}:{seconds:00}"; // Format as MM:SS
+            countdownTimerHumansText.text = $"{minutes:00}:{seconds:00}";
             sliderHumans.value = timeHumans;
             
             yield return new WaitForSeconds(1);
@@ -225,10 +199,10 @@ public class UIManager : NetworkBehaviour
         sparksObjects.Play();
         while (timeObjects > 0)
         {
-            int minutes = Mathf.FloorToInt(timeObjects / 60); // Calculate the minutes
-            int seconds = Mathf.FloorToInt(timeObjects % 60); // Calculate the seconds
+            int minutes = Mathf.FloorToInt(timeObjects / 60);
+            int seconds = Mathf.FloorToInt(timeObjects % 60);
 
-            countdownTimerObjectsText.text = $"{minutes:00}:{seconds:00}"; // Format as MM:SS
+            countdownTimerObjectsText.text = $"{minutes:00}:{seconds:00}";
             sliderObjects.value = timeObjects;
 
             yield return new WaitForSeconds(1);

@@ -16,7 +16,6 @@ public class TaskFeedbackManager : MonoBehaviour
     public bool lightsTask = false;
     public bool waterTask = true;
 
-    // Start is called before the first frame update
     void Start()
     {
         lightsObj = GameObject.FindGameObjectsWithTag("Light");

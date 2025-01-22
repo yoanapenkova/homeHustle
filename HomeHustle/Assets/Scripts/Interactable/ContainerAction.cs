@@ -15,19 +15,17 @@ public class ContainerAction : NetworkBehaviour, SimpleAction
     private bool isInteracting = false;
     private bool isNear = false;
 
-    // Start is called before the first frame update
     void Start()
     {
         interactable = GetComponent<Interactable>();
     }
 
-    // Update is called once per frame
     void Update()
     {
         if (interactable.isOnWatch && !isInteracting)
         {
             UpdateInstructions();
-            // Allow any client to trigger plug actions
+            
             if (Input.GetKeyDown(KeyCode.E) && isNear)
             {
                 Outcome();
@@ -36,7 +34,6 @@ public class ContainerAction : NetworkBehaviour, SimpleAction
     }
     public void Outcome()
     {
-        // Enable the mouse cursor
         Cursor.lockState = CursorLockMode.None;
         Cursor.visible = true;
 
@@ -70,18 +67,15 @@ public class ContainerAction : NetworkBehaviour, SimpleAction
 
     void OnTriggerExit(Collider other)
     {
-        // This will be called when the collider exits the trigger zone.
         if (other.CompareTag("Player"))
         {
             if (containerInventory.activeSelf)
             {
                 containerInventory.SetActive(false);
 
-                // Disable the mouse cursor (optional)
                 Cursor.lockState = CursorLockMode.Locked;
                 Cursor.visible = false;
             }
-            Debug.Log("Player has exited the trigger zone");
             isNear = false;
             containerInventory.GetComponent<ContainerInventory>().currentObjectInventory = null;
         }

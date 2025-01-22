@@ -12,15 +12,12 @@ public class StoreAction : NetworkBehaviour
 
     private InventorySlot inventorySlot;
     private ulong containerId;
-    
 
-    // Start is called before the first frame update
     void Start()
     {
         inventorySlot = gameObject.GetComponent<InventorySlot>();
     }
 
-    // Update is called once per frame
     void Update()
     {
         
@@ -34,7 +31,6 @@ public class StoreAction : NetworkBehaviour
 
         if (freeSlot != null)
         {
-            Debug.Log("Antes de pasar: " + containerId);
             storeObjectLocalServerRpc(containerId);
 
             freeSlot.element = inventorySlot.element;
@@ -51,15 +47,10 @@ public class StoreAction : NetworkBehaviour
     [ServerRpc(RequireOwnership = false)]
     void storeObjectLocalServerRpc(ulong objectId)
     {
-        Debug.Log("Después de pasar: " + objectId);
-        
-        // Get the player object for the specified object ID
         if (NetworkManager.Singleton.SpawnManager.SpawnedObjects.TryGetValue(objectId, out var container))
         {
-            //Debug.Log(container.name);
             GameObject containerObject = container.gameObject;
             
-            // Parent the object to the player's "pocket" or an empty GameObject on the player
             inventorySlot.element.transform.SetParent(containerObject.transform);
             inventorySlot.element.transform.localPosition = new Vector3(0, 1, 0.5f); // Adjust if needed
         }

@@ -4,13 +4,13 @@ public class FloatingAndSpinning : MonoBehaviour
 {
     [Header("Floating Settings")]
     [SerializeField]
-    private float floatAmplitude = 0.1f; // The height of the floating motion
+    private float floatAmplitude = 0.1f;
     [SerializeField]
-    private float floatFrequency = 1f; // The speed of the floating motion
+    private float floatFrequency = 1f;
 
     [Header("Spinning Settings")]
     [SerializeField]
-    private float spinSpeed = 200f; // The speed of rotation (degrees per second)
+    private float spinSpeed = 200f;
 
     private Vector3 startPosition;
 
@@ -19,7 +19,7 @@ public class FloatingAndSpinning : MonoBehaviour
     void Start()
     {
         startPosition = transform.position;
-        randomOffset = Random.Range(0f, Mathf.PI * 2f); // Random phase offset
+        randomOffset = Random.Range(0f, Mathf.PI * 2f);
     }
 
     void Update()

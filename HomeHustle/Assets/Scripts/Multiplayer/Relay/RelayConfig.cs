@@ -50,7 +50,6 @@ public class RelayConfig : NetworkBehaviour
         });
     }
 
-    // Start is called before the first frame update
     private async void Start()
     {
         await UnityServices.InitializeAsync();
@@ -65,7 +64,6 @@ public class RelayConfig : NetworkBehaviour
         await AuthenticationService.Instance.UpdatePlayerNameAsync(funnyCharacterNames[Random.Range(0,funnyCharacterNames.Length)]);
     }
 
-    // Update is called once per frame
     void Update()
     {
         
@@ -86,7 +84,6 @@ public class RelayConfig : NetworkBehaviour
 
             NetworkManager.Singleton.StartHost();
 
-            // Spawn the host's player object
             SpawnPlayerPrefab(NetworkManager.Singleton.LocalClientId);
 
             NetworkManager.Singleton.OnClientConnectedCallback += OnClientConnected;
@@ -110,8 +107,7 @@ public class RelayConfig : NetworkBehaviour
 
     private void SpawnPlayerPrefab(ulong clientId)
     {
-        int prefabIndex = (int)(clientId % (ulong)playerPrefabs.Length); // Cycle through available prefabs
-        Debug.Log(prefabIndex);
+        int prefabIndex = (int)(clientId % (ulong)playerPrefabs.Length);
         GameObject playerInstance = Instantiate(playerPrefabs[prefabIndex]);
 
         var networkObject = playerInstance.GetComponent<NetworkObject>();

@@ -27,7 +27,7 @@ public class PlayerManager : NetworkBehaviour
 
     void Update()
     {
-        if (IsOwner) // Only update UI for the owner
+        if (IsOwner)
         {
             UpdateCoins();
         }
@@ -51,7 +51,7 @@ public class PlayerManager : NetworkBehaviour
 
     private void SetupPoints()
     {
-        if (!IsOwner) return; // Ensure the script runs only on the owner of the object
+        if (!IsOwner) return;
 
         coinsIconObj = GameObject.Find("Coins");
         thunderIconObj = GameObject.Find("Thunder");
@@ -81,7 +81,7 @@ public class PlayerManager : NetworkBehaviour
         while (true)
         {
             yield return new WaitForSeconds(incrementInterval);
-            if (IsOwner) // Increment points only for the owner
+            if (IsOwner)
             {
                 points += incrementAmount;
             }

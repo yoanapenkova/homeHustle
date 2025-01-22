@@ -23,19 +23,16 @@ public class InventoryManagement : NetworkBehaviour
 
         GameObject[] unsortedSlots = GameObject.FindGameObjectsWithTag("InventorySlot");
 
-        // Sort by name and assign
         inventorySlots = unsortedSlots
-            .OrderBy(obj => obj.name) // Sort alphabetically by name
+            .OrderBy(obj => obj.name)
             .ToArray();
     }
 
-    // Start is called before the first frame update
     void Start()
     {
         
     }
 
-    // Update is called once per frame
     void Update()
     {
         ShootElements();
@@ -51,13 +48,10 @@ public class InventoryManagement : NetworkBehaviour
 
             if (rb != null)
             {
-                // Change the pick-up state on the server
                 element.GetComponent<PickUpAction>().ChangePickUpState();
 
-                // Un-parent the object
                 element.transform.SetParent(null);
 
-                // Apply force to shoot the object
                 Transform shootingPoint = NetworkManager.Singleton.ConnectedClients[clientId].PlayerObject.transform.Find("ShootingInventoryElement");
                 if (shootingPoint != null)
                 {
@@ -89,9 +83,8 @@ public class InventoryManagement : NetworkBehaviour
 
                 if (networkObject != null)
                 {
-                    // Send a ServerRpc to perform the shooting logic on the server
                     ShootElementServerRpc(NetworkManager.Singleton.LocalClientId, networkObject);
-                    slot.element = null; // Clear the inventory slot locally
+                    slot.element = null;
                 }
             }
         }

@@ -8,13 +8,11 @@ public class LockUnlockFunctions : MonoBehaviour
     [SerializeField]
     private TMP_InputField lockNumber;
 
-    // Start is called before the first frame update
     void Start()
     {
         
     }
 
-    // Update is called once per frame
     void Update()
     {
         

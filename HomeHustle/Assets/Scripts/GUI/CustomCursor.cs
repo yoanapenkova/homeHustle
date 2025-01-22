@@ -5,19 +5,17 @@ using UnityEngine;
 public class CustomCursor : MonoBehaviour
 {
     [SerializeField]
-    private Texture2D cursorTexture; // Assign the texture in the inspector
+    private Texture2D cursorTexture;
 
     [SerializeField]
-    private Vector2 hotspot = new Vector2(0, 0); // Hotspot defines the "clickable" point of the cursor
+    private Vector2 hotspot = new Vector2(0, 0);
 
     void Start()
     {
-        // Change cursor appearance when the game starts
         Cursor.SetCursor(cursorTexture, hotspot, CursorMode.Auto);
-        //Cursor.visible = true; // Ensure the cursor is visible
+        Cursor.visible = true;
     }
 
-    // Update is called once per frame
     void Update()
     {
         

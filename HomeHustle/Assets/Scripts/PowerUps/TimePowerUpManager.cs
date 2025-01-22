@@ -12,22 +12,21 @@ public class TimePowerUpManager : NetworkBehaviour
 
     private bool[] takenSpawnPoints;
 
-    private float spawnInterval = 30f; // Time between spawns
-    private float powerUpLifetime = 10f; // Time before the power-up disappears
+    private float spawnInterval = 30f;
+    private float powerUpLifetime = 10f;
 
-    public static TimePowerUpManager Instance; // Singleton instance
+    public static TimePowerUpManager Instance;
 
     private void Awake()
     {
-        // Ensure only one instance exists
         if (Instance == null)
         {
             Instance = this;
-            DontDestroyOnLoad(gameObject); // Persist across scenes
+            DontDestroyOnLoad(gameObject);
         }
         else
         {
-            Destroy(gameObject); // Destroy duplicate managers
+            Destroy(gameObject);
         }
     }
 
@@ -39,7 +38,7 @@ public class TimePowerUpManager : NetworkBehaviour
     public void PrepareSpawnPoints()
     {
         takenSpawnPoints = new bool[spawnPoints.Length];
-        if (IsServer) // Ensure only the server manages power-up spawning
+        if (IsServer)
         {
             StartCoroutine(SpawnPowerUpRoutine());
         }
@@ -51,21 +50,15 @@ public class TimePowerUpManager : NetworkBehaviour
         {
             yield return new WaitForSeconds(spawnInterval);
 
-            // Find a free spawn point
             int spawnIndex = GetRandomFreeSpawnPoint();
-            if (spawnIndex != -1) // If a free spawn point is available
+            if (spawnIndex != -1)
             {
-                // Mark the spawn point as taken
                 takenSpawnPoints[spawnIndex] = true;
 
-                // Spawn the power-up
                 Transform spawnPoint = spawnPoints[spawnIndex];
                 Transform powerUp = Instantiate(powerUpPrefab, spawnPoint.position, spawnPoint.rotation);
                 powerUp.GetComponent<NetworkObject>().Spawn();
 
-                Debug.Log("New power up!!");
-
-                // Start a coroutine to destroy the power-up after a lifetime and free the spawn point
                 StartCoroutine(HandlePowerUpLifetime(powerUp, spawnIndex));
             }
         }
@@ -75,37 +68,35 @@ public class TimePowerUpManager : NetworkBehaviour
     {
         yield return new WaitForSeconds(powerUpLifetime);
 
-        // Destroy the power-up and free the spawn point
         if (powerUp != null && powerUp.TryGetComponent<NetworkObject>(out var networkObject))
         {
-            networkObject.Despawn(); // Properly despawn the object from the network
+            networkObject.Despawn();
             Destroy(powerUp);
 
             SubtractTimeBothTeamsClientRpc();
         }
 
-        takenSpawnPoints[spawnIndex] = false; // Mark the spawn point as free
+        takenSpawnPoints[spawnIndex] = false;
     }
 
     private int GetRandomFreeSpawnPoint()
     {
-        // Get all free spawn points
         List<int> freePoints = new List<int>();
         for (int i = 0; i < takenSpawnPoints.Length; i++)
         {
-            if (!takenSpawnPoints[i]) // If the spawn point is not taken
+            if (!takenSpawnPoints[i])
             {
                 freePoints.Add(i);
             }
         }
 
-        if (freePoints.Count > 0) // If there are free spawn points
+        if (freePoints.Count > 0)
         {
-            int randomIndex = Random.Range(0, freePoints.Count); // Choose one randomly
+            int randomIndex = Random.Range(0, freePoints.Count);
             return freePoints[randomIndex];
         }
 
-        return -1; // No free spawn points
+        return -1;
     }
 
     [ClientRpc]

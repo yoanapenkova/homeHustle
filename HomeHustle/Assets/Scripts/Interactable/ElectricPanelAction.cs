@@ -8,6 +8,7 @@ public class ElectricPanelAction : NetworkBehaviour, SimpleAction
 {
     private string[] actions = { "Connect" };
 
+    [Header("UI Management")]
     [SerializeField]
     private GameObject electricPanelManagementPanel;
     [SerializeField]
@@ -16,19 +17,17 @@ public class ElectricPanelAction : NetworkBehaviour, SimpleAction
     private Interactable interactable;
     private bool panelOpened = false;
 
-    // Start is called before the first frame update
     void Start()
     {
         interactable = GetComponent<Interactable>();
     }
 
-    // Update is called once per frame
     void Update()
     {
         if (interactable.isOnWatch && !panelOpened)
         {
             UpdateInstructions();
-            // Allow any client to trigger boiler actions
+            
             if (Input.GetKeyDown(KeyCode.E))
             {
                 Outcome();
@@ -38,13 +37,11 @@ public class ElectricPanelAction : NetworkBehaviour, SimpleAction
 
     public void Outcome()
     {
-        // Enable the mouse cursor
         Cursor.lockState = CursorLockMode.None;
         Cursor.visible = true;
 
         electricPanelManagementPanel.SetActive(true);
 
-        // Clear previous listeners before adding new ones
         cancelButton.onClick.RemoveAllListeners();
         cancelButton.onClick.AddListener(() => HideEPManagementPanel());
     }
@@ -64,7 +61,6 @@ public class ElectricPanelAction : NetworkBehaviour, SimpleAction
     {
         electricPanelManagementPanel.SetActive(false);
 
-        // Disable the mouse cursor (optional)
         Cursor.lockState = CursorLockMode.Locked;
         Cursor.visible = false;
     }

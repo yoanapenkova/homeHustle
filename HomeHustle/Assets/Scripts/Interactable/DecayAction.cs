@@ -13,6 +13,7 @@ public enum ProductCondition
 
 public class DecayAction : NetworkBehaviour, SimpleAction
 {
+    [Header("UI Management")]
     [SerializeField]
     private TMP_Text timeLeftText;
     [SerializeField]
@@ -26,26 +27,22 @@ public class DecayAction : NetworkBehaviour, SimpleAction
     private Interactable interactable;
     private Camera mainCamera;
 
-    // Networked variable to track if the product is altered
     private NetworkVariable<bool> isAltered = new NetworkVariable<bool>(false);
 
-    // Start is called before the first frame update
     void Start()
     {
         interactable = GetComponent<Interactable>();
         mainCamera = Camera.main;
 
-        // Subscribe to the NetworkVariable's value change event
         isAltered.OnValueChanged += OnAlteredStateChanged;
     }
 
-    // Update is called once per frame
     void Update()
     {
         if (interactable.isOnWatch)
         {
             UpdateInstructions();
-            // Allow any client to trigger spoil actions
+            
             if (Input.GetKeyDown(KeyCode.Q) && !altered)
             {
                 Outcome();
@@ -60,18 +57,14 @@ public class DecayAction : NetworkBehaviour, SimpleAction
         UpdateGUI();
     }
 
-    // Ensure that NetworkVariable changes are propagated to clients
     private void OnEnable()
     {
-        // Ensure that the state is synced with clients when the product is altered
         if (IsServer)
         {
-            // When the server enables the object, initialize the product's state
             isAltered.Value = altered;
         }
     }
 
-    // Unsubscribe when the script is disabled to prevent memory leaks
     private void OnDisable()
     {
         isAltered.OnValueChanged -= OnAlteredStateChanged;
@@ -106,12 +99,10 @@ public class DecayAction : NetworkBehaviour, SimpleAction
 
     public void Outcome()
     {
-        // If we are the server, we handle the state change
         if (IsServer)
         {
             ToggleAlteredState();
         }
-        // If we are a client, request the server to toggle the product state
         else
         {
             ToggleAlteredStateServerRpc();
@@ -135,31 +126,25 @@ public class DecayAction : NetworkBehaviour, SimpleAction
         }
     }
 
-    // Handles the logic to toggle the product's state
     private void ToggleAlteredState()
     {
-        // Toggle the products's altered state
         isAltered.Value = !isAltered.Value;
         altered = isAltered.Value;
 
-        // Notify all clients that the product state has changed
         AlteredStateChangedClientRpc(isAltered.Value);
     }
 
-    // ServerRpc: Used by clients to request the server to toggle the product state
     [ServerRpc(RequireOwnership = false)]
     private void ToggleAlteredStateServerRpc()
     {
         ToggleAlteredState();
     }
 
-    // This method is called when the network variable 'isAltered' changes
     private void OnAlteredStateChanged(bool previousValue, bool newValue)
     {
         altered = newValue;
     }
 
-    // ClientRpc: Used to notify clients of the product state change
     [ClientRpc]
     private void AlteredStateChangedClientRpc(bool newState)
     {

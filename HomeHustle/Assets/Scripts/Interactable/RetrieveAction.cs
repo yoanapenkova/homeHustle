@@ -11,13 +11,11 @@ public class RetrieveAction : NetworkBehaviour
 
     private InventorySlot inventorySlot;
 
-    // Start is called before the first frame update
     void Start()
     {
         inventorySlot = gameObject.GetComponent<InventorySlot>();
     }
 
-    // Update is called once per frame
     void Update()
     {
         
@@ -47,13 +45,10 @@ public class RetrieveAction : NetworkBehaviour
     {
         Debug.Log("Después: " + clientId);
 
-        // Get the player object for the specified object ID
         if (NetworkManager.Singleton.ConnectedClients.TryGetValue(clientId, out var player))
         {
-            //Debug.Log(container.name);
             GameObject playerObject = player.PlayerObject.gameObject;
 
-            // Parent the object to the player's "pocket" or an empty GameObject on the player
             inventorySlot.element.transform.SetParent(playerObject.transform);
             inventorySlot.element.transform.localPosition = new Vector3(0, 1, 0.5f); // Adjust if needed
         }
