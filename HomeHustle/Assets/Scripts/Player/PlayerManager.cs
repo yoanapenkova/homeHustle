@@ -4,7 +4,6 @@ using UnityEngine;
 using Unity.Netcode;
 using System;
 using TMPro;
-using UnityEditorInternal;
 
 public class PlayerManager : NetworkBehaviour
 {
