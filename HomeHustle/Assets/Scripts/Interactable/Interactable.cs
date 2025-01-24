@@ -21,4 +21,8 @@ public class Interactable : MonoBehaviour
     public GameObject auxKey;
     [SerializeField]
     public TMP_Text auxInstructionsText;
+
+    [Header("Permissions")]
+    [SerializeField]
+    public PlayerRole[] playerRoles;
 }

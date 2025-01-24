@@ -20,7 +20,7 @@ public class PickUpAction : NetworkBehaviour, SimpleAction
     public bool pickedUp = false;
     private Interactable interactable;
     private Renderer[] renderers;
-    private Collider collider;
+    private Collider[] colliders;
     private Rigidbody rb;
 
     private NetworkVariable<bool> isPickedUp = new NetworkVariable<bool>(false);
@@ -29,7 +29,7 @@ public class PickUpAction : NetworkBehaviour, SimpleAction
     {
         interactable = GetComponent<Interactable>();
         renderers = GetComponentsInChildren<Renderer>();
-        collider = GetComponent<Collider>();
+        colliders = GetComponentsInChildren<Collider>();
         rb = GetComponent<Rigidbody>();
 
         isPickedUp.OnValueChanged += OnPickUpStateChanged;
@@ -73,7 +73,6 @@ public class PickUpAction : NetworkBehaviour, SimpleAction
             freeSlot.elementIcon = imagePrefab;
 
             ChangePickUpState();
-            UIManager.Instance.ShowFeedback("Inventory is full!");
         } else
         {
             UIManager.Instance.ShowFeedback("Inventory is full!");
@@ -87,9 +86,14 @@ public class PickUpAction : NetworkBehaviour, SimpleAction
         interactable.mainInstructionsText.text = actions[0];
 
         DecayAction decayAction = gameObject.GetComponent<DecayAction>();
-        if (decayAction == null)
+        PushAction pushAction = gameObject.GetComponent<PushAction>();
+        if (decayAction == null && pushAction == null)
         {
             interactable.auxKeyBackground.SetActive(false);
+        }
+        else if (pushAction != null)
+        {
+            interactable.auxKeyBackground.SetActive(true);
         }
 
         interactable.mainKey.GetComponent<Image>().color = Color.white;
@@ -130,7 +134,10 @@ public class PickUpAction : NetworkBehaviour, SimpleAction
         {
             rend.enabled = !newValue;
         }
-        collider.enabled = !newValue;
+        foreach (Collider coll in colliders)
+        {
+            coll.enabled = !newValue;
+        }
         rb.isKinematic = newValue;
     }
 
@@ -143,7 +150,10 @@ public class PickUpAction : NetworkBehaviour, SimpleAction
         {
             rend.enabled = !newState;
         }
-        collider.enabled = !newState;
+        foreach (Collider coll in colliders)
+        {
+            coll.enabled = !newState;
+        }
         rb.isKinematic = newState;
     }
 
