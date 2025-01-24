@@ -73,19 +73,30 @@ public class InventoryManagement : NetworkBehaviour
 
     void ShootElements()
     {
-        if (Input.GetKeyDown(KeyCode.Alpha1))
+        for (int i = 0; i < inventorySlots.Length; i++)
         {
-            InventorySlot slot = inventorySlots[0].GetComponent<InventorySlot>();
-            if (slot != null && slot.element != null)
+            KeyCode key = KeyCode.Alpha1 + i; // Map Alpha1, Alpha2, etc., to slot indices
+            if (Input.GetKeyDown(key))
             {
-                GameObject element = slot.element;
-                NetworkObject networkObject = element.GetComponent<NetworkObject>();
+                HandleSlotShoot(i);
+            }
+        }
+    }
 
-                if (networkObject != null)
-                {
-                    ShootElementServerRpc(NetworkManager.Singleton.LocalClientId, networkObject);
-                    slot.element = null;
-                }
+    void HandleSlotShoot(int slotIndex)
+    {
+        if (slotIndex < 0 || slotIndex >= inventorySlots.Length) return; // Safety check
+
+        InventorySlot slot = inventorySlots[slotIndex].GetComponent<InventorySlot>();
+        if (slot != null && slot.element != null)
+        {
+            GameObject element = slot.element;
+            NetworkObject networkObject = element.GetComponent<NetworkObject>();
+
+            if (networkObject != null)
+            {
+                ShootElementServerRpc(NetworkManager.Singleton.LocalClientId, networkObject);
+                slot.element = null;
             }
         }
     }
