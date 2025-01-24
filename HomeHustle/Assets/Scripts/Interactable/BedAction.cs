@@ -16,6 +16,11 @@ public class BedAction : NetworkBehaviour, SimpleAction
     private bool made = false;
     private Interactable interactable;
 
+    private bool isBeingMade = false;
+    [Header("FX Management")]
+    [SerializeField]
+    private ParticleSystem smokeFX;
+
     private NetworkVariable<bool> isMade = new NetworkVariable<bool>(false);
 
     void Start()
@@ -76,8 +81,17 @@ public class BedAction : NetworkBehaviour, SimpleAction
             interactable.mainInstructionsText.text = actions[0];
         }
         interactable.auxKeyBackground.SetActive(false);
-        interactable.mainKey.GetComponent<Image>().color = Color.white;
-        interactable.mainInstructionsText.color = Color.white;
+
+        if (isBeingMade)
+        {
+            interactable.mainKey.GetComponent<Image>().color = Color.grey;
+            interactable.mainInstructionsText.color = Color.grey;
+        } else
+        {
+            interactable.mainKey.GetComponent<Image>().color = Color.white;
+            interactable.mainInstructionsText.color = Color.white;
+        }
+        
     }
 
     private void ToggleBedState()
@@ -96,30 +110,46 @@ public class BedAction : NetworkBehaviour, SimpleAction
 
     private void OnBedStateChanged(bool previousValue, bool newValue)
     {
-        if (newValue)
+        made = newValue;
+        unmadeObject.SetActive(!newValue);
+
+        if (made)
         {
-            madeObject.SetActive(true);
-            unmadeObject.SetActive(false);
-        }
-        else
+            interactable.enabled = false;
+            smokeFX.gameObject.SetActive(true);
+            isBeingMade = true;
+            StartCoroutine(Make());
+        } else
         {
             madeObject.SetActive(false);
-            unmadeObject.SetActive(true);
         }
+    }
+
+    private IEnumerator Make()
+    {
+        yield return new WaitForSeconds(5);
+        AudioManager.Instance.PlaySpecificSound(AudioManager.Instance.bellSound);
+        smokeFX.gameObject.SetActive(false);
+        isBeingMade = false;
+        interactable.enabled = true;
+        madeObject.SetActive(true);
     }
 
     [ClientRpc]
     private void BedStateChangedClientRpc(bool newState)
     {
-        if (newState)
+        made = newState;
+        unmadeObject.SetActive(!newState);
+
+        if (made)
         {
-            madeObject.SetActive(true);
-            unmadeObject.SetActive(false);
-        }
-        else
+            interactable.enabled = false;
+            smokeFX.gameObject.SetActive(true);
+            isBeingMade = true;
+            StartCoroutine(Make());
+        } else
         {
             madeObject.SetActive(false);
-            unmadeObject.SetActive(true);
         }
     }
 }

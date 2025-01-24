@@ -50,6 +50,8 @@ public class WaterComponentAction : NetworkBehaviour, SimpleAction
     // Update is called once per frame
     void Update()
     {
+        if (!IsSpawned) return;
+
         if (interactable.isOnWatch)
         {
             UpdateInstructions();
@@ -112,8 +114,8 @@ public class WaterComponentAction : NetworkBehaviour, SimpleAction
         }
         else
         {
-            // TODO: show message that there are not enough points (coins or energy)
-            Debug.Log("Not enough coins/energy to perform this action.");
+            string message = playerManager.isHuman ? "Need more coins!" : "Need more energy!";
+            UIManager.Instance.ShowFeedback(message);
         }
     }
 
@@ -193,8 +195,9 @@ public class WaterComponentAction : NetworkBehaviour, SimpleAction
 
         if (!broken)
         {
+            interactable.enabled = false;
             smokeFX.gameObject.SetActive(true);
-            smokeFX.Play();
+            cooldownSignUI.SetActive(true);
             isBeingRepaired = true;
             StartCoroutine(Repair());
             StartCoroutine(ActivateIcon());
