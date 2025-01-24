@@ -5,10 +5,17 @@ using Unity.Netcode;
 using System;
 using TMPro;
 
+public enum PlayerRole
+{
+    Dad, Mom, Boy, Girl, Volt, Tidy, Nom, Aqua
+}
+
 public class PlayerManager : NetworkBehaviour
 {
     [SerializeField]
     public bool isHuman;
+    [SerializeField]
+    public PlayerRole role;
 
     [SerializeField]
     public int points = 0;

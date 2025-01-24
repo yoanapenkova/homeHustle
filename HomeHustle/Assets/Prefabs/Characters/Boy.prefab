@@ -19611,6 +19611,7 @@ GameObject:
   - component: {fileID: -3943059098501108451}
   - component: {fileID: 6252500357674144929}
   - component: {fileID: 6457505478037735194}
+  - component: {fileID: 5623813293157050286}
   m_Layer: 2
   m_Name: Boy
   m_TagString: Player
@@ -19940,7 +19941,27 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   isHuman: 1
+  role: 2
   points: 0
+--- !u!114 &5623813293157050286
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6522310770964685636}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 72d65d20591f0454a8fce77614331460, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  inventorySlots:
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  shootingPoint: {fileID: 348019365773883811}
+  shootForce: 10
 --- !u!1 &6526935851195626340
 GameObject:
   m_ObjectHideFlags: 0

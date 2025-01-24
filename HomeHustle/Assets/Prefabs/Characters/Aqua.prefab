@@ -152,7 +152,7 @@ Transform:
   m_GameObject: {fileID: 1342791433285466827}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -0.42600012, y: 1, z: 0.24099994}
+  m_LocalPosition: {x: -0.42600012, y: 0.827, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -1132,6 +1132,7 @@ GameObject:
   - component: {fileID: -3943059098501108451}
   - component: {fileID: 6252500357674144929}
   - component: {fileID: 6457505478037735194}
+  - component: {fileID: 7178638966921607253}
   m_Layer: 2
   m_Name: Aqua
   m_TagString: Player
@@ -1198,7 +1199,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d5a57f767e5e46a458fc5d3c628d0cbb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  GlobalObjectIdHash: 996333305
+  GlobalObjectIdHash: 2482338322
   InScenePlacedSourceGlobalObjectIdHash: 0
   AlwaysReplicateAsRoot: 0
   SynchronizeTransform: 1
@@ -1454,7 +1455,28 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: cd4dd026e63bd5445b7481a090095324, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  objectPrefab: {fileID: 6602043931486785739, guid: 92917952e79e3794889db6714fa18e93, type: 3}
+  isHuman: 0
+  role: 7
+  points: 0
+--- !u!114 &7178638966921607253
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6522310770964685636}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 72d65d20591f0454a8fce77614331460, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  inventorySlots:
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  shootingPoint: {fileID: 5657435843325212433}
+  shootForce: 10
 --- !u!1 &6572249029944242666
 GameObject:
   m_ObjectHideFlags: 0
