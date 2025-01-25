@@ -25,6 +25,7 @@ public class WaterComponentAction : NetworkBehaviour, SimpleAction
     public bool broken = false;
     private Interactable interactable;
     private SinkAction sinkAction;
+    private ContainerAction containerAction;
 
     // Cooldown logic
     private bool isBeingRepaired = false;
@@ -43,6 +44,7 @@ public class WaterComponentAction : NetworkBehaviour, SimpleAction
     {
         interactable = gameObject.GetComponent<Interactable>();
         sinkAction = gameObject.GetComponent<SinkAction>();
+        containerAction = gameObject.GetComponent<ContainerAction>();
 
         isBroken.OnValueChanged += OnBrokenStateChanged;
     }
@@ -136,13 +138,20 @@ public class WaterComponentAction : NetworkBehaviour, SimpleAction
         {
             interactable.auxKey.GetComponent<Image>().color = Color.grey;
             interactable.auxInstructionsText.color = Color.grey;
-            interactable.mainKey.GetComponent<Image>().color = Color.white;
-            interactable.mainInstructionsText.color = Color.white;
+            if (containerAction == null)
+            {
+                interactable.mainKey.GetComponent<Image>().color = Color.white;
+                interactable.mainInstructionsText.color = Color.white;
+            }
         }
 
-        if (sinkAction == null)
+        if (sinkAction == null && containerAction == null)
         {
             interactable.mainKeyBackground.SetActive(false);
+        }
+        else if (sinkAction == null && containerAction != null)
+        {
+            interactable.mainKeyBackground.SetActive(true);
         }
     }
 

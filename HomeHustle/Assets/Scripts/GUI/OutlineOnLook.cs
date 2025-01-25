@@ -26,7 +26,7 @@ public class OutlineOnLook : NetworkBehaviour
 
         if (playerManager == null)
         {
-            CheckForNetworkAndPlayerServerRpc();
+            CheckForNetworkAndPlayerServerRpc(NetworkManager.Singleton.LocalClientId);
         }
 
         Ray ray = new Ray(playerCamera.transform.position, playerCamera.transform.forward);
@@ -41,10 +41,7 @@ public class OutlineOnLook : NetworkBehaviour
                 Interactable interactableProperties = hitObject.GetComponent<Interactable>();
                 if (interactableProperties.playerRoles.Contains(playerManager.role))
                 {
-                    if (interactableProperties != null)
-                    {
-                        interactableProperties.isOnWatch = true;
-                    }
+                    interactableProperties.isOnWatch = true;
 
                     if (hitObject != currentObject)
                     {
@@ -120,19 +117,30 @@ public class OutlineOnLook : NetworkBehaviour
     }
 
     [ServerRpc(RequireOwnership = false)]
-    void CheckForNetworkAndPlayerServerRpc()
+    void CheckForNetworkAndPlayerServerRpc(ulong clientId)
     {
-        if (NetworkManager.Singleton.LocalClientId != null)
+        if (NetworkManager.Singleton.ConnectedClients.TryGetValue(clientId, out var client))
         {
-            // Get the player object for the specified client ID
-            if (NetworkManager.Singleton.ConnectedClients.TryGetValue(NetworkManager.Singleton.LocalClientId, out var client))
+            GameObject playerObject = client.PlayerObject.gameObject;
+
+            if (playerObject != null)
             {
-                playerManager = client.PlayerObject.gameObject.GetComponent<PlayerManager>();
+                AssignPlayerManagerClientRpc(playerObject.GetComponent<NetworkObject>().NetworkObjectId, clientId);
             }
             else
             {
-                Debug.LogError($"Client ID {NetworkManager.Singleton.LocalClientId} not found!");
+                Debug.LogError($"PlayerManager not found on Client ID {clientId}");
             }
+        }
+    }
+
+    [ClientRpc]
+    void AssignPlayerManagerClientRpc(ulong playerObjectId, ulong clientId)
+    {
+        if (NetworkManager.Singleton.LocalClientId == clientId)
+        {
+            GameObject playerObject = NetworkManager.Singleton.SpawnManager.SpawnedObjects[playerObjectId].gameObject;
+            playerManager = playerObject.GetComponent<PlayerManager>();
         }
     }
 }

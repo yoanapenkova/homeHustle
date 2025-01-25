@@ -13,7 +13,7 @@ public class BedAction : NetworkBehaviour, SimpleAction
     private GameObject unmadeObject;
 
     private string[] actions = { "Make", "Unmake" };
-    private bool made = false;
+    public bool made = false;
     private Interactable interactable;
 
     private bool isBeingMade = false;
@@ -21,7 +21,13 @@ public class BedAction : NetworkBehaviour, SimpleAction
     [SerializeField]
     private ParticleSystem smokeFX;
 
+    [Header("UI Management")]
+    [SerializeField]
+    private GameObject minigamePanel;
+
     private NetworkVariable<bool> isMade = new NetworkVariable<bool>(false);
+
+    private PlayerManager playerManager;
 
     void Start()
     {
@@ -32,15 +38,25 @@ public class BedAction : NetworkBehaviour, SimpleAction
 
     void Update()
     {
-        if (interactable.isOnWatch)
+        if (!IsSpawned) return;
+
+        if (playerManager == null)
         {
-            UpdateInstructions();
-            
-            if (Input.GetKeyDown(KeyCode.E))
-            {
-                Outcome();
-            }
+            CheckForNetworkAndPlayerServerRpc(NetworkManager.Singleton.LocalClientId);
         }
+
+        if (playerManager != null)
+        {
+            if (interactable.isOnWatch)
+            {
+                UpdateInstructions();
+
+                if ((Input.GetKeyDown(KeyCode.E) && !made && playerManager.isHuman) || (Input.GetKeyDown(KeyCode.E) && made && !playerManager.isHuman))
+                {
+                    Outcome();
+                }
+            }
+        } 
     }
 
     private void OnEnable()
@@ -58,6 +74,21 @@ public class BedAction : NetworkBehaviour, SimpleAction
 
     public void Outcome()
     {
+        if (playerManager.isHuman)
+        {
+            PerformStateChange();
+        } else
+        {
+            Cursor.lockState = CursorLockMode.None;
+            Cursor.visible = true;
+            minigamePanel.SetActive(true);
+            minigamePanel.GetComponent<ClickerMinigame>().RefreshGame();
+            minigamePanel.GetComponent<ClickerMinigame>().bed = this;
+        }
+    }
+
+    public void PerformStateChange()
+    {
         if (IsServer)
         {
             ToggleBedState();
@@ -70,28 +101,41 @@ public class BedAction : NetworkBehaviour, SimpleAction
 
     public void UpdateInstructions()
     {
-        interactable.actionsInstructions.SetActive(true);
-        interactable.mainKeyBackground.SetActive(true);
-        if (made)
+        if (playerManager != null)
         {
-            interactable.mainInstructionsText.text = actions[1];
-        }
-        else
-        {
-            interactable.mainInstructionsText.text = actions[0];
-        }
-        interactable.auxKeyBackground.SetActive(false);
+            interactable.actionsInstructions.SetActive(true);
+            interactable.mainKeyBackground.SetActive(true);
 
-        if (isBeingMade)
-        {
-            interactable.mainKey.GetComponent<Image>().color = Color.grey;
-            interactable.mainInstructionsText.color = Color.grey;
-        } else
-        {
-            interactable.mainKey.GetComponent<Image>().color = Color.white;
-            interactable.mainInstructionsText.color = Color.white;
+            if (playerManager.isHuman)
+            {
+                interactable.mainInstructionsText.text = actions[0];
+                if (!made)
+                {
+                    interactable.mainKey.GetComponent<Image>().color = Color.white;
+                    interactable.mainInstructionsText.color = Color.white;
+                } else if (made || isBeingMade)
+                {
+                    interactable.mainKey.GetComponent<Image>().color = Color.grey;
+                    interactable.mainInstructionsText.color = Color.grey;
+                }
+            }
+            else
+            {
+                interactable.mainInstructionsText.text = actions[1];
+                if (made)
+                {
+                    interactable.mainKey.GetComponent<Image>().color = Color.white;
+                    interactable.mainInstructionsText.color = Color.white;
+                }
+                else
+                {
+                    interactable.mainKey.GetComponent<Image>().color = Color.grey;
+                    interactable.mainInstructionsText.color = Color.grey;
+                }
+            }
+
+            interactable.auxKeyBackground.SetActive(false);
         }
-        
     }
 
     private void ToggleBedState()
@@ -150,6 +194,34 @@ public class BedAction : NetworkBehaviour, SimpleAction
         } else
         {
             madeObject.SetActive(false);
+        }
+    }
+
+    [ServerRpc(RequireOwnership = false)]
+    void CheckForNetworkAndPlayerServerRpc(ulong clientId)
+    {
+        if (NetworkManager.Singleton.ConnectedClients.TryGetValue(clientId, out var client))
+        {
+            GameObject playerObject = client.PlayerObject.gameObject;
+
+            if (playerObject != null)
+            {
+                AssignPlayerManagerClientRpc(playerObject.GetComponent<NetworkObject>().NetworkObjectId, clientId);
+            }
+            else
+            {
+                Debug.LogError($"PlayerManager not found on Client ID {clientId}");
+            }
+        }
+    }
+
+    [ClientRpc]
+    void AssignPlayerManagerClientRpc(ulong playerObjectId, ulong clientId)
+    {
+        if (NetworkManager.Singleton.LocalClientId == clientId)
+        {
+            GameObject playerObject = NetworkManager.Singleton.SpawnManager.SpawnedObjects[playerObjectId].gameObject;
+            playerManager = playerObject.GetComponent<PlayerManager>();
         }
     }
 }

@@ -9,6 +9,7 @@ TagManager:
   - Light
   - WaterComponent
   - Plug
+  - Bed
   layers:
   - Default
   - TransparentFX
