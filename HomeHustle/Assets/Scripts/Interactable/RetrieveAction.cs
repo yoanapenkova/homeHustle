@@ -27,15 +27,13 @@ public class RetrieveAction : NetworkBehaviour
 
         if (freeSlot != null)
         {
-            Debug.Log("Antes: " + NetworkManager.Singleton.LocalClientId);
-            retrieveObjectLocalServerRpc(NetworkManager.Singleton.LocalClientId);
-
             freeSlot.element = inventorySlot.element;
             freeSlot.elementIcon = inventorySlot.element.GetComponent<PickUpAction>().imagePrefab;
-            inventorySlot.element = null;
+            retrieveObjectLocalServerRpc(NetworkManager.Singleton.LocalClientId);
         }
         else
         {
+            Debug.Log("No free slots.");
             // TODO: Display message saying inventory is full.
         }
     }
@@ -43,19 +41,33 @@ public class RetrieveAction : NetworkBehaviour
     [ServerRpc(RequireOwnership = false)]
     void retrieveObjectLocalServerRpc(ulong clientId)
     {
-        Debug.Log("Después: " + clientId);
-
         if (NetworkManager.Singleton.ConnectedClients.TryGetValue(clientId, out var player))
         {
             GameObject playerObject = player.PlayerObject.gameObject;
 
             inventorySlot.element.transform.SetParent(playerObject.transform);
             inventorySlot.element.transform.localPosition = new Vector3(0, 1, 0.5f); // Adjust if needed
+
+            removeObjectFromContainerInventoryClientRpc();
         }
         else
         {
             Debug.LogError($"Client ID {clientId} not found!");
         }
+    }
+
+    [ClientRpc(RequireOwnership = false)]
+    void removeObjectFromContainerInventoryClientRpc()
+    {
+        /*
+        if (!IsServer)
+        {
+            Debug.Log("client");
+        }
+        Debug.Log("ENTRA QUITAR ELEMENT");
+        InventorySlot inventorySlotObject = NetworkManager.Singleton.SpawnManager.SpawnedObjects[inventorySlotId].gameObject.GetComponent<InventorySlot>();
+        */
+        inventorySlot.element = null;
     }
 
     private InventorySlot getFirstFreeSlot()
