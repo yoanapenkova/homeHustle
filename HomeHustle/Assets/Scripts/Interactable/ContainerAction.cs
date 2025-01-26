@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using Unity.Netcode;
 using UnityEngine;
 using UnityEngine.UI;
@@ -10,6 +11,8 @@ public class ContainerAction : NetworkBehaviour, SimpleAction
 
     [SerializeField]
     private GameObject containerInventory;
+    [SerializeField]
+    private GameObject playerInventory;
 
     private Interactable interactable;
     private bool isInteracting = false;
@@ -25,7 +28,7 @@ public class ContainerAction : NetworkBehaviour, SimpleAction
         if (interactable.isOnWatch && !isInteracting)
         {
             UpdateInstructions();
-            
+
             if (Input.GetKeyDown(KeyCode.E) && isNear)
             {
                 Outcome();
@@ -39,6 +42,15 @@ public class ContainerAction : NetworkBehaviour, SimpleAction
 
         containerInventory.SetActive(true);
         containerInventory.GetComponent<ContainerInventory>().currentObjectInventory = gameObject;
+
+        foreach (InventorySlot slot in playerInventory.GetComponentsInChildren<InventorySlot>())
+        {
+            slot.GetComponent<StoreAction>().containerInventory = containerInventory.GetComponent<ContainerInventory>();
+            slot.GetComponent<StoreAction>().containerInventorySlots = Enumerable.Range(0, containerInventory.transform.childCount)
+            .Select(i => containerInventory.transform.GetChild(i).gameObject)
+            .OrderBy(child => child.name)
+            .ToArray();
+        }
     }
 
     public void UpdateInstructions()

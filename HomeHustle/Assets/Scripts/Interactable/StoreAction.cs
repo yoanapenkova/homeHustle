@@ -5,10 +5,8 @@ using UnityEngine;
 
 public class StoreAction : NetworkBehaviour
 {
-    [SerializeField]
-    private ContainerInventory containerInventory;
-    [SerializeField]
-    private GameObject[] containerInventorySlots;
+    public ContainerInventory containerInventory;
+    public GameObject[] containerInventorySlots;
 
     private InventorySlot inventorySlot;
     private ulong containerId;
