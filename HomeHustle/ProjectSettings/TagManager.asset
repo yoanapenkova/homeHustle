@@ -10,6 +10,7 @@ TagManager:
   - WaterComponent
   - Plug
   - Bed
+  - Clothes
   layers:
   - Default
   - TransparentFX

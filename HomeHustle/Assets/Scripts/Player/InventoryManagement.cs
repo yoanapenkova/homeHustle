@@ -20,10 +20,10 @@ public class InventoryManagement : NetworkBehaviour
 
     void Awake()
     {
-
         GameObject[] unsortedSlots = GameObject.FindGameObjectsWithTag("InventorySlot");
 
         inventorySlots = unsortedSlots
+            .Where(obj => !obj.name.Contains("Container"))
             .OrderBy(obj => obj.name)
             .ToArray();
     }

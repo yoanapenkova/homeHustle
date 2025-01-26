@@ -8,6 +8,11 @@ using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.UI;
 
+public enum Status
+{
+    Clean, Dirty
+}
+
 public class PickUpAction : NetworkBehaviour, SimpleAction
 {
     [Header("UI Management")]
@@ -15,6 +20,10 @@ public class PickUpAction : NetworkBehaviour, SimpleAction
     public Image imagePrefab;
     [SerializeField]
     private GameObject[] inventorySlots;
+
+    [Header("Status")]
+    [SerializeField]
+    public Status status;
 
     private string[] actions = { "Pick up" };
     public bool pickedUp = false;

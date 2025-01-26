@@ -20,7 +20,12 @@ public class ContainerInventory : NetworkBehaviour
     public override void OnNetworkSpawn()
     {
         base.OnNetworkSpawn();
+        StartCoroutine(PrepareContainer());
+    }
 
+    IEnumerator PrepareContainer()
+    {
+        yield return new WaitForSeconds(1);
         gameObject.SetActive(false);
     }
 }

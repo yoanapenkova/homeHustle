@@ -5,6 +5,10 @@ using Unity.Netcode;
 using UnityEngine;
 using UnityEngine.UI;
 
+public enum ContainerType
+{
+    Wardrobe, Drawer, BathroomBasket, WashingMachine
+}
 public class ContainerAction : NetworkBehaviour, SimpleAction
 {
     private string[] actions = { "Aproach", "Store" };
@@ -13,6 +17,8 @@ public class ContainerAction : NetworkBehaviour, SimpleAction
     public GameObject containerInventory;
     [SerializeField]
     private GameObject playerInventory;
+    [SerializeField]
+    public ContainerType containerType;
 
     private Interactable interactable;
     private bool isInteracting = false;
