@@ -46,6 +46,8 @@ public class ClickerMinigame : NetworkBehaviour
 
     void Update()
     {
+        if (!IsSpawned) { return; }
+
         if (playerManager == null)
         {
             CheckForNetworkAndPlayerServerRpc(NetworkManager.Singleton.LocalClientId);

@@ -10,13 +10,15 @@ public class ContainerAction : NetworkBehaviour, SimpleAction
     private string[] actions = { "Aproach", "Store" };
 
     [SerializeField]
-    private GameObject containerInventory;
+    public GameObject containerInventory;
     [SerializeField]
     private GameObject playerInventory;
 
     private Interactable interactable;
     private bool isInteracting = false;
     private bool isNear = false;
+
+    private PlayerManager playerManager;
 
     void Start()
     {
@@ -25,13 +27,23 @@ public class ContainerAction : NetworkBehaviour, SimpleAction
 
     void Update()
     {
-        if (interactable.isOnWatch && !isInteracting)
-        {
-            UpdateInstructions();
+        if (!IsSpawned) return;
 
-            if (Input.GetKeyDown(KeyCode.E) && isNear)
+        if (playerManager == null)
+        {
+            CheckForNetworkAndPlayerServerRpc(NetworkManager.Singleton.LocalClientId);
+        }
+
+        if (playerManager != null)
+        {
+            if (interactable.isOnWatch && !isInteracting && playerManager.isHuman)
             {
-                Outcome();
+                UpdateInstructions();
+
+                if (Input.GetKeyDown(KeyCode.E) && isNear)
+                {
+                    Outcome();
+                }
             }
         }
     }
@@ -90,6 +102,34 @@ public class ContainerAction : NetworkBehaviour, SimpleAction
             }
             isNear = false;
             containerInventory.GetComponent<ContainerInventory>().currentObjectInventory = null;
+        }
+    }
+
+    [ServerRpc(RequireOwnership = false)]
+    void CheckForNetworkAndPlayerServerRpc(ulong clientId)
+    {
+        if (NetworkManager.Singleton.ConnectedClients.TryGetValue(clientId, out var client))
+        {
+            GameObject playerObject = client.PlayerObject.gameObject;
+
+            if (playerObject != null)
+            {
+                AssignPlayerManagerClientRpc(playerObject.GetComponent<NetworkObject>().NetworkObjectId, clientId);
+            }
+            else
+            {
+                Debug.LogError($"PlayerManager not found on Client ID {clientId}");
+            }
+        }
+    }
+
+    [ClientRpc]
+    void AssignPlayerManagerClientRpc(ulong playerObjectId, ulong clientId)
+    {
+        if (NetworkManager.Singleton.LocalClientId == clientId)
+        {
+            GameObject playerObject = NetworkManager.Singleton.SpawnManager.SpawnedObjects[playerObjectId].gameObject;
+            playerManager = playerObject.GetComponent<PlayerManager>();
         }
     }
 

@@ -16,6 +16,8 @@ public class AudioManager : MonoBehaviour
     public AudioClip lockDoor;
     public AudioClip lockedDoor;
     public AudioClip evilLaugh;
+    public AudioClip sadTrombone;
+    public AudioClip yeah;
 
     private void Awake()
     {
@@ -42,7 +44,7 @@ public class AudioManager : MonoBehaviour
     {
         ambientSound.clip = clip;
         ambientSound.loop = true;
-        ambientSound.Play();
+        //ambientSound.Play();
     }
 
     public void PlaySpecificSound(AudioClip clip)
