@@ -20,6 +20,8 @@ public class BedAction : NetworkBehaviour, SimpleAction
     [Header("FX Management")]
     [SerializeField]
     private ParticleSystem smokeFX;
+    [SerializeField]
+    private GameObject explosionFX;
 
     [Header("UI Management")]
     [SerializeField]
@@ -156,16 +158,19 @@ public class BedAction : NetworkBehaviour, SimpleAction
     {
         made = newValue;
         unmadeObject.SetActive(!newValue);
+        interactable.enabled = false;
 
         if (made)
         {
-            interactable.enabled = false;
             smokeFX.gameObject.SetActive(true);
             isBeingMade = true;
             StartCoroutine(Make());
         } else
         {
+            AudioManager.Instance.PlaySpecificSound(AudioManager.Instance.evilLaugh);
+            explosionFX.gameObject.SetActive(true);
             madeObject.SetActive(false);
+            StartCoroutine(Unmake());
         }
     }
 
@@ -177,6 +182,13 @@ public class BedAction : NetworkBehaviour, SimpleAction
         isBeingMade = false;
         interactable.enabled = true;
         madeObject.SetActive(true);
+    }
+
+    private IEnumerator Unmake()
+    {
+        yield return new WaitForSeconds(2);
+        explosionFX.gameObject.SetActive(false);
+        interactable.enabled = true;
     }
 
     [ClientRpc]

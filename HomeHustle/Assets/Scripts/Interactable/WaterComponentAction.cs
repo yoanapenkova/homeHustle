@@ -111,7 +111,7 @@ public class WaterComponentAction : NetworkBehaviour, SimpleAction
             }
             else
             {
-                playerManager.points += costPerObject;
+                playerManager.points -= costPerObject;
             }
         }
         else

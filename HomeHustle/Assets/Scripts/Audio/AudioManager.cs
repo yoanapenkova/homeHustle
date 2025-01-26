@@ -15,6 +15,7 @@ public class AudioManager : MonoBehaviour
     public AudioClip openDoor;
     public AudioClip lockDoor;
     public AudioClip lockedDoor;
+    public AudioClip evilLaugh;
 
     private void Awake()
     {

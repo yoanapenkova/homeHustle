@@ -1,9 +1,16 @@
 using TMPro;
+using Unity.Netcode;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class ClickerMinigame : MonoBehaviour
+public class ClickerMinigame : NetworkBehaviour
 {
+    [Header("Cost Management")]
+    [SerializeField]
+    private int costPerObject = 5;
+
+    public PlayerManager playerManager;
+
     [Header("UI Elements")]
     public Button clickerButton;
     public TMP_Text scoreText;
@@ -30,8 +37,20 @@ public class ClickerMinigame : MonoBehaviour
         exitButton.gameObject.SetActive(false);
     }
 
+    public override void OnNetworkSpawn()
+    {
+        base.OnNetworkSpawn();
+
+        gameObject.SetActive(false);
+    }
+
     void Update()
     {
+        if (playerManager == null)
+        {
+            CheckForNetworkAndPlayerServerRpc(NetworkManager.Singleton.LocalClientId);
+        }
+
         if (isGameActive)
         {
             // Update the timer
@@ -63,13 +82,20 @@ public class ClickerMinigame : MonoBehaviour
 
     void OnClickerButtonPressed()
     {
-        //TODO: NEED TO FIND THE PLAYERMANAGER AND ADD ACTION COST
+        bool isAllowed = (playerManager.points - costPerObject) >= 0;
 
-        //THE FOLLOWING WOULD HAPPEN ONLY IF THE PLAYER HAS THE ENOUGH POINTS TO DO SO
         if (!hasGameStarted)
         {
-            // Start the game on the first click
-            StartGame();
+            if (isAllowed)
+            {
+                StartGame();
+                playerManager.points -= costPerObject;
+            }
+            else
+            {
+                string message = "Need more energy!";
+                UIManager.Instance.ShowFeedback(message);
+            }
         }
 
         if (isGameActive)
@@ -120,6 +146,34 @@ public class ClickerMinigame : MonoBehaviour
         {
             string message = "Didn't work this time buddy, try again!";
             UIManager.Instance.ShowFeedback(message);
+        }
+    }
+
+    [ServerRpc(RequireOwnership = false)]
+    void CheckForNetworkAndPlayerServerRpc(ulong clientId)
+    {
+        if (NetworkManager.Singleton.ConnectedClients.TryGetValue(clientId, out var client))
+        {
+            GameObject playerObject = client.PlayerObject.gameObject;
+
+            if (playerObject != null)
+            {
+                AssignPlayerManagerClientRpc(playerObject.GetComponent<NetworkObject>().NetworkObjectId, clientId);
+            }
+            else
+            {
+                Debug.LogError($"PlayerManager not found on Client ID {clientId}");
+            }
+        }
+    }
+
+    [ClientRpc]
+    void AssignPlayerManagerClientRpc(ulong playerObjectId, ulong clientId)
+    {
+        if (NetworkManager.Singleton.LocalClientId == clientId)
+        {
+            GameObject playerObject = NetworkManager.Singleton.SpawnManager.SpawnedObjects[playerObjectId].gameObject;
+            playerManager = playerObject.GetComponent<PlayerManager>();
         }
     }
 }
