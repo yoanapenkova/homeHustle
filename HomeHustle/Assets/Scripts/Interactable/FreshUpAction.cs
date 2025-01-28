@@ -79,7 +79,6 @@ public class FreshUpAction : NetworkBehaviour, SimpleAction
 
     private void ToggleDadState()
     {
-        Debug.Log("Toggle Dad State");
         isDadDone.Value = !isDadDone.Value;
         dadDone = isDadDone.Value;
 
@@ -89,20 +88,17 @@ public class FreshUpAction : NetworkBehaviour, SimpleAction
     [ServerRpc(RequireOwnership = false)]
     private void ToggleDadStateServerRpc()
     {
-        Debug.Log("Dad change ServerRpc");
         ToggleDadState();
     }
 
     private void OnDadStateChanged(bool previousValue, bool newValue)
     {
-        Debug.Log("Dad state change");
         dadDone = newValue;
     }
 
     [ClientRpc]
     private void DadStateChangedClientRpc(bool newState)
     {
-        Debug.Log("Dad change ClientRpc");
         dadDone = newState;
     }
 

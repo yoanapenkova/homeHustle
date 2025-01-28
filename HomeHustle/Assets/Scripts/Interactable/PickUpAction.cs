@@ -19,7 +19,7 @@ public class PickUpAction : NetworkBehaviour, SimpleAction
     [SerializeField]
     public Image imagePrefab;
     [SerializeField]
-    private GameObject[] inventorySlots;
+    public GameObject[] inventorySlots;
 
     [Header("Status")]
     [SerializeField]
@@ -28,9 +28,9 @@ public class PickUpAction : NetworkBehaviour, SimpleAction
     private string[] actions = { "Pick up" };
     public bool pickedUp = false;
     private Interactable interactable;
-    private Renderer[] renderers;
-    private Collider[] colliders;
-    private Rigidbody rb;
+    public Renderer[] renderers;
+    public Collider[] colliders;
+    public Rigidbody rb;
 
     private NetworkVariable<bool> isPickedUp = new NetworkVariable<bool>(false);
 
@@ -174,7 +174,7 @@ public class PickUpAction : NetworkBehaviour, SimpleAction
             GameObject clientPlayerObject = client.PlayerObject.gameObject;
 
             gameObject.transform.SetParent(clientPlayerObject.transform);
-            gameObject.transform.localPosition = new Vector3(0, 1, 0.5f); // Adjust if needed
+            gameObject.transform.localPosition = new Vector3(0, 1.5f, 0.5f); // Adjust if needed
         }
         else
         {

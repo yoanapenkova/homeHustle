@@ -1,11 +1,17 @@
 using System.Collections;
 using System.Collections.Generic;
+using Unity.Netcode;
 using UnityEngine;
 using UnityEngine.EventSystems;
 
-public class ItemSlot : MonoBehaviour, IDropHandler
+public class ItemSlot : NetworkBehaviour, IDropHandler
 {
+    [SerializeField]
     public GameObject droppedItem;
+    [SerializeField]
+    public GameObject initialItem;
+    [SerializeField]
+    public IngredientType waitingFor;
 
     public void OnDrop(PointerEventData eventData)
     {
@@ -18,15 +24,11 @@ public class ItemSlot : MonoBehaviour, IDropHandler
         }
     }
 
-    // Start is called before the first frame update
-    void Start()
+    public void ResetSlot()
     {
-        
+        initialItem.GetComponent<RectTransform>().anchoredPosition = GetComponent<RectTransform>().anchoredPosition;
+        initialItem.GetComponent<DragDrop>().inSlot = gameObject;
+        droppedItem = initialItem;
     }
 
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
 }

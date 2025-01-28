@@ -13,6 +13,11 @@ public enum ClothType
     Shoes, TShirt, Shorts, Cap
 }
 
+public enum IngredientType
+{
+    Tomato, Cheese, Lettuce, Meat, TopBun, BottomBun
+}
+
 public class DragDrop : MonoBehaviour, IPointerDownHandler, IBeginDragHandler, IEndDragHandler, IDragHandler, IDropHandler
 {
     [SerializeField]
@@ -22,6 +27,8 @@ public class DragDrop : MonoBehaviour, IPointerDownHandler, IBeginDragHandler, I
     public ItemColor color;
     [SerializeField]
     public ClothType clothType;
+    [SerializeField]
+    public IngredientType ingredientType;
 
     private RectTransform rectTransform;
     private CanvasGroup canvasGroup;

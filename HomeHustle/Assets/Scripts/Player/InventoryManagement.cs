@@ -17,6 +17,9 @@ public class InventoryManagement : NetworkBehaviour
     public float shootForce = 10f;
 
     private GameObject objectToParent;
+    private InventorySlot currentSlotThrowing;
+
+    public bool enabled = true;
 
     void Awake()
     {
@@ -35,7 +38,10 @@ public class InventoryManagement : NetworkBehaviour
 
     void Update()
     {
-        ShootElements();
+        if (enabled)
+        {
+            ShootElements();
+        }
     }
 
     [ServerRpc(RequireOwnership = false)]
@@ -52,15 +58,27 @@ public class InventoryManagement : NetworkBehaviour
 
                 element.transform.SetParent(null);
 
-                Transform shootingPoint = NetworkManager.Singleton.ConnectedClients[clientId].PlayerObject.transform.Find("ShootingInventoryElement");
-                if (shootingPoint != null)
+                if (currentSlotThrowing.isDirected)
                 {
-                    Vector3 shootDirection = shootingPoint.forward;
-                    rb.AddForce(shootDirection * shootForce, ForceMode.Impulse);
+                    element.transform.position = currentSlotThrowing.directedTransform.position;
+                    element.transform.rotation = currentSlotThrowing.directedTransform.rotation;
+                    currentSlotThrowing.isDirected = false;
+                    currentSlotThrowing.directedTransform = null;
+                    currentSlotThrowing = null;
+                    enabled = true;
                 }
                 else
                 {
-                    Debug.LogWarning("ShootingPoint not found for client.");
+                    Transform shootingPoint = NetworkManager.Singleton.ConnectedClients[clientId].PlayerObject.transform.Find("ShootingInventoryElement");
+                    if (shootingPoint != null)
+                    {
+                        Vector3 shootDirection = shootingPoint.forward;
+                        rb.AddForce(shootDirection * shootForce, ForceMode.Impulse);
+                    }
+                    else
+                    {
+                        Debug.LogWarning("ShootingPoint not found for client.");
+                    }
                 }
             }
         }
@@ -83,7 +101,7 @@ public class InventoryManagement : NetworkBehaviour
         }
     }
 
-    void HandleSlotShoot(int slotIndex)
+    public void HandleSlotShoot(int slotIndex)
     {
         if (slotIndex < 0 || slotIndex >= inventorySlots.Length) return; // Safety check
 
@@ -95,6 +113,7 @@ public class InventoryManagement : NetworkBehaviour
 
             if (networkObject != null)
             {
+                currentSlotThrowing = slot;
                 ShootElementServerRpc(NetworkManager.Singleton.LocalClientId, networkObject);
                 slot.element = null;
             }

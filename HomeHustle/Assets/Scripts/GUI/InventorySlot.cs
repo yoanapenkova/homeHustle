@@ -11,6 +11,9 @@ public class InventorySlot : NetworkBehaviour
 
     private bool occupied;
 
+    public bool isDirected = false;
+    public Transform directedTransform;
+
     void Start()
     {
         

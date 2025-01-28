@@ -49,7 +49,6 @@ public class ShowerAction : NetworkBehaviour, SimpleAction
     // Start is called before the first frame update
     void Start()
     {
-
         isDadDone.OnValueChanged += OnDadStateChanged;
         isMomDone.OnValueChanged += OnMomStateChanged;
         isBoyDone.OnValueChanged += OnBoyStateChanged;
@@ -76,10 +75,10 @@ public class ShowerAction : NetworkBehaviour, SimpleAction
             }
         } else
         {
-            actionsInstructions.SetActive(false);
             showerUI.SetActive(false);
             interactionProgress = 0f;
             progressSlider.value = interactionProgress;
+            //Review if the following creates an error somewhere.
             auxKeyBackground.SetActive(false);
         }
     }

@@ -11069,7 +11069,7 @@ Transform:
   m_GameObject: {fileID: 4154654898948713599}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 3.1031017, y: 1.499, z: 0.469}
+  m_LocalPosition: {x: 3.1031017, y: 2, z: 0.469}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -18203,7 +18203,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d5a57f767e5e46a458fc5d3c628d0cbb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  GlobalObjectIdHash: 2955289198
+  GlobalObjectIdHash: 2890744246
   InScenePlacedSourceGlobalObjectIdHash: 0
   AlwaysReplicateAsRoot: 0
   SynchronizeTransform: 1
@@ -18481,6 +18481,7 @@ MonoBehaviour:
   - {fileID: 0}
   shootingPoint: {fileID: 3999514449117770070}
   shootForce: 10
+  enabled: 1
 --- !u!114 &3759161773456813575
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -18500,6 +18501,7 @@ MonoBehaviour:
   - {fileID: 0}
   shootingPoint: {fileID: 6792369900497964098, guid: 3d8e9e332f5f99d40b6bf9006763851f, type: 3}
   shootForce: 10
+  enabled: 1
 --- !u!1 &6525077470759063028
 GameObject:
   m_ObjectHideFlags: 0

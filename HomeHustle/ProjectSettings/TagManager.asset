@@ -13,6 +13,7 @@ TagManager:
   - Clothes
   - Mirror
   - Shower
+  - Plate
   layers:
   - Default
   - TransparentFX
