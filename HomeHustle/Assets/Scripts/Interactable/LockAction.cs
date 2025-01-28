@@ -15,6 +15,14 @@ public class LockAction : NetworkBehaviour, SimpleAction
     private NetworkVariable<bool> isLocked = new NetworkVariable<bool>(false);
     private NetworkVariable<int> lockCombination = new NetworkVariable<int>(0);
 
+    [Header("Cost Management")]
+    [SerializeField]
+    private int costPerHuman = 5;
+    [SerializeField]
+    private int costPerObject = 8;
+
+    private PlayerManager playerManager;
+
     [Header("UI Management")]
     [SerializeField]
     private GameObject lockUnlockScreen;
@@ -40,6 +48,13 @@ public class LockAction : NetworkBehaviour, SimpleAction
 
     void Update()
     {
+        if (!IsSpawned) return;
+
+        if (playerManager == null)
+        {
+            CheckForNetworkAndPlayerServerRpc(NetworkManager.Singleton.LocalClientId);
+        }
+
         if (interactable.isOnWatch)
         {
             UpdateInstructions();
@@ -86,23 +101,15 @@ public class LockAction : NetworkBehaviour, SimpleAction
         string inputCombination = string.Join("", lockNumbers.Select(input => input.text));
         int inputCombinationInt = int.Parse(inputCombination);
 
-        if (!locked)
-        {
-            Debug.Log("Locking...");
-            usedCombination = inputCombinationInt;
-            locked = true;
+        bool isAllowed = playerManager.isHuman ? ((playerManager.points - costPerHuman) >= 0) : ((playerManager.points - costPerObject) >= 0);
 
-            UpdateLockStateServerRpc(locked, usedCombination);
-            AudioManager.Instance.PlaySpecificSound(AudioManager.Instance.lockDoor);
-            HideLockUnlockScreen();
-        }
-        else
+        if (isAllowed)
         {
-            if (usedCombination == inputCombinationInt)
+            if (!locked)
             {
-                Debug.Log("Unlocking...");
-                usedCombination = 0;
-                locked = false;
+                Debug.Log("Locking...");
+                usedCombination = inputCombinationInt;
+                locked = true;
 
                 UpdateLockStateServerRpc(locked, usedCombination);
                 AudioManager.Instance.PlaySpecificSound(AudioManager.Instance.lockDoor);
@@ -110,10 +117,27 @@ public class LockAction : NetworkBehaviour, SimpleAction
             }
             else
             {
-                Debug.Log("Incorrect combination.");
-                ProvideFeedback(inputCombinationInt);
-                AudioManager.Instance.PlaySpecificSound(AudioManager.Instance.lockedDoor);
+                if (usedCombination == inputCombinationInt)
+                {
+                    Debug.Log("Unlocking...");
+                    usedCombination = 0;
+                    locked = false;
+
+                    UpdateLockStateServerRpc(locked, usedCombination);
+                    AudioManager.Instance.PlaySpecificSound(AudioManager.Instance.lockDoor);
+                    HideLockUnlockScreen();
+                }
+                else
+                {
+                    Debug.Log("Incorrect combination.");
+                    ProvideFeedback(inputCombinationInt);
+                    AudioManager.Instance.PlaySpecificSound(AudioManager.Instance.lockedDoor);
+                }
             }
+        } else
+        {
+            string message = playerManager.isHuman ? "Need more coins!" : "Need more energy!";
+            UIManager.Instance.ShowFeedback(message);
         }
     }
 
@@ -229,5 +253,33 @@ public class LockAction : NetworkBehaviour, SimpleAction
     private void OnLockCombinationStateChanged(int previousValue, int newValue)
     {
         usedCombination = newValue;
+    }
+
+    [ServerRpc(RequireOwnership = false)]
+    void CheckForNetworkAndPlayerServerRpc(ulong clientId)
+    {
+        if (NetworkManager.Singleton.ConnectedClients.TryGetValue(clientId, out var client))
+        {
+            GameObject playerObject = client.PlayerObject.gameObject;
+
+            if (playerObject != null)
+            {
+                AssignPlayerManagerClientRpc(playerObject.GetComponent<NetworkObject>().NetworkObjectId, clientId);
+            }
+            else
+            {
+                Debug.LogError($"PlayerManager not found on Client ID {clientId}");
+            }
+        }
+    }
+
+    [ClientRpc]
+    void AssignPlayerManagerClientRpc(ulong playerObjectId, ulong clientId)
+    {
+        if (NetworkManager.Singleton.LocalClientId == clientId)
+        {
+            GameObject playerObject = NetworkManager.Singleton.SpawnManager.SpawnedObjects[playerObjectId].gameObject;
+            playerManager = playerObject.GetComponent<PlayerManager>();
+        }
     }
 }

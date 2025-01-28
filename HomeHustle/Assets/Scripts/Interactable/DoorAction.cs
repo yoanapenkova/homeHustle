@@ -31,6 +31,7 @@ public class DoorAction : NetworkBehaviour, SimpleAction
     {
         if (interactable.isOnWatch)
         {
+            //For fridge door
             bool hasPower = true;
             if (parentPowerAction != null)
             {

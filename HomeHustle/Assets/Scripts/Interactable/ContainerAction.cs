@@ -63,8 +63,8 @@ public class ContainerAction : NetworkBehaviour, SimpleAction
 
         foreach (InventorySlot slot in playerInventory.GetComponentsInChildren<InventorySlot>())
         {
-            slot.GetComponent<StoreAction>().containerInventory = containerInventory.GetComponent<ContainerInventory>();
-            slot.GetComponent<StoreAction>().containerInventorySlots = Enumerable.Range(0, containerInventory.transform.childCount)
+            slot.gameObject.GetComponent<StoreAction>().containerInventory = containerInventory.GetComponent<ContainerInventory>();
+            slot.gameObject.GetComponent<StoreAction>().containerInventorySlots = Enumerable.Range(0, containerInventory.transform.childCount)
             .Select(i => containerInventory.transform.GetChild(i).gameObject)
             .OrderBy(child => child.name)
             .ToArray();

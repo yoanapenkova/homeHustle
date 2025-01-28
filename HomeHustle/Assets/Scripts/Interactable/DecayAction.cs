@@ -13,6 +13,12 @@ public enum ProductCondition
 
 public class DecayAction : NetworkBehaviour, SimpleAction
 {
+    [Header("Cost Management")]
+    [SerializeField]
+    private int costPerObject = 10;
+
+    private PlayerManager playerManager;
+
     [Header("UI Management")]
     [SerializeField]
     private TMP_Text timeLeftText;
@@ -39,11 +45,18 @@ public class DecayAction : NetworkBehaviour, SimpleAction
 
     void Update()
     {
+        if (!IsSpawned) return;
+
+        if (playerManager == null)
+        {
+            CheckForNetworkAndPlayerServerRpc(NetworkManager.Singleton.LocalClientId);
+        }
+
         if (interactable.isOnWatch)
         {
             UpdateInstructions();
             
-            if (Input.GetKeyDown(KeyCode.Q) && !altered)
+            if (Input.GetKeyDown(KeyCode.Q) && !altered && !playerManager.isHuman)
             {
                 Outcome();
             }
@@ -99,20 +112,28 @@ public class DecayAction : NetworkBehaviour, SimpleAction
 
     public void Outcome()
     {
-        if (IsServer)
+        bool isAllowed = (playerManager.points - costPerObject) >= 0;
+        if (isAllowed)
         {
-            ToggleAlteredState();
-        }
-        else
+            if (IsServer)
+            {
+                ToggleAlteredState();
+            }
+            else
+            {
+                ToggleAlteredStateServerRpc();
+            }
+        } else
         {
-            ToggleAlteredStateServerRpc();
-        }
+            string message = "Need more energy!";
+            UIManager.Instance.ShowFeedback(message);
+        } 
     }
 
     public void UpdateInstructions()
     {
         interactable.actionsInstructions.SetActive(true);
-        interactable.auxKeyBackground.SetActive(true);
+        interactable.auxKeyBackground.SetActive(!playerManager.isHuman);
         interactable.auxInstructionsText.text = actions[0];
 
         if (altered)
@@ -163,6 +184,34 @@ public class DecayAction : NetworkBehaviour, SimpleAction
 
             yield return new WaitForSeconds(1);
             timeToSpoil--;
+        }
+    }
+
+    [ServerRpc(RequireOwnership = false)]
+    void CheckForNetworkAndPlayerServerRpc(ulong clientId)
+    {
+        if (NetworkManager.Singleton.ConnectedClients.TryGetValue(clientId, out var client))
+        {
+            GameObject playerObject = client.PlayerObject.gameObject;
+
+            if (playerObject != null)
+            {
+                AssignPlayerManagerClientRpc(playerObject.GetComponent<NetworkObject>().NetworkObjectId, clientId);
+            }
+            else
+            {
+                Debug.LogError($"PlayerManager not found on Client ID {clientId}");
+            }
+        }
+    }
+
+    [ClientRpc]
+    void AssignPlayerManagerClientRpc(ulong playerObjectId, ulong clientId)
+    {
+        if (NetworkManager.Singleton.LocalClientId == clientId)
+        {
+            GameObject playerObject = NetworkManager.Singleton.SpawnManager.SpawnedObjects[playerObjectId].gameObject;
+            playerManager = playerObject.GetComponent<PlayerManager>();
         }
     }
 }
