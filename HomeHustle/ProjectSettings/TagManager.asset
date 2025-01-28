@@ -11,6 +11,8 @@ TagManager:
   - Plug
   - Bed
   - Clothes
+  - Mirror
+  - Shower
   layers:
   - Default
   - TransparentFX

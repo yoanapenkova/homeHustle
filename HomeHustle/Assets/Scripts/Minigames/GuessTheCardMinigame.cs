@@ -6,6 +6,12 @@ using UnityEngine.UI;
 
 public class GuessTheCardMinigame : NetworkBehaviour
 {
+    [Header("Cost Management")]
+    [SerializeField]
+    private int costPerObject = 7;
+
+    private PlayerManager playerManager;
+
     [Header("UI Management")]
     [SerializeField]
     private Button exitPanelButton;
@@ -60,7 +66,12 @@ public class GuessTheCardMinigame : NetworkBehaviour
     // Update is called once per frame
     void Update()
     {
-        
+        if (!IsSpawned) { return; }
+
+        if (playerManager == null)
+        {
+            CheckForNetworkAndPlayerServerRpc(NetworkManager.Singleton.LocalClientId);
+        }
     }
 
     public override void OnNetworkSpawn()
@@ -92,10 +103,19 @@ public class GuessTheCardMinigame : NetworkBehaviour
 
     public void StartMinigame()
     {
-        if (!isGameOver)
+        bool isAllowed = (playerManager.points - costPerObject) >= 0;
+
+        if (isAllowed)
         {
-            StartCoroutine(FadeInFadeOut());
-            isGameOver = true;
+            if (!isGameOver)
+            {
+                StartCoroutine(FadeInFadeOut());
+                isGameOver = true;
+            }
+        } else
+        {
+            string message = "Need more energy!";
+            UIManager.Instance.ShowFeedback(message);
         }
     }
 
@@ -262,5 +282,33 @@ public class GuessTheCardMinigame : NetworkBehaviour
         yield return new WaitForSeconds(1);
         HidePanel();
         RestartUI();
+    }
+
+    [ServerRpc(RequireOwnership = false)]
+    void CheckForNetworkAndPlayerServerRpc(ulong clientId)
+    {
+        if (NetworkManager.Singleton.ConnectedClients.TryGetValue(clientId, out var client))
+        {
+            GameObject playerObject = client.PlayerObject.gameObject;
+
+            if (playerObject != null)
+            {
+                AssignPlayerManagerClientRpc(playerObject.GetComponent<NetworkObject>().NetworkObjectId, clientId);
+            }
+            else
+            {
+                Debug.LogError($"PlayerManager not found on Client ID {clientId}");
+            }
+        }
+    }
+
+    [ClientRpc]
+    void AssignPlayerManagerClientRpc(ulong playerObjectId, ulong clientId)
+    {
+        if (NetworkManager.Singleton.LocalClientId == clientId)
+        {
+            GameObject playerObject = NetworkManager.Singleton.SpawnManager.SpawnedObjects[playerObjectId].gameObject;
+            playerManager = playerObject.GetComponent<PlayerManager>();
+        }
     }
 }

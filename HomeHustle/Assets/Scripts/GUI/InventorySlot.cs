@@ -1,9 +1,10 @@
 using System.Collections;
 using System.Collections.Generic;
+using Unity.Netcode;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class InventorySlot : MonoBehaviour
+public class InventorySlot : NetworkBehaviour
 {
     public GameObject element;
     public Image elementIcon;
