@@ -4,6 +4,7 @@ using System.Linq;
 using TMPro;
 using UnityEditor.Rendering;
 using UnityEngine;
+using UnityEngine.Rendering;
 
 public class TaskFeedbackManager : MonoBehaviour
 {
@@ -26,11 +27,27 @@ public class TaskFeedbackManager : MonoBehaviour
     //DO LAUNDRY
     [SerializeField]
     private GameObject laundryOkDone;
+    //BREAKFAST COMPLEX TASK
+    //
+    //BREAKFAST COMPLEX TASK
+    //GET READY COMPLEX TASK
+    //HAVE SHOWER
+    [SerializeField]
+    private TMP_Text showerText;
+    [SerializeField]
+    private GameObject showerDone;
+    //FRESH UP
+    [SerializeField]
+    private TMP_Text freshUpText;
+    [SerializeField]
+    private GameObject freshUpDone;
 
     private GameObject[] lightsObj;
     private GameObject[] waterObj;
     private GameObject[] bedsObj;
     private GameObject[] clothesObj;
+    private GameObject showerObj;
+    private GameObject mirrorObj;
     private List<GameObject> cleanClothes = new List<GameObject>();
     private List<GameObject> dirtyClothes = new List<GameObject>();
     public bool lightsTask = false;
@@ -38,6 +55,8 @@ public class TaskFeedbackManager : MonoBehaviour
     public bool bedSubstep = true;
     public bool clothesSubstep = true;
     public bool laundrySubstep = true;
+    public bool showerSubstep = true;
+    public bool freshUpSubstep = true;
 
     void Start()
     {
@@ -59,6 +78,8 @@ public class TaskFeedbackManager : MonoBehaviour
                 }
             }
         }
+        showerObj = GameObject.FindGameObjectWithTag("Shower");
+        mirrorObj = GameObject.FindGameObjectWithTag("Mirror");
     }
 
     void Update()
@@ -166,6 +187,38 @@ public class TaskFeedbackManager : MonoBehaviour
         }
 
         laundrySubstep = laundryDone;
+
+        // 3.Complex Task - Substep: Shower X/4
+        bool showered = true;
+        int showeredHumans = 0;
+
+        ShowerAction shower = showerObj.GetComponent<ShowerAction>();
+        if (shower != null)
+        {
+            if (shower.dadDone) { showeredHumans++; showered = showered && shower.dadDone; } else { showered = false; };
+            if (shower.momDone) { showeredHumans++; showered = showered && shower.momDone; } else { showered = false; };
+            if (shower.boyDone) { showeredHumans++; showered = showered && shower.boyDone; } else { showered = false; };
+            if (shower.girlDone) { showeredHumans++; showered = showered && shower.girlDone; } else { showered = false; };
+        }
+
+        showerSubstep = showered;
+        showerText.text = "Shower " + showeredHumans + "/4";
+
+        // 3.Complex Task - Substep: Fresh up X/4
+        bool freshedUp = true;
+        int freshedUpHumans = 0;
+
+        FreshUpAction mirror = mirrorObj.GetComponent<FreshUpAction>();
+        if (mirror != null)
+        {
+            if (mirror.dadDone) { freshedUpHumans++; freshedUp = freshedUp && mirror.dadDone; } else { freshedUp = false; };
+            if (mirror.momDone) { freshedUpHumans++; freshedUp = freshedUp && mirror.momDone; } else { freshedUp = false; };
+            if (mirror.boyDone) { freshedUpHumans++; freshedUp = freshedUp && mirror.boyDone; } else { freshedUp = false; };
+            if (mirror.girlDone) { freshedUpHumans++; freshedUp = freshedUp && mirror.girlDone; } else { freshedUp = false; };
+        }
+
+        freshUpSubstep = freshedUp;
+        freshUpText.text = "Freshen up " + freshedUpHumans + "/4";
     }
 
     void UpdateUI()
@@ -175,5 +228,7 @@ public class TaskFeedbackManager : MonoBehaviour
         bedOkDone.SetActive(bedSubstep);
         clothesOkDone.SetActive(clothesSubstep);
         laundryOkDone.SetActive(laundrySubstep);
+        showerDone.SetActive(showerSubstep);
+        freshUpDone.SetActive(freshUpSubstep);
     }
 }

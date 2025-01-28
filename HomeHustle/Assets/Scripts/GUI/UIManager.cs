@@ -121,6 +121,7 @@ public class UIManager : NetworkBehaviour
         connectedPlayers.Value++;
         homeScreen.SetActive(false);
         preGameScreen.SetActive(true);
+        //hudScreen.SetActive(false);
 
         Cursor.lockState = CursorLockMode.Locked;
         Cursor.visible = false;
