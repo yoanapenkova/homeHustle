@@ -72,7 +72,6 @@ public class PutAction : NetworkBehaviour, SimpleAction
         {
             currentKeyCode = KeyCode.E;
             placeholder.SetActive(false);
-            interactable.mainKey.GetComponent<Image>().sprite = originalSprite;
         }
 
         if (placedObject != null)
@@ -88,8 +87,10 @@ public class PutAction : NetworkBehaviour, SimpleAction
         if (result.Item1)
         {
             placedObject = playerInventory[result.Item2].element;
+            placedObject.GetComponent<MealAction>().enabled = true;
             placedObject.GetComponent<MealAction>().platePlaced = true;
             placedObject.GetComponent<MealAction>().gamePanel = gamePanel;
+            placedObject.GetComponent<WashAction>().enabled = true;
             placedObject.GetComponent<WashAction>().washUI = washUI;
             placedObject.GetComponent<WashAction>().progressSlider = progressSlider;
             playerInventory[result.Item2].isDirected = true;
@@ -103,7 +104,7 @@ public class PutAction : NetworkBehaviour, SimpleAction
             string message = "No plates in the inventory!";
             UIManager.Instance.ShowFeedback(message);
         }
-            
+        interactable.mainKey.GetComponent<Image>().sprite = originalSprite;
     }
 
     public void UpdateInstructions()

@@ -132,6 +132,7 @@ public class DecayAction : NetworkBehaviour, SimpleAction
 
     public void UpdateInstructions()
     {
+        Debug.Log(playerManager.isHuman);
         interactable.actionsInstructions.SetActive(true);
         interactable.auxKeyBackground.SetActive(!playerManager.isHuman);
         interactable.auxInstructionsText.text = actions[0];

@@ -16,12 +16,12 @@ public class WashAction : NetworkBehaviour, SimpleAction
     private float interactionSpeed = 1f;
     [SerializeField]
     private float targetProgress = 10f;
-    private float interactionProgress = 0f;
+    public float interactionProgress = 0f;
 
     private string[] actions = { "Hold to wash", "Open the tap" };
     public bool washed = false;
     private Interactable interactable;
-    private SinkAction sink;
+    public SinkAction sink;
 
     public bool insideSink = false;
     private bool actionCompleted = false;
@@ -42,7 +42,7 @@ public class WashAction : NetworkBehaviour, SimpleAction
         MealAction mealAction = GetComponent<MealAction>();
         if (mealAction.eaten)
         {
-            if (insideSink && !actionCompleted)
+            if (interactable.isOnWatch && insideSink && !actionCompleted)
             {
                 UpdateInstructions();
 
@@ -51,12 +51,6 @@ public class WashAction : NetworkBehaviour, SimpleAction
                     Outcome();
                 }
             }
-            else
-            {
-                washUI.SetActive(false);
-                interactionProgress = 0f;
-                progressSlider.value = interactionProgress;
-            }
         }
     }
 
@@ -64,10 +58,14 @@ public class WashAction : NetworkBehaviour, SimpleAction
     {
         Debug.Log($"Object collided with: {other.gameObject.name}");
         SinkAction sinkAction = other.gameObject.GetComponent<SinkAction>();
-        if (sinkAction != null )
+        if (sinkAction != null)
         {
             sink = sinkAction;
             insideSink = true;
+        } else
+        {
+            sink = null;
+            insideSink = false;
         }
     }
 
@@ -77,9 +75,18 @@ public class WashAction : NetworkBehaviour, SimpleAction
         SinkAction sinkAction = other.gameObject.GetComponent<SinkAction>();
         if (sinkAction != null)
         {
-            sink = null;
             insideSink = false;
+            if (washUI != null)
+            {
+                washUI.SetActive(false);
+            }
+            interactionProgress = 0f;
+            if (progressSlider != null)
+            {
+                progressSlider.value = interactionProgress;
+            }
         }
+        interactable.mainKeyBackground.SetActive(false);
     }
 
     public void Outcome()

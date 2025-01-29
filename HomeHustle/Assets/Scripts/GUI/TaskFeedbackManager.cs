@@ -28,8 +28,17 @@ public class TaskFeedbackManager : MonoBehaviour
     [SerializeField]
     private GameObject laundryOkDone;
     //BREAKFAST COMPLEX TASK
-    //
-    //BREAKFAST COMPLEX TASK
+    //SET TABLE
+    [SerializeField]
+    private GameObject setTableDone;
+    //EAT BREAKFAST X/4
+    [SerializeField]
+    private TMP_Text breakfastText;
+    [SerializeField]
+    private GameObject breakfastDone;
+    //CLEAN DISHES
+    [SerializeField]
+    private GameObject cleanDishesDone;
     //GET READY COMPLEX TASK
     //HAVE SHOWER
     [SerializeField]
@@ -46,6 +55,8 @@ public class TaskFeedbackManager : MonoBehaviour
     private GameObject[] waterObj;
     private GameObject[] bedsObj;
     private GameObject[] clothesObj;
+    private GameObject[] placematsObj;
+    private GameObject[] platesObj;
     private GameObject showerObj;
     private GameObject mirrorObj;
     private List<GameObject> cleanClothes = new List<GameObject>();
@@ -55,6 +66,9 @@ public class TaskFeedbackManager : MonoBehaviour
     public bool bedSubstep = true;
     public bool clothesSubstep = true;
     public bool laundrySubstep = true;
+    public bool tableSubstep = false;
+    public bool breakfastSubstep = false;
+    public bool dishesSubstep = false;
     public bool showerSubstep = true;
     public bool freshUpSubstep = true;
 
@@ -78,12 +92,14 @@ public class TaskFeedbackManager : MonoBehaviour
                 }
             }
         }
+        placematsObj = GameObject.FindGameObjectsWithTag("Placemat");
         showerObj = GameObject.FindGameObjectWithTag("Shower");
         mirrorObj = GameObject.FindGameObjectWithTag("Mirror");
     }
 
     void Update()
     {
+        platesObj = GameObject.FindGameObjectsWithTag("Plate");
         UpdateTaskStats();
         UpdateUI();
     }
@@ -188,6 +204,67 @@ public class TaskFeedbackManager : MonoBehaviour
 
         laundrySubstep = laundryDone;
 
+        // 2.Complex Task - Substep: Set Table
+        if (!tableSubstep)
+        {
+            bool tableDone = true;
+            foreach (GameObject placemat in placematsObj)
+            {
+                PutAction item = placemat.GetComponent<PutAction>();
+                if (item != null)
+                {
+                    tableDone = tableDone && item.occupied;
+                }
+            }
+            tableSubstep = tableDone;
+        }
+
+        // 2.Complex Task - Substeps: Breakfast X/4 and Clean dishes
+        bool breakfast = false;
+        bool washed = false;
+        int sandwiches = 0;
+        if (platesObj != null)
+        {
+            if (platesObj.Length > 0)
+            {
+                breakfast = true;
+                washed = true;
+                foreach (GameObject plate in platesObj)
+                {
+                    bool meal = false;
+                    bool wash = false;
+                    MealAction mealAction = plate.GetComponent<MealAction>();
+                    WashAction washAction = plate.GetComponent<WashAction>();
+                    if (mealAction.enabled && washAction.enabled)
+                    {
+                        meal = mealAction.eaten;
+                        if (mealAction.eaten)
+                        {
+                            sandwiches++;
+                        }
+                        wash = washAction.washed;
+                    }
+                    breakfast = breakfast && meal;
+                    washed = washed && wash;
+                }
+            }
+        }
+
+        breakfastText.text = "Sandwich " + sandwiches + "/4";
+
+        if (platesObj.Length >= 4)
+        {
+            if (sandwiches == 4)
+            {
+                breakfastSubstep = true;
+            }
+            else
+            {
+                breakfastSubstep = breakfast;
+            }
+            dishesSubstep = washed;
+        }
+
         // 3.Complex Task - Substep: Shower X/4
         bool showered = true;
         int showeredHumans = 0;
@@ -228,6 +305,9 @@ public class TaskFeedbackManager : MonoBehaviour
         bedOkDone.SetActive(bedSubstep);
         clothesOkDone.SetActive(clothesSubstep);
         laundryOkDone.SetActive(laundrySubstep);
+        setTableDone.SetActive(tableSubstep);
+        breakfastDone.SetActive(breakfastSubstep);
+        cleanDishesDone.SetActive(dishesSubstep);
         showerDone.SetActive(showerSubstep);
         freshUpDone.SetActive(freshUpSubstep);
     }

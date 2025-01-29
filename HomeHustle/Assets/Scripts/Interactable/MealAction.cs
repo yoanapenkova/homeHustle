@@ -29,7 +29,7 @@ public class MealAction : NetworkBehaviour, SimpleAction
     // Update is called once per frame
     void Update()
     {
-        if (interactable.isOnWatch && !eaten && platePlaced)
+        if (interactable.isOnWatch && !eaten && platePlaced && !GameObject.Find("TaskFeedbackManager").GetComponent<TaskFeedbackManager>().breakfastSubstep)
         {
             UpdateInstructions();
 

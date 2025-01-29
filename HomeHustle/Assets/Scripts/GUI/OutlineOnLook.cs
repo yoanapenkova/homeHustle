@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Unity.Netcode;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class OutlineOnLook : NetworkBehaviour
 {
@@ -17,6 +18,12 @@ public class OutlineOnLook : NetworkBehaviour
     [Header("UI Management")]
     [SerializeField]
     private GameObject actionsInstructions;
+    [SerializeField]
+    public GameObject mainKey;
+    [SerializeField]
+    public Sprite mainKeyOriginalSprite;
+    [SerializeField]
+    public GameObject washUI;
 
     private PlayerManager playerManager;
 
@@ -53,6 +60,7 @@ public class OutlineOnLook : NetworkBehaviour
             else
             {
                 ClearOutline();
+                mainKey.GetComponent<Image>().sprite = mainKeyOriginalSprite;
             }
         }
 
@@ -61,6 +69,7 @@ public class OutlineOnLook : NetworkBehaviour
             if (!currentObject.GetComponent<Interactable>().enabled)
             {
                 ClearOutline();
+                mainKey.GetComponent<Image>().sprite = mainKeyOriginalSprite;
             }
         }
     }
@@ -114,6 +123,7 @@ public class OutlineOnLook : NetworkBehaviour
         originalMaterials.Clear();
         currentObject = null;
         actionsInstructions.SetActive(false);
+        washUI.SetActive(false);
     }
 
     [ServerRpc(RequireOwnership = false)]

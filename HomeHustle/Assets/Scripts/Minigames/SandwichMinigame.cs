@@ -80,6 +80,13 @@ public class SandwichMinigame : NetworkBehaviour
         foreach (ItemSlot slot in initialSlots)
         {
             slot.ResetSlot();
+            slot.initialItem.GetComponent<DragDrop>().canvasGroup.alpha = 1;
+            slot.initialItem.GetComponent<DragDrop>().canvasGroup.blocksRaycasts = true;
+        }
+
+        foreach (ItemSlot slot in resultSlots)
+        {
+            slot.droppedItem = null;
         }
 
         RandomizeRecipe();

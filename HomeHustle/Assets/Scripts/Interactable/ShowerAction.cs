@@ -78,8 +78,6 @@ public class ShowerAction : NetworkBehaviour, SimpleAction
             showerUI.SetActive(false);
             interactionProgress = 0f;
             progressSlider.value = interactionProgress;
-            //Review if the following creates an error somewhere.
-            auxKeyBackground.SetActive(false);
         }
     }
 

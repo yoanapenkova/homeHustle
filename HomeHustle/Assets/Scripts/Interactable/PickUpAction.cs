@@ -148,6 +148,16 @@ public class PickUpAction : NetworkBehaviour, SimpleAction
             coll.enabled = !newValue;
         }
         rb.isKinematic = newValue;
+
+        if (newValue)
+        {
+            WashAction washAction = gameObject.GetComponent<WashAction>();
+            if (washAction != null && washAction.enabled)
+            {
+                washAction.insideSink = false;
+                washAction.washUI.SetActive(false);
+            }
+        }
     }
 
     [ClientRpc]
@@ -164,6 +174,21 @@ public class PickUpAction : NetworkBehaviour, SimpleAction
             coll.enabled = !newState;
         }
         rb.isKinematic = newState;
+
+        if (newState)
+        {
+            WashAction washAction = gameObject.GetComponent<WashAction>();
+            if (washAction != null)
+            {
+                if (washAction.enabled)
+                {
+                    washAction.insideSink = false;
+                    washAction.washUI.SetActive(false);
+                    washAction.interactionProgress = 0f;
+                    washAction.progressSlider.value = washAction.interactionProgress;
+                }
+            }
+        }
     }
 
     [ServerRpc(RequireOwnership = false)]
