@@ -26,6 +26,10 @@ public class PlayerManager : NetworkBehaviour
     private GameObject thunderIconObj;
     private TMP_Text pointsText;
 
+    [Header("UX/UI")]
+    [SerializeField]
+    public bool cameraMovement = true;
+
     void Start()
     {
         

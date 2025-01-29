@@ -2450,8 +2450,8 @@ CharacterController:
   serializedVersion: 3
   m_Height: 0.59
   m_Radius: 0.13
-  m_SlopeLimit: 45
-  m_StepOffset: 0.25
+  m_SlopeLimit: 0
+  m_StepOffset: 0
   m_SkinWidth: 0.02
   m_MinMoveDistance: 0
   m_Center: {x: 0, y: 0.29, z: 0}
@@ -2726,6 +2726,7 @@ MonoBehaviour:
   isHuman: 0
   role: 5
   points: 0
+  cameraMovement: 1
 --- !u!114 &2080632858841000081
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2745,6 +2746,7 @@ MonoBehaviour:
   - {fileID: 0}
   shootingPoint: {fileID: 5095538883016789583}
   shootForce: 10
+  enabled: 1
 --- !u!1 &6693175210422128420
 GameObject:
   m_ObjectHideFlags: 0
