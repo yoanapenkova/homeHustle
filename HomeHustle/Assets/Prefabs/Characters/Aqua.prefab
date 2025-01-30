@@ -1459,6 +1459,7 @@ MonoBehaviour:
   role: 7
   points: 0
   cameraMovement: 1
+  actionKeys: 310000003200000033000000340000006500000071000000
 --- !u!114 &7178638966921607253
 MonoBehaviour:
   m_ObjectHideFlags: 0

@@ -29,10 +29,14 @@ public class PlayerManager : NetworkBehaviour
     [Header("UX/UI")]
     [SerializeField]
     public bool cameraMovement = true;
+    [SerializeField]
+    private KeyCode[] actionKeys;
+
+    private Animator animator;
 
     void Start()
     {
-        
+        animator = GetComponent<Animator>();
     }
 
     void Update()
@@ -41,6 +45,7 @@ public class PlayerManager : NetworkBehaviour
         {
             UpdateCoins();
         }
+        UpdateAnimator();
     }
 
     private void OnEnable()
@@ -56,6 +61,20 @@ public class PlayerManager : NetworkBehaviour
         if (GameManager.Instance != null)
         {
             GameManager.Instance.OnGameStarted -= SetupPoints;
+        }
+    }
+
+    void UpdateAnimator()
+    {
+        foreach (KeyCode key in actionKeys)
+        {
+            if (Input.GetKeyDown(key))
+            {
+                animator.SetBool("Interact", true);
+            } else if (Input.GetKeyUp(key))
+            {
+                animator.SetBool("Interact", false);
+            }
         }
     }
 
