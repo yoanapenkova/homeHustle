@@ -31,8 +31,11 @@ public class PlayerManager : NetworkBehaviour
     public bool cameraMovement = true;
     [SerializeField]
     private KeyCode[] actionKeys;
+    [SerializeField]
+    public ParticleSystem pushFX;
 
     private Animator animator;
+    
 
     void Start()
     {
@@ -74,6 +77,10 @@ public class PlayerManager : NetworkBehaviour
             } else if (Input.GetKeyUp(key))
             {
                 animator.SetBool("Interact", false);
+                if (key == KeyCode.Q && animator.GetBool("Push"))
+                {
+                    animator.SetBool("Push", false);
+                }
             }
         }
     }

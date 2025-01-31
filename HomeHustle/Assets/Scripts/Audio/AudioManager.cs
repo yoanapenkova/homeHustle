@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.UI;
 
 public class AudioManager : MonoBehaviour
 {
@@ -6,6 +7,12 @@ public class AudioManager : MonoBehaviour
 
     public AudioSource ambientSound;
     public AudioSource sfxSource;
+
+    [Header("UI")]
+    [SerializeField]
+    private Slider musicSlider;
+    [SerializeField]
+    public Slider sfxSlider;
 
     [Header("Ambient")]
     public AudioClip ambient;
@@ -40,15 +47,26 @@ public class AudioManager : MonoBehaviour
         }
     }
 
+    void Update()
+    {
+        AdjustVolume();
+    }
+
     public void PlayAmbientSound(AudioClip clip)
     {
         ambientSound.clip = clip;
         ambientSound.loop = true;
-        //ambientSound.Play();
+        ambientSound.Play();
     }
 
     public void PlaySpecificSound(AudioClip clip)
     {
         sfxSource.PlayOneShot(clip);
+    }
+
+    void AdjustVolume()
+    {
+        ambientSound.volume = musicSlider.normalizedValue;
+        sfxSource.volume = sfxSlider.normalizedValue;
     }
 }

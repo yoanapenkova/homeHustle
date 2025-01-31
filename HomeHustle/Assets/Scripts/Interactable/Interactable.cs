@@ -25,4 +25,8 @@ public class Interactable : MonoBehaviour
     [Header("Permissions")]
     [SerializeField]
     public PlayerRole[] playerRoles;
+
+    [Header("Object Properties")]
+    [SerializeField]
+    public bool throwable = false;
 }

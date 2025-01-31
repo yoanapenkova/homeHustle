@@ -20,6 +20,7 @@ public class InventoryManagement : NetworkBehaviour
     private InventorySlot currentSlotThrowing;
 
     public bool enabled = true;
+    public bool missNextThrow = false;
 
     void Awake()
     {
@@ -103,19 +104,24 @@ public class InventoryManagement : NetworkBehaviour
 
     public void HandleSlotShoot(int slotIndex)
     {
-        if (slotIndex < 0 || slotIndex >= inventorySlots.Length) return; // Safety check
+        if (missNextThrow) {
+            missNextThrow = false; 
+            return; 
+        } else {
+            if (slotIndex < 0 || slotIndex >= inventorySlots.Length) return; // Safety check
 
-        InventorySlot slot = inventorySlots[slotIndex].GetComponent<InventorySlot>();
-        if (slot != null && slot.element != null)
-        {
-            GameObject element = slot.element;
-            NetworkObject networkObject = element.GetComponent<NetworkObject>();
-
-            if (networkObject != null)
+            InventorySlot slot = inventorySlots[slotIndex].GetComponent<InventorySlot>();
+            if (slot != null && slot.element != null)
             {
-                currentSlotThrowing = slot;
-                ShootElementServerRpc(NetworkManager.Singleton.LocalClientId, networkObject);
-                slot.element = null;
+                GameObject element = slot.element;
+                NetworkObject networkObject = element.GetComponent<NetworkObject>();
+
+                if (networkObject != null)
+                {
+                    currentSlotThrowing = slot;
+                    ShootElementServerRpc(NetworkManager.Singleton.LocalClientId, networkObject);
+                    slot.element = null;
+                }
             }
         }
     }

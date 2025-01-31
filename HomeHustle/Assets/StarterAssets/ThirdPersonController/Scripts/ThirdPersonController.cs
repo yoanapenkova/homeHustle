@@ -272,7 +272,10 @@ namespace StarterAssets
             // Update the animator with the current speed
             if (_hasAnimator)
             {
-                _animator.SetFloat(_animIDSpeed, _speed / SprintSpeed); // Normalize speed for blending
+                if (!_animator.GetBool("Push"))
+                {
+                    _animator.SetFloat(_animIDSpeed, _speed / SprintSpeed); // Normalize speed for blending
+                }
             }
 
             /*

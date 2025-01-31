@@ -146,6 +146,7 @@ MonoBehaviour:
   auxKey: {fileID: 0}
   auxInstructionsText: {fileID: 0}
   playerRoles: 00000000010000000200000003000000
+  throwable: 1
 --- !u!114 &8921909367031275845
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -312,5 +313,7 @@ MonoBehaviour:
   progressSlider: {fileID: 0}
   interactionSpeed: 1
   targetProgress: 10
+  interactionProgress: 0
   washed: 0
+  sink: {fileID: 0}
   insideSink: 0

@@ -50,11 +50,14 @@ public class PushAction : NetworkBehaviour, SimpleAction
 
             float distance = Vector3.Distance(playerTransform.position, transform.position);
 
-            if (distance <= proximityDistance)
+            if (distance <= proximityDistance) //Investigar si invertimos esto
             {
                 isNear = true;
                 if (Input.GetKeyDown(KeyCode.Q))
                 {
+                    player.GetComponent<Animator>().SetBool("Push",true);
+                    player.GetComponent<PlayerManager>().pushFX.gameObject.SetActive(true);
+                    player.GetComponent<PlayerManager>().pushFX.Play();
                     isPushing = true;
                 }
             }
@@ -62,6 +65,8 @@ public class PushAction : NetworkBehaviour, SimpleAction
             {
                 isNear = false;
                 isPushing = false;
+                player.GetComponent<PlayerManager>().pushFX.Stop();
+                player.GetComponent<PlayerManager>().pushFX.gameObject.SetActive(false);
             }
         }
     }
