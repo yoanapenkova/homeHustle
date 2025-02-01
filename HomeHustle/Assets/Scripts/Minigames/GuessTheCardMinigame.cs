@@ -111,6 +111,12 @@ public class GuessTheCardMinigame : NetworkBehaviour
             {
                 StartCoroutine(FadeInFadeOut());
                 isGameOver = true;
+                playerManager.points -= costPerObject;
+                GameStats.Instance.spentPoints += costPerObject;
+                if (!GameStats.Instance.tamperedItemsState.Value)
+                {
+                    GameStats.Instance.UpdateTamperSabotageServerRpc(true);
+                }
             }
         } else
         {

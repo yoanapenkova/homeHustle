@@ -92,6 +92,11 @@ public class ClickerMinigame : NetworkBehaviour
             {
                 StartGame();
                 playerManager.points -= costPerObject;
+                GameStats.Instance.spentPoints += costPerObject;
+                if (!GameStats.Instance.tamperedItemsState.Value)
+                {
+                    GameStats.Instance.UpdateTamperSabotageServerRpc(true);
+                }
             }
             else
             {

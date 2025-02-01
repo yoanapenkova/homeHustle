@@ -104,14 +104,19 @@ public class WaterComponentAction : NetworkBehaviour, SimpleAction
             {
                 ToggleBrokenStateServerRpc();
             }
-
             if (playerManager.isHuman)
             {
                 playerManager.points -= costPerHuman;
+                GameStats.Instance.spentPoints += costPerHuman;
             }
             else
             {
                 playerManager.points -= costPerObject;
+                GameStats.Instance.spentPoints += costPerObject;
+                if (!GameStats.Instance.alteredWaterSystem.Value)
+                {
+                    GameStats.Instance.UpdateWaterSabotageServerRpc(true);
+                }
             }
         }
         else

@@ -93,10 +93,12 @@ public class TimePowerUpAction : NetworkBehaviour
                     if (collidingIsHuman)
                     {
                         UIManager.Instance.timeObjects -= 10;
+                        GameStats.Instance.UpdateLostTimeObjectsServerRpc(10);
                     }
                     else
                     {
                         UIManager.Instance.timeHumans -= 10;
+                        GameStats.Instance.UpdateLostTimeHumansServerRpc(10);
                     }
 
                     isActivated = true;

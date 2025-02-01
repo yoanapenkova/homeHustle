@@ -106,6 +106,16 @@ public class LightSwitchAction : NetworkBehaviour, SimpleAction
             {
                 ToggleLightStateServerRpc();
             }
+
+            if (!playerManager.isHuman)
+            {
+                playerManager.points -= costPerObject;
+                GameStats.Instance.spentPoints += costPerObject;
+                if (!GameStats.Instance.manipulatedLights.Value)
+                {
+                    GameStats.Instance.UpdateLightsSabotageServerRpc(true);
+                }
+            }
         } else
         {
             string message = "Need more energy!";

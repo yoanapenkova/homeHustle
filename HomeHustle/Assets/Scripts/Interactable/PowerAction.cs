@@ -69,6 +69,20 @@ public class PowerAction : NetworkBehaviour, SimpleAction
             {
                 TogglePowerStateServerRpc();
             }
+            if (playerManager.isHuman)
+            {
+                playerManager.points -= costPerHuman;
+                GameStats.Instance.spentPoints += costPerHuman;
+            }
+            else
+            {
+                playerManager.points -= costPerObject;
+                GameStats.Instance.spentPoints += costPerObject;
+                if (!GameStats.Instance.usedElectricPanel.Value)
+                {
+                    GameStats.Instance.UpdateEPanelSabotageServerRpc(true);
+                }
+            }
         } else
         {
             string message = playerManager.isHuman ? "Need more coins!" : "Need more energy!";

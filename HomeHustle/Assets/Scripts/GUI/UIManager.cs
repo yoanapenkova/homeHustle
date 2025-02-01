@@ -40,7 +40,7 @@ public class UIManager : NetworkBehaviour
     [SerializeField]
     private ParticleSystem sparksObjects;
     [SerializeField]
-    private int countdownDuration = 600;
+    public int countdownDuration = 600;
     [SerializeField]
     private TMP_Text feedbackText;
     public float feedbackDisplayDuration = 2f; // Duration to keep the text fully visible
@@ -71,6 +71,14 @@ public class UIManager : NetworkBehaviour
 
         timeHumans = countdownDuration;
         timeObjects = countdownDuration; 
+    }
+
+    private void Update()
+    {
+        if (timeHumans == 0 && timeObjects == 0)
+        {
+            GameStats.Instance.ShowGameStatsServerRpc();
+        }
     }
 
     ////////////////////////////////

@@ -123,6 +123,15 @@ public class DecayAction : NetworkBehaviour, SimpleAction
             {
                 ToggleAlteredStateServerRpc();
             }
+            if (!playerManager.isHuman)
+            {
+                playerManager.points -= costPerObject;
+                GameStats.Instance.spentPoints += costPerObject;
+                if (!GameStats.Instance.tamperedItemsState.Value)
+                {
+                    GameStats.Instance.UpdateTamperSabotageServerRpc(true);
+                }
+            }
         } else
         {
             string message = "Need more energy!";
