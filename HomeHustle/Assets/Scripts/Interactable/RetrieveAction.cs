@@ -33,8 +33,8 @@ public class RetrieveAction : NetworkBehaviour
         }
         else
         {
-            Debug.Log("No free slots.");
-            // TODO: Display message saying inventory is full.
+            string message = "You have no free slots!";
+            UIManager.Instance.ShowFeedback(message);
         }
     }
 

@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using TMPro;
 using Unity.Netcode;
 using UnityEngine;
 using UnityEngine.UI;
@@ -24,6 +25,10 @@ public class OutlineOnLook : NetworkBehaviour
     public Sprite mainKeyOriginalSprite;
     [SerializeField]
     public GameObject washUI;
+    [SerializeField]
+    public TMP_Text mainNeededPoints;
+    [SerializeField]
+    public TMP_Text auxNeededPoints;
 
     private PlayerManager playerManager;
 
@@ -61,6 +66,8 @@ public class OutlineOnLook : NetworkBehaviour
             {
                 ClearOutline();
                 mainKey.GetComponent<Image>().sprite = mainKeyOriginalSprite;
+                mainNeededPoints.text = "";
+                auxNeededPoints.text = "";
             }
         }
 
@@ -70,6 +77,8 @@ public class OutlineOnLook : NetworkBehaviour
             {
                 ClearOutline();
                 mainKey.GetComponent<Image>().sprite = mainKeyOriginalSprite;
+                mainNeededPoints.text = "";
+                auxNeededPoints.text = "";
             }
         }
     }

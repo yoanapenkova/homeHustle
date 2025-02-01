@@ -231,6 +231,7 @@ public class LockAction : NetworkBehaviour, SimpleAction
             interactable.auxInstructionsText.text = actions[0];
             interactable.mainKey.GetComponent<Image>().color = Color.white;
             interactable.mainInstructionsText.color = Color.white;
+            interactable.auxNeededPoints.text = playerManager.isHuman ? "cost: -" + costPerHuman: "cost: -" + costPerObject;
         }
 
         if (doorAction.opened)

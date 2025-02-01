@@ -35,7 +35,8 @@ public class PlugAction : NetworkBehaviour, SimpleAction
                 Outcome();
             } else
             {
-                //TODO: show message that there's no power.
+                string message = "Plugs have no power!";
+                UIManager.Instance.ShowFeedback(message);
             }
         }
     }

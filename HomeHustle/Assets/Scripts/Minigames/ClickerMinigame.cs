@@ -7,7 +7,7 @@ public class ClickerMinigame : NetworkBehaviour
 {
     [Header("Cost Management")]
     [SerializeField]
-    private int costPerObject = 5;
+    public int costPerObject = 5;
 
     public PlayerManager playerManager;
 

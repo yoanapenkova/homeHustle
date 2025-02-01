@@ -141,6 +141,7 @@ public class DecayAction : NetworkBehaviour, SimpleAction
         {
             interactable.auxKey.GetComponent<Image>().color = Color.grey;
             interactable.auxInstructionsText.color = Color.grey;
+            interactable.auxNeededPoints.text = "cost: -" + costPerObject;
         } else
         {
             interactable.auxKey.GetComponent<Image>().color = Color.white;

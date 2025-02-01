@@ -8,7 +8,7 @@ public class GuessTheCardMinigame : NetworkBehaviour
 {
     [Header("Cost Management")]
     [SerializeField]
-    private int costPerObject = 7;
+    public int costPerObject = 7;
 
     private PlayerManager playerManager;
 

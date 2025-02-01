@@ -131,6 +131,7 @@ public class WaterComponentAction : NetworkBehaviour, SimpleAction
         {
             interactable.auxKey.GetComponent<Image>().color = Color.white;
             interactable.auxInstructionsText.color = Color.white;
+            interactable.auxNeededPoints.text = "cost: -" + costPerHuman;
             interactable.mainKey.GetComponent<Image>().color = Color.grey;
             interactable.mainInstructionsText.color = Color.grey;
         }

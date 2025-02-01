@@ -16,11 +16,16 @@ public class Interactable : MonoBehaviour
     [SerializeField]
     public TMP_Text mainInstructionsText;
     [SerializeField]
+    public TMP_Text mainNeededPoints;
+    [SerializeField]
     public GameObject auxKeyBackground;
     [SerializeField]
     public GameObject auxKey;
     [SerializeField]
     public TMP_Text auxInstructionsText;
+    [SerializeField]
+    public TMP_Text auxNeededPoints;
+
 
     [Header("Permissions")]
     [SerializeField]

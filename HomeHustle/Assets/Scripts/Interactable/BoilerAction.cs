@@ -35,7 +35,8 @@ public class BoilerAction : NetworkBehaviour, SimpleAction
                 Outcome();
             } else
             {
-                //TODO: show message that there's no power.
+                string message = "Boiler has no power!";
+                UIManager.Instance.ShowFeedback(message);
             }
         }
     }
