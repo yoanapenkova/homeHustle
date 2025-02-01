@@ -121,6 +121,12 @@ public class InventoryManagement : NetworkBehaviour
                     currentSlotThrowing = slot;
                     ShootElementServerRpc(NetworkManager.Singleton.LocalClientId, networkObject);
                     slot.element = null;
+
+                    if (slot.slotTime.text != "")
+                    {
+                        slot.StopShootCountdown();
+                        slot.slotTime.text = "";
+                    }
                 }
             }
         }

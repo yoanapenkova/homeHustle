@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using Unity.Netcode;
 using UnityEngine;
 using UnityEngine.UI;
@@ -12,10 +13,14 @@ public class ElectricPanelAction : NetworkBehaviour, SimpleAction
     [SerializeField]
     private GameObject electricPanelManagementPanel;
     [SerializeField]
+    private TMP_Text costText;
+    [SerializeField]
     private Button cancelButton;
 
     private Interactable interactable;
     private bool panelOpened = false;
+
+    private PlayerManager playerManager;
 
     void Start()
     {
@@ -24,6 +29,13 @@ public class ElectricPanelAction : NetworkBehaviour, SimpleAction
 
     void Update()
     {
+        if (!IsSpawned) return;
+
+        if (playerManager == null)
+        {
+            CheckForNetworkAndPlayerServerRpc(NetworkManager.Singleton.LocalClientId);
+        }
+
         if (interactable.isOnWatch && !panelOpened)
         {
             UpdateInstructions();
@@ -41,6 +53,7 @@ public class ElectricPanelAction : NetworkBehaviour, SimpleAction
         Cursor.visible = true;
 
         electricPanelManagementPanel.SetActive(true);
+        costText.text = playerManager.isHuman ? "each action will cost -2" : "each action will cost -5";
 
         cancelButton.onClick.RemoveAllListeners();
         cancelButton.onClick.AddListener(() => HideEPManagementPanel());
@@ -63,5 +76,33 @@ public class ElectricPanelAction : NetworkBehaviour, SimpleAction
 
         Cursor.lockState = CursorLockMode.Locked;
         Cursor.visible = false;
+    }
+
+    [ServerRpc(RequireOwnership = false)]
+    void CheckForNetworkAndPlayerServerRpc(ulong clientId)
+    {
+        if (NetworkManager.Singleton.ConnectedClients.TryGetValue(clientId, out var client))
+        {
+            GameObject playerObject = client.PlayerObject.gameObject;
+
+            if (playerObject != null)
+            {
+                AssignPlayerManagerClientRpc(playerObject.GetComponent<NetworkObject>().NetworkObjectId, clientId);
+            }
+            else
+            {
+                Debug.LogError($"PlayerManager not found on Client ID {clientId}");
+            }
+        }
+    }
+
+    [ClientRpc]
+    void AssignPlayerManagerClientRpc(ulong playerObjectId, ulong clientId)
+    {
+        if (NetworkManager.Singleton.LocalClientId == clientId)
+        {
+            GameObject playerObject = NetworkManager.Singleton.SpawnManager.SpawnedObjects[playerObjectId].gameObject;
+            playerManager = playerObject.GetComponent<PlayerManager>();
+        }
     }
 }

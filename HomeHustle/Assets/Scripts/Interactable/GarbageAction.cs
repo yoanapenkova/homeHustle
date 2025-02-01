@@ -69,14 +69,14 @@ public class GarbageAction : NetworkBehaviour, SimpleAction
             {
                 if (elementsInInventory[i] != null)
                 {
+                    playerManager.gameObject.GetComponent<InventoryManagement>().missNextThrow = true;
                     if (elementsInInventory[i].GetComponent<Interactable>().throwable)
                     {
                         GameObject objToDestroy = elementsInInventory[i].gameObject;
                         elementsInInventory[i] = null;
-                        Destroy(objToDestroy);
+                        RequestDespawnServerRpc(objToDestroy.GetComponent<NetworkObject>().NetworkObjectId);
                     } else
                     {
-                        playerManager.gameObject.GetComponent<InventoryManagement>().missNextThrow = true;
                         string message = "Item cannot be thrown away!";
                         UIManager.Instance.ShowFeedback(message);
                     }
@@ -87,6 +87,15 @@ public class GarbageAction : NetworkBehaviour, SimpleAction
                     UIManager.Instance.ShowFeedback(message);
                 }
             }
+        }
+    }
+
+    [ServerRpc(RequireOwnership = false)]
+    public void RequestDespawnServerRpc(ulong objectId)
+    {
+        if (NetworkManager.SpawnManager.SpawnedObjects.TryGetValue(objectId, out NetworkObject obj))
+        {
+            obj.Despawn(true);
         }
     }
 

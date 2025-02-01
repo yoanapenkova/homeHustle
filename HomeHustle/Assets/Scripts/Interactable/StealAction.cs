@@ -68,9 +68,6 @@ public class StealAction : NetworkBehaviour, SimpleAction
         for (int i = 0; i < panelOptions.Length; i++)
         {
             PanelOption optionSlot = panelOptions[i].GetComponent<PanelOption>();
-            Debug.Log(containerInventorySlots[i]);
-            Debug.Log(containerInventorySlots[i].element);
-            Debug.Log(containerInventorySlots[i].elementIcon);
             if (containerInventorySlots[i] != null)
             {
                 if (containerInventorySlots[i].element != null)
