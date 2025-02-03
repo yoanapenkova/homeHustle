@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using Unity.Netcode;
 using UnityEngine;
-using UnityEngine.ProBuilder;
 
 public class InventoryManagement : NetworkBehaviour
 {
@@ -19,8 +18,9 @@ public class InventoryManagement : NetworkBehaviour
     private GameObject objectToParent;
     private InventorySlot currentSlotThrowing;
 
-    public bool enabled = true;
+    public bool isEnabled = true;
     public bool missNextThrow = false;
+    public bool canThrow = true;
 
     void Awake()
     {
@@ -39,47 +39,36 @@ public class InventoryManagement : NetworkBehaviour
 
     void Update()
     {
-        if (enabled)
-        {
-            ShootElements();
-        }
-    }
+        if (!IsOwner) return;
 
-    [ServerRpc(RequireOwnership = false)]
-    void ShootElementServerRpc(ulong clientId, NetworkObjectReference elementReference)
+        ShootElements();
+    }
+    
+    void StartShootElement(ulong clientId, NetworkObjectReference elementReference, GameObject placeholder)
     {
         if (elementReference.TryGet(out NetworkObject elementNetworkObject))
         {
             GameObject element = elementNetworkObject.gameObject;
-            Rigidbody rb = element.GetComponent<Rigidbody>();
 
-            if (rb != null)
+            if (element != null)
             {
                 element.GetComponent<PickUpAction>().ChangePickUpState();
 
-                element.transform.SetParent(null);
+                ulong objectId = element.GetComponent<NetworkObject>().NetworkObjectId;
+                DeparentElementServerRpc(objectId);
 
                 if (currentSlotThrowing.isDirected)
                 {
-                    element.transform.position = currentSlotThrowing.directedTransform.position;
-                    element.transform.rotation = currentSlotThrowing.directedTransform.rotation;
+                    ChangePositionServerRpc(element.GetComponent<NetworkObject>().NetworkObjectId, placeholder.GetComponent<NetworkObject>().NetworkObjectId);
+                    
                     currentSlotThrowing.isDirected = false;
                     currentSlotThrowing.directedTransform = null;
                     currentSlotThrowing = null;
-                    enabled = true;
+                    isEnabled = true;
                 }
                 else
                 {
-                    Transform shootingPoint = NetworkManager.Singleton.ConnectedClients[clientId].PlayerObject.transform.Find("ShootingInventoryElement");
-                    if (shootingPoint != null)
-                    {
-                        Vector3 shootDirection = shootingPoint.forward;
-                        rb.AddForce(shootDirection * shootForce, ForceMode.Impulse);
-                    }
-                    else
-                    {
-                        Debug.LogWarning("ShootingPoint not found for client.");
-                    }
+                    ShootServerRpc(clientId, objectId);
                 }
             }
         }
@@ -89,21 +78,64 @@ public class InventoryManagement : NetworkBehaviour
         }
     }
 
+    [ServerRpc(RequireOwnership = false)]
+    void ChangePositionServerRpc(ulong elementId, ulong placeholderId)
+    {
+        GameObject element = NetworkManager.Singleton.SpawnManager.SpawnedObjects[elementId].gameObject;
+        GameObject placeholder = NetworkManager.Singleton.SpawnManager.SpawnedObjects[placeholderId].gameObject;
+        if (element != null && placeholder != null)
+        {
+            element.transform.position = placeholder.transform.position;
+            element.transform.rotation = placeholder.transform.rotation;
+        }
+    }
+
+    [ServerRpc(RequireOwnership = false)]
+    void DeparentElementServerRpc(ulong objectId)
+    {
+        GameObject elementObject = NetworkManager.Singleton.SpawnManager.SpawnedObjects[objectId].gameObject;
+        elementObject.transform.SetParent(null);
+    }
+
+    [ServerRpc(RequireOwnership = false)]
+    void ShootServerRpc(ulong clientId, ulong objectId)
+    {
+        Transform shootingPoint = NetworkManager.Singleton.ConnectedClients[clientId].PlayerObject.transform.Find("ShootingInventoryElement");
+        GameObject elementObject = NetworkManager.Singleton.SpawnManager.SpawnedObjects[objectId].gameObject;
+        Rigidbody rb = elementObject.GetComponent<Rigidbody>();
+        if (shootingPoint != null)
+        {
+            Vector3 shootDirection = shootingPoint.forward;
+            rb.AddForce(shootDirection * shootForce, ForceMode.Impulse);
+        }
+        else
+        {
+            Debug.LogWarning("ShootingPoint not found for client.");
+        }
+    }
+
 
     void ShootElements()
     {
+        if (!isEnabled) return; // Prevents execution if disabled
+
         for (int i = 0; i < inventorySlots.Length; i++)
         {
             KeyCode key = KeyCode.Alpha1 + i; // Map Alpha1, Alpha2, etc., to slot indices
             if (Input.GetKeyDown(key))
             {
-                HandleSlotShoot(i);
+                Debug.Log("InventoryManagement");
+                HandleSlotShoot(i, false, null);
             }
         }
     }
 
-    public void HandleSlotShoot(int slotIndex)
+    public void HandleSlotShoot(int slotIndex, bool isDirected, GameObject placeholder)
     {
+        if (!IsOwner) return;
+
+        if (!canThrow) return;
+
         if (missNextThrow) {
             missNextThrow = false; 
             return; 
@@ -115,11 +147,18 @@ public class InventoryManagement : NetworkBehaviour
             {
                 GameObject element = slot.element;
                 NetworkObject networkObject = element.GetComponent<NetworkObject>();
+                Debug.Log(networkObject.gameObject.name);
 
                 if (networkObject != null)
                 {
+                    Debug.Log("assigning current slot throwing");
                     currentSlotThrowing = slot;
-                    ShootElementServerRpc(NetworkManager.Singleton.LocalClientId, networkObject);
+                    currentSlotThrowing.isDirected = isDirected;
+                    if (placeholder != null)
+                    {
+                        currentSlotThrowing.directedTransform = placeholder.transform;
+                    }
+                    StartShootElement(NetworkManager.Singleton.LocalClientId, networkObject, placeholder);
                     slot.element = null;
 
                     if (slot.slotTime.text != "")
@@ -127,9 +166,20 @@ public class InventoryManagement : NetworkBehaviour
                         slot.StopShootCountdown();
                         slot.slotTime.text = "";
                     }
+
+                    // Start cooldown after throwing
+                    StartCoroutine(ThrowCooldown());
                 }
             }
         }
+    }
+
+    // Cooldown Coroutine
+    private IEnumerator ThrowCooldown()
+    {
+        canThrow = false; // Disable throwing
+        yield return new WaitForSeconds(1f); // Wait for 1 second
+        canThrow = true; // Re-enable throwing
     }
 
 }

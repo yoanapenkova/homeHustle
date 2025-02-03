@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Runtime.CompilerServices;
 using Unity.Collections.LowLevel.Unsafe;
 using Unity.Netcode;
 using UnityEngine;
@@ -64,20 +65,29 @@ public class PutAction : NetworkBehaviour, SimpleAction
 
             if (Input.GetKeyDown(currentKeyCode) && !occupied && playerManager.isHuman)
             {
+                Debug.Log("PutAction");
                 Outcome();
             }
             placeholder.SetActive(true);
+            playerManager.gameObject.GetComponent<InventoryManagement>().isEnabled = false;
         }
         else
         {
             currentKeyCode = KeyCode.E;
             placeholder.SetActive(false);
+            playerManager.gameObject.GetComponent<InventoryManagement>().isEnabled = true;
         }
 
         if (placedObject != null)
         {
             CheckObjectPickedUp();
         }
+    }
+
+    public override void OnNetworkSpawn()
+    {
+        base.OnNetworkSpawn();
+        placeholder.SetActive(false);
     }
 
     public void Outcome()
@@ -87,16 +97,9 @@ public class PutAction : NetworkBehaviour, SimpleAction
         if (result.Item1)
         {
             placedObject = playerInventory[result.Item2].element;
-            placedObject.GetComponent<MealAction>().enabled = true;
-            placedObject.GetComponent<MealAction>().platePlaced = true;
-            placedObject.GetComponent<MealAction>().gamePanel = gamePanel;
-            placedObject.GetComponent<WashAction>().enabled = true;
-            placedObject.GetComponent<WashAction>().washUI = washUI;
-            placedObject.GetComponent<WashAction>().progressSlider = progressSlider;
-            playerInventory[result.Item2].isDirected = true;
-            playerInventory[result.Item2].directedTransform = placeholder.transform;
-            playerManager.gameObject.GetComponent<InventoryManagement>().enabled = false;
-            playerManager.gameObject.GetComponent<InventoryManagement>().HandleSlotShoot(result.Item2);
+            UpdatePlacedObjectServerRpc(placedObject.GetComponent<NetworkObject>().NetworkObjectId);
+
+            playerManager.gameObject.GetComponent<InventoryManagement>().HandleSlotShoot(result.Item2, true, placeholder);
 
             ChangeState();
         } else
@@ -129,6 +132,36 @@ public class PutAction : NetworkBehaviour, SimpleAction
             interactable.mainKey.GetComponent<Image>().color = Color.grey;
             interactable.mainInstructionsText.color = Color.grey;
         }
+    }
+
+    [ServerRpc(RequireOwnership = false)]
+    void UpdatePlacedObjectServerRpc(ulong itemId)
+    {
+        GameObject item = NetworkManager.Singleton.SpawnManager.SpawnedObjects[itemId].gameObject;
+        placedObject = item;
+
+        placedObject.GetComponent<MealAction>().enabled = true;
+        placedObject.GetComponent<MealAction>().platePlaced = true;
+        placedObject.GetComponent<MealAction>().gamePanel = gamePanel;
+        placedObject.GetComponent<WashAction>().enabled = true;
+        placedObject.GetComponent<WashAction>().washUI = washUI;
+        placedObject.GetComponent<WashAction>().progressSlider = progressSlider;
+
+        UpdatePlacedObjectClientRpc(itemId);
+    }
+
+    [ClientRpc(RequireOwnership = false)]
+    void UpdatePlacedObjectClientRpc (ulong itemId)
+    {
+        GameObject item = NetworkManager.Singleton.SpawnManager.SpawnedObjects[itemId].gameObject;
+        placedObject = item;
+
+        placedObject.GetComponent<MealAction>().enabled = true;
+        placedObject.GetComponent<MealAction>().platePlaced = true;
+        placedObject.GetComponent<MealAction>().gamePanel = gamePanel;
+        placedObject.GetComponent<WashAction>().enabled = true;
+        placedObject.GetComponent<WashAction>().washUI = washUI;
+        placedObject.GetComponent<WashAction>().progressSlider = progressSlider;
     }
 
     void ChangeState()

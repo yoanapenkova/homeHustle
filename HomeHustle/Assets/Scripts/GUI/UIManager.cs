@@ -1,6 +1,8 @@
 using System.Collections;
+using System.Net.Security;
 using TMPro;
 using Unity.Netcode;
+using Unity.Services.Authentication;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -27,6 +29,7 @@ public class UIManager : NetworkBehaviour
     [Header("In-game")]
     [SerializeField]
     private GameObject hudScreen;
+    private Vector3 hudScreenOriginalScale;
     [SerializeField]
     private TMP_Text countdownTimerHumansText;
     [SerializeField]
@@ -51,6 +54,13 @@ public class UIManager : NetworkBehaviour
     public int timeObjects;
 
     public static UIManager Instance;
+
+    private string[] funnyCharacterNames = new string[]{
+    "Wobble","Snort","Pickle","Spud","Doofus","Giggles","Noodle","Tater","Fluffy","Wiggles",
+    "Dork","Boing","Bungus","Farticus","Bibble","Squishy","Zonk","Bloop","Scoot","Pogo",
+    "Bumper","Snazzy","Cheddar","Puddles","Wacky","Toast","Snoozer","Zippy","Gizmo","Goober",
+    "Doodles","Scooby","Slinky","Crumbs","Bonk","Skippy","Waffles","Yapper","Banana","Chuckle",
+    "Zonkus","Squiggle","Muffin","Blobby","Fizzy","Sprocket","Choco","Twinkle","Bork","Goofus"};
 
     private void Awake()
     {
@@ -110,14 +120,25 @@ public class UIManager : NetworkBehaviour
 
     private void OnDisable()
     {
-        NetworkManager.Singleton.OnClientConnectedCallback -= OnClientConnectedForNames;
+        if (NetworkManager.Singleton != null)
+        {
+            NetworkManager.Singleton.OnClientConnectedCallback -= OnClientConnectedForNames;
+        }
+    }
+
+    public override void OnNetworkSpawn()
+    {
+        base.OnNetworkSpawn();
+
+        hudScreenOriginalScale = hudScreen.transform.localScale;
+        hudScreen.transform.localScale = Vector3.zero;
     }
 
     private void OnClientConnectedForNames(ulong clientId)
     {
         if (IsServer)
         {
-            string newPlayerName = "Player_" + clientId;
+            string newPlayerName = funnyCharacterNames[Random.Range(0, funnyCharacterNames.Length)] + "#" + clientId.ToString("D4");
             playerList += newPlayerName + "\n";
 
             UpdatePlayerListClientRpc(playerList);
@@ -129,7 +150,6 @@ public class UIManager : NetworkBehaviour
         connectedPlayers.Value++;
         homeScreen.SetActive(false);
         preGameScreen.SetActive(true);
-        //hudScreen.SetActive(false);
 
         Cursor.lockState = CursorLockMode.Locked;
         Cursor.visible = false;
@@ -169,7 +189,7 @@ public class UIManager : NetworkBehaviour
     }
 
     [ClientRpc]
-    private void UpdatePlayerListClientRpc(string updatedList)
+    public void UpdatePlayerListClientRpc(string updatedList)
     {
         playersNamesText.text = updatedList;
     }
@@ -186,7 +206,7 @@ public class UIManager : NetworkBehaviour
     public void GetHUD()
     {
         preGameScreen.SetActive(false);
-        hudScreen.SetActive(true);
+        hudScreen.transform.localScale = hudScreenOriginalScale;
 
         StartCoroutine(StartCountdownHumans());
         StartCoroutine(StartCountdownObjects());

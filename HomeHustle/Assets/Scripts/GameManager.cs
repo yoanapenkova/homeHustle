@@ -5,12 +5,14 @@ using Unity.Netcode;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
-public class GameManager : MonoBehaviour
+public class GameManager : NetworkBehaviour
 {
     public static GameManager Instance { get; private set; }
 
     public bool gameStarted = false;
     public event Action OnGameStarted;
+
+    public PlayerManager playerManager;
 
     private void Awake()
     {
@@ -22,6 +24,16 @@ public class GameManager : MonoBehaviour
         else
         {
             Destroy(gameObject);
+        }
+    }
+
+    void Update()
+    {
+        if (!IsSpawned) return;
+
+        if (playerManager == null)
+        {
+            CheckForNetworkAndPlayerServerRpc(NetworkManager.Singleton.LocalClientId);
         }
     }
 
@@ -38,6 +50,7 @@ public class GameManager : MonoBehaviour
             if (!gameStarted && value)
             {
                 gameStarted = value;
+                Debug.Log("Game is starting!");
                 OnGameStarted?.Invoke();
             }
         }
@@ -48,7 +61,7 @@ public class GameManager : MonoBehaviour
         UIManager.Instance.GetHUD();
         TimePowerUpManager.Instance.PrepareSpawnPoints();
 
-        gameStarted = true;
+        IsGameActive = true;
     }
 
     public void EndGameSession()
@@ -59,9 +72,37 @@ public class GameManager : MonoBehaviour
         }
 
         Debug.Log("Game session ended. Reload in few instants.");
-        gameStarted = false;
+        IsGameActive = false;
 
         // Reload the current scene
         SceneManager.LoadScene(SceneManager.GetActiveScene().name);
+    }
+
+    [ServerRpc(RequireOwnership = false)]
+    void CheckForNetworkAndPlayerServerRpc(ulong clientId)
+    {
+        if (NetworkManager.Singleton.ConnectedClients.TryGetValue(clientId, out var client))
+        {
+            GameObject playerObject = client.PlayerObject.gameObject;
+
+            if (playerObject != null)
+            {
+                AssignPlayerManagerClientRpc(playerObject.GetComponent<NetworkObject>().NetworkObjectId, clientId);
+            }
+            else
+            {
+                Debug.LogError($"PlayerManager not found on Client ID {clientId}");
+            }
+        }
+    }
+
+    [ClientRpc]
+    void AssignPlayerManagerClientRpc(ulong playerObjectId, ulong clientId)
+    {
+        if (NetworkManager.Singleton.LocalClientId == clientId)
+        {
+            GameObject playerObject = NetworkManager.Singleton.SpawnManager.SpawnedObjects[playerObjectId].gameObject;
+            playerManager = playerObject.GetComponent<PlayerManager>();
+        }
     }
 }

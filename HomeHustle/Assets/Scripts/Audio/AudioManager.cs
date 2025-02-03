@@ -56,7 +56,7 @@ public class AudioManager : MonoBehaviour
     {
         ambientSound.clip = clip;
         ambientSound.loop = true;
-        ambientSound.Play();
+        //ambientSound.Play();
     }
 
     public void PlaySpecificSound(AudioClip clip)

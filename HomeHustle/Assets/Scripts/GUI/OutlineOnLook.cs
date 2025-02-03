@@ -44,7 +44,7 @@ public class OutlineOnLook : NetworkBehaviour
         Ray ray = new Ray(playerCamera.transform.position, playerCamera.transform.forward);
         RaycastHit hit;
 
-        if (playerManager != null)
+        if (playerManager != null && GameManager.Instance.gameStarted)
         {
             if (Physics.Raycast(ray, out hit, maxDistance, interactableLayer))
             {

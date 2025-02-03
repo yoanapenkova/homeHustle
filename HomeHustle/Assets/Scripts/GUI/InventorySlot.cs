@@ -20,8 +20,6 @@ public class InventorySlot : NetworkBehaviour
     public bool isDirected = false;
     public Transform directedTransform;
 
-    private PlayerManager playerManager;
-
     void Start()
     {
         
@@ -29,13 +27,6 @@ public class InventorySlot : NetworkBehaviour
 
     void Update()
     {
-        if (!IsSpawned) return;
-
-        if (playerManager == null)
-        {
-            CheckForNetworkAndPlayerServerRpc(NetworkManager.Singleton.LocalClientId);
-        }
-
         updateAppearance();
     }
 
@@ -76,7 +67,7 @@ public class InventorySlot : NetworkBehaviour
 
         slotTime.text = "";
         
-        playerManager.gameObject.GetComponent<InventoryManagement>().HandleSlotShoot(index);
+        GameManager.Instance.playerManager.gameObject.GetComponent<InventoryManagement>().HandleSlotShoot(index, false, null);
 
         shootCoroutine = null; // Reset reference after completion
     }
@@ -104,35 +95,6 @@ public class InventorySlot : NetworkBehaviour
         else
         {
             Debug.LogWarning("[StopShootCountdown] No coroutine running to stop.");
-        }
-    }
-
-
-    [ServerRpc(RequireOwnership = false)]
-    void CheckForNetworkAndPlayerServerRpc(ulong clientId)
-    {
-        if (NetworkManager.Singleton.ConnectedClients.TryGetValue(clientId, out var client))
-        {
-            GameObject playerObject = client.PlayerObject.gameObject;
-
-            if (playerObject != null)
-            {
-                AssignPlayerManagerClientRpc(playerObject.GetComponent<NetworkObject>().NetworkObjectId, clientId);
-            }
-            else
-            {
-                Debug.LogError($"PlayerManager not found on Client ID {clientId}");
-            }
-        }
-    }
-
-    [ClientRpc]
-    void AssignPlayerManagerClientRpc(ulong playerObjectId, ulong clientId)
-    {
-        if (NetworkManager.Singleton.LocalClientId == clientId)
-        {
-            GameObject playerObject = NetworkManager.Singleton.SpawnManager.SpawnedObjects[playerObjectId].gameObject;
-            playerManager = playerObject.GetComponent<PlayerManager>();
         }
     }
 }

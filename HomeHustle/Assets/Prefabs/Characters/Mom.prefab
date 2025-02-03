@@ -18131,7 +18131,6 @@ GameObject:
   - component: {fileID: 6252500357674144929}
   - component: {fileID: 6457505478037735194}
   - component: {fileID: -6673354215150516597}
-  - component: {fileID: 3759161773456813575}
   m_Layer: 2
   m_Name: Mom
   m_TagString: Player
@@ -18204,7 +18203,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d5a57f767e5e46a458fc5d3c628d0cbb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  GlobalObjectIdHash: 2890744246
+  GlobalObjectIdHash: 2955289198
   InScenePlacedSourceGlobalObjectIdHash: 0
   AlwaysReplicateAsRoot: 0
   SynchronizeTransform: 1
@@ -18392,7 +18391,7 @@ Animator:
   m_GameObject: {fileID: 6522310770964685636}
   m_Enabled: 1
   m_Avatar: {fileID: 0}
-  m_Controller: {fileID: 9100000, guid: 72257274d49f09f448a131c9df7310f0, type: 2}
+  m_Controller: {fileID: 9100000, guid: ff2f5db4f00722f4290fd40dc527d920, type: 2}
   m_CullingMode: 0
   m_UpdateMode: 0
   m_ApplyRootMotion: 0
@@ -18465,6 +18464,7 @@ MonoBehaviour:
   points: 0
   cameraMovement: 1
   actionKeys: 310000003200000033000000340000006500000071000000
+  pushFX: {fileID: 1701687775494551808}
 --- !u!114 &-6673354215150516597
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -18485,26 +18485,7 @@ MonoBehaviour:
   shootingPoint: {fileID: 3999514449117770070}
   shootForce: 10
   enabled: 1
---- !u!114 &3759161773456813575
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6522310770964685636}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 72d65d20591f0454a8fce77614331460, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  inventorySlots:
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  shootingPoint: {fileID: 6792369900497964098, guid: 3d8e9e332f5f99d40b6bf9006763851f, type: 3}
-  shootForce: 10
-  enabled: 1
+  missNextThrow: 0
 --- !u!1 &6525077470759063028
 GameObject:
   m_ObjectHideFlags: 0
@@ -20869,7 +20850,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &5098176595374463604
 Transform:
   m_ObjectHideFlags: 0

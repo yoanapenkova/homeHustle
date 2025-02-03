@@ -1711,7 +1711,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &3168860178837196225
 Transform:
   m_ObjectHideFlags: 0
@@ -7498,7 +7498,7 @@ Animator:
   m_GameObject: {fileID: 6522310770964685636}
   m_Enabled: 1
   m_Avatar: {fileID: 0}
-  m_Controller: {fileID: 9100000, guid: 0f2c0f96e3d098c4a9300891d5aa4064, type: 2}
+  m_Controller: {fileID: 9100000, guid: 22706c8455af2fc44bc36e28eef4711e, type: 2}
   m_CullingMode: 0
   m_UpdateMode: 0
   m_ApplyRootMotion: 0
@@ -7571,6 +7571,7 @@ MonoBehaviour:
   points: 0
   cameraMovement: 1
   actionKeys: 310000003200000033000000340000006500000071000000
+  pushFX: {fileID: 3025875572180266918}
 --- !u!114 &2080632858841000081
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -7591,6 +7592,7 @@ MonoBehaviour:
   shootingPoint: {fileID: 5095538883016789583}
   shootForce: 10
   enabled: 1
+  missNextThrow: 0
 --- !u!1 &6693175210422128420
 GameObject:
   m_ObjectHideFlags: 0

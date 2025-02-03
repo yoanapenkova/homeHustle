@@ -2348,6 +2348,7 @@ MonoBehaviour:
   points: 0
   cameraMovement: 1
   actionKeys: 310000003200000033000000340000006500000071000000
+  pushFX: {fileID: 7918208031366281081}
 --- !u!114 &2154947206321284060
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2368,6 +2369,7 @@ MonoBehaviour:
   shootingPoint: {fileID: 6909633202375321070}
   shootForce: 10
   enabled: 1
+  missNextThrow: 0
 --- !u!1 &6808647733903869862
 GameObject:
   m_ObjectHideFlags: 0
@@ -2494,7 +2496,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &2084951223766015705
 Transform:
   m_ObjectHideFlags: 0
@@ -2503,13 +2505,13 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 7312809826762952829}
   serializedVersion: 2
-  m_LocalRotation: {x: 0.05415042, y: -0.7084016, z: -0.06742321, w: -0.7004921}
+  m_LocalRotation: {x: -0.009319565, y: -0.99624217, z: -0.08597289, w: 0.0048303376}
   m_LocalPosition: {x: 0.025626183, y: 0.02, z: -0.013000011}
   m_LocalScale: {x: 0.22088999, y: 0.22089, z: 0.22089}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 4872946186941523522}
-  m_LocalEulerAnglesHint: {x: -9.869, y: 90.554, z: 1.032}
+  m_LocalEulerAnglesHint: {x: -9.869, y: 180.467, z: 1.032}
 --- !u!198 &7918208031366281081
 ParticleSystem:
   m_ObjectHideFlags: 0

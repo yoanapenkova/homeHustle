@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using Unity.Netcode;
 using Unity.Services.Lobbies.Models;
 using UnityEngine;
+using UnityEngine.InputSystem.LowLevel;
 
 public class TimePowerUpAction : NetworkBehaviour
 {
@@ -15,7 +16,7 @@ public class TimePowerUpAction : NetworkBehaviour
 
     void Start()
     {
-        isCollected.OnValueChanged += OnCollectedStateChanged;
+        
     }
 
     void Update()
@@ -39,15 +40,7 @@ public class TimePowerUpAction : NetworkBehaviour
 
     public void Outcome()
     {
-        if (IsServer)
-        {
-            ToggleCollectedState();
-        }
-        else
-        {
-            ToggleCollectedStateServerRpc();
-        }
-
+        ToggleCollectedStateServerRpc();
         gameObject.SetActive(false);
     }
 
@@ -58,29 +51,56 @@ public class TimePowerUpAction : NetworkBehaviour
 
     private void ToggleCollectedState()
     {
-        isCollected.Value = !isCollected.Value;
-        collected = isCollected.Value;
+        isCollected.Value = true;
+        collected = true;
 
-        CollectedStateChangedClientRpc(isCollected.Value, collidingPlayerObject.isHuman);
+        if (collected && !isActivated)
+        {
+            Debug.Log("Power up has been collected.");
+
+            PlayerManager[] players = FindObjectsOfType<PlayerManager>();
+
+            foreach (PlayerManager player in players)
+            {
+                if (player.IsOwner) // Check if this is the local player
+                {
+                    if (collidingPlayerObject.GetComponent<PlayerManager>().isHuman)
+                    {
+                        UIManager.Instance.timeObjects -= 10;
+                        GameStats.Instance.UpdateLostTimeObjectsServerRpc(10);
+                    }
+                    else
+                    {
+                        UIManager.Instance.timeHumans -= 10;
+                        GameStats.Instance.UpdateLostTimeHumansServerRpc(10);
+                    }
+
+                    isActivated = true;
+                    break;
+                }
+            }
+        }
     }
 
     [ServerRpc(RequireOwnership = false)]
     private void ToggleCollectedStateServerRpc()
     {
         ToggleCollectedState();
+        CollectedStateChangedClientRpc(collidingPlayerObject.isHuman);
     }
 
     private void OnCollectedStateChanged(bool previousValue, bool newValue)
     {
-        collected = newValue;
+        collected = true;
     }
 
-    [ClientRpc]
-    private void CollectedStateChangedClientRpc(bool newState, bool collidingIsHuman)
+    [ClientRpc(RequireOwnership = false)]
+    private void CollectedStateChangedClientRpc(bool collidingIsHuman)
     {
-        collected = newState;
+        isCollected.Value = true;
+        collected = true;
 
-        if (newState && !isActivated)
+        if (collected && !isActivated)
         {
             Debug.Log("Power up has been collected.");
 

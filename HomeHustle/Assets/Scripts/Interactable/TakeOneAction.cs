@@ -46,16 +46,14 @@ public class TakeOneAction : NetworkBehaviour, SimpleAction
         {
             if (IsServer)
             {
+                Debug.Log("Server making the request.");
                 SpawnNewItem();
             } else
             {
+                Debug.Log("Client making the request.");
                 SpawnNewItemServerRpc();
             }
-
-            if (newItem != null)
-            {
-                newItem.GetComponent<PickUpAction>().Outcome();
-            }
+            StartCoroutine(PotentialPickUpItem());
         } else
         {
             string message = "There is a plate on the counter!";
@@ -81,6 +79,15 @@ public class TakeOneAction : NetworkBehaviour, SimpleAction
         }
             
     }
+    
+    IEnumerator PotentialPickUpItem()
+    {
+        yield return new WaitForSeconds(.5f);
+        if (newItem != null)
+        {
+            newItem.GetComponent<PickUpAction>().Outcome();
+        }
+    }
 
     void SpawnNewItem()
     {
@@ -88,14 +95,14 @@ public class TakeOneAction : NetworkBehaviour, SimpleAction
         GameObject spawnedObject = Instantiate(prefabToSpawn, spawnPoint.position, spawnPoint.rotation);
 
         NetworkObject networkObject = spawnedObject.GetComponent<NetworkObject>();
+        networkObject.Spawn();
         if (networkObject == null)
         {
             Debug.LogError("Prefab does not have a NetworkObject component attached!");
-            Destroy(spawnedObject);
+            networkObject.Despawn(true);
             return;
         }
 
-        networkObject.Spawn();
         spawnedObject.transform.parent = spawnPoint.transform;
         spawnedObject.GetComponent<PickUpAction>().inventorySlots = inventorySlots;
         spawnedObject.GetComponent<Interactable>().actionsInstructions = interactable.actionsInstructions;
@@ -109,11 +116,31 @@ public class TakeOneAction : NetworkBehaviour, SimpleAction
         spawnedObject.GetComponent<PickUpAction>().colliders = spawnedObject.GetComponentsInChildren<Collider>();
         spawnedObject.GetComponent<PickUpAction>().rb = spawnedObject.GetComponent<Rigidbody>();
         newItem = spawnedObject;
+        UpdateItemClientRpc(networkObject.NetworkObjectId);
+        Debug.Log(newItem);
     }
 
     [ServerRpc (RequireOwnership = false)]
     void SpawnNewItemServerRpc()
     {
         SpawnNewItem();
+    }
+
+    [ClientRpc(RequireOwnership = false)]
+    void UpdateItemClientRpc(ulong itemId)
+    {
+        GameObject spawnedObject = NetworkManager.Singleton.SpawnManager.SpawnedObjects[itemId].gameObject;
+        spawnedObject.GetComponent<PickUpAction>().inventorySlots = inventorySlots;
+        spawnedObject.GetComponent<Interactable>().actionsInstructions = interactable.actionsInstructions;
+        spawnedObject.GetComponent<Interactable>().mainKeyBackground = interactable.mainKeyBackground;
+        spawnedObject.GetComponent<Interactable>().mainKey = interactable.mainKey;
+        spawnedObject.GetComponent<Interactable>().mainInstructionsText = interactable.mainInstructionsText;
+        spawnedObject.GetComponent<Interactable>().auxKeyBackground = interactable.auxKeyBackground;
+        spawnedObject.GetComponent<Interactable>().auxKey = interactable.auxKey;
+        spawnedObject.GetComponent<Interactable>().auxInstructionsText = interactable.auxInstructionsText;
+        spawnedObject.GetComponent<PickUpAction>().renderers = spawnedObject.GetComponentsInChildren<Renderer>();
+        spawnedObject.GetComponent<PickUpAction>().colliders = spawnedObject.GetComponentsInChildren<Collider>();
+        spawnedObject.GetComponent<PickUpAction>().rb = spawnedObject.GetComponent<Rigidbody>();
+        newItem = spawnedObject;
     }
 }

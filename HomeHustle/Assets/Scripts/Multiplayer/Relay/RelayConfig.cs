@@ -8,10 +8,11 @@ using Unity.Services.Relay.Models;
 using TMPro;
 using Unity.Netcode.Transports.UTP;
 using Unity.Networking.Transport.Relay;
-using Cinemachine;
 
 public class RelayConfig : NetworkBehaviour
 {
+    private string playerName;
+
     [Header("Relay Configuration")]
     [SerializeField]
     private Button hostButton;
@@ -29,13 +30,6 @@ public class RelayConfig : NetworkBehaviour
     [Header("Player Prefabs")]
     [SerializeField]
     private GameObject[] playerPrefabs; // Array to store different player prefabs
-
-    private string[] funnyCharacterNames = new string[]{
-    "Wobble","Snort","Pickle","Spud","Doofus","Giggles","Noodle","Tater","Fluffy","Wiggles",
-    "Dork","Boing","Bungus","Farticus","Bibble","Squishy","Zonk","Bloop","Scoot","Pogo",
-    "Bumper","Snazzy","Cheddar","Puddles","Wacky","Toast","Snoozer","Zippy","Gizmo","Goober",
-    "Doodles","Scooby","Slinky","Crumbs","Bonk","Skippy","Waffles","Yapper","Banana","Chuckle",
-    "Zonkus","Squiggle","Muffin","Blobby","Fizzy","Sprocket","Choco","Twinkle","Bork","Goofus"};
 
 
     private void Awake()
@@ -61,7 +55,7 @@ public class RelayConfig : NetworkBehaviour
         await AuthenticationService.Instance.SignInAnonymouslyAsync();
 
         //For setting up the players' names
-        await AuthenticationService.Instance.UpdatePlayerNameAsync(funnyCharacterNames[Random.Range(0,funnyCharacterNames.Length)]);
+        //await AuthenticationService.Instance.UpdatePlayerNameAsync(funnyCharacterNames[Random.Range(0, funnyCharacterNames.Length)]);
     }
 
     void Update()
@@ -147,8 +141,11 @@ public class RelayConfig : NetworkBehaviour
 
     private void OnDisable()
     {
-        NetworkManager.Singleton.OnClientConnectedCallback -= UIManager.Instance.OnClientConnected;
-        NetworkManager.Singleton.OnClientDisconnectCallback -= UIManager.Instance.OnClientDisconnected;
-        UIManager.Instance.connectedPlayers.OnValueChanged -= UIManager.Instance.OnPlayerCountChanged;
+        if (NetworkManager != null)
+        {
+            NetworkManager.Singleton.OnClientConnectedCallback -= UIManager.Instance.OnClientConnected;
+            NetworkManager.Singleton.OnClientDisconnectCallback -= UIManager.Instance.OnClientDisconnected;
+            UIManager.Instance.connectedPlayers.OnValueChanged -= UIManager.Instance.OnPlayerCountChanged;
+        }    
     }
 }

@@ -47,8 +47,11 @@ public class PlayerManager : NetworkBehaviour
         if (IsOwner)
         {
             UpdateCoins();
+            if (GameManager.Instance.gameStarted)
+            {
+                UpdateAnimator();
+            }
         }
-        UpdateAnimator();
     }
 
     private void OnEnable()

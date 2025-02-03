@@ -12,8 +12,8 @@ public class TimePowerUpManager : NetworkBehaviour
 
     private bool[] takenSpawnPoints;
 
-    private float spawnInterval = 30f;
-    private float powerUpLifetime = 10f;
+    private float spawnInterval = 10f;
+    private float powerUpLifetime = 20f;
 
     public static TimePowerUpManager Instance;
 
