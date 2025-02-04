@@ -33,10 +33,20 @@ public class SandwichMinigame : NetworkBehaviour
     // Update is called once per frame
     void Update()
     {
-        //if (!IsSpawned) return;
+        if (mealAction == null) return;
 
-        CheckForFinish();
-        UpdateData();
+        if (!completed)
+        {
+            if (!mealAction.eaten)
+            {
+                CheckForFinish();
+            }
+        }
+        else if (!mealAction.eaten) // Prevents multiple calls
+        {
+            completed = false;
+            UpdateData();
+        }
     }
 
     public override void OnNetworkSpawn()
@@ -47,6 +57,8 @@ public class SandwichMinigame : NetworkBehaviour
 
     void CheckForFinish()
     {
+        if (completed) { return; }
+
         bool isItDone = true;
 
         foreach (ItemSlot slot in resultSlots)
@@ -63,15 +75,19 @@ public class SandwichMinigame : NetworkBehaviour
 
         if (completed)
         {
+            Debug.Log("CheckForFinish: game has been finished.");
             StartCoroutine(ShowDoneIcon());
         }
     }
 
     void UpdateData()
     {
-        if (completed && !mealAction.eaten)
+        if (!mealAction.eaten)
         {
-            mealAction.UpdateState();
+            MealAction meal = mealAction;
+            mealAction = null;
+            Debug.Log("UpdateData: meal has been eaten.");
+            meal.UpdateState();
         }
     }
 

@@ -23,7 +23,7 @@ public class MealAction : NetworkBehaviour, SimpleAction
     {
         interactable = GetComponent<Interactable>();
 
-        isEaten.OnValueChanged += OnEatenStateChanged;
+        //isEaten.OnValueChanged += OnEatenStateChanged;
     }
 
     // Update is called once per frame

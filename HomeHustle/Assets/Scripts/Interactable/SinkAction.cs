@@ -16,7 +16,7 @@ public class SinkAction : NetworkBehaviour, SimpleAction
     private Interactable interactable;
     private WaterComponentAction waterComponentAction;
 
-    private NetworkVariable<bool> isRunning = new NetworkVariable<bool>(false);
+    public NetworkVariable<bool> isRunning = new NetworkVariable<bool>(false);
 
     void Start()
     {
@@ -107,6 +107,7 @@ public class SinkAction : NetworkBehaviour, SimpleAction
     [ClientRpc]
     private void SinkStateChangedClientRpc(bool newState)
     {
+        open = newState;
         if (newState)
         {
             EnableWaterFlow();

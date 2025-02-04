@@ -34,8 +34,15 @@ public class FreshenUpMinigame : NetworkBehaviour
             CheckForNetworkAndPlayerServerRpc(NetworkManager.Singleton.LocalClientId);
         }
 
-        CheckForFinish();
-        UpdateCounter();
+        if (freshUpAction == null) return;
+
+        if (!completed)
+        {
+            CheckForFinish();
+        } else
+        {
+            UpdateCounter();
+        }
     }
 
     public override void OnNetworkSpawn()
@@ -82,6 +89,7 @@ public class FreshenUpMinigame : NetworkBehaviour
                 freshUpAction.UpdateGirl();
             }
             freshUpAction.gameObject.GetComponent<Interactable>().enabled = false;
+            freshUpAction = null;
             StartCoroutine(ShowDoneIcon());
         }
     }

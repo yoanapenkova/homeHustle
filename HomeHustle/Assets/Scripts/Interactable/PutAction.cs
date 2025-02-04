@@ -5,6 +5,7 @@ using Unity.Collections.LowLevel.Unsafe;
 using Unity.Netcode;
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.XR;
 
 public class PutAction : NetworkBehaviour, SimpleAction
 {
@@ -45,8 +46,9 @@ public class PutAction : NetworkBehaviour, SimpleAction
     void Start()
     {
         interactable = GetComponent<Interactable>();
-        isOccupied.OnValueChanged += OnOccupiedStateChanged;
         originalSprite = interactable.mainKey.GetComponent<Image>().sprite;
+
+        //isOccupied.OnValueChanged += OnOccupiedStateChanged;
     }
 
     // Update is called once per frame
@@ -75,10 +77,13 @@ public class PutAction : NetworkBehaviour, SimpleAction
         {
             currentKeyCode = KeyCode.E;
             placeholder.SetActive(false);
-            playerManager.gameObject.GetComponent<InventoryManagement>().isEnabled = true;
+            if (playerManager != null)
+            {
+                playerManager.gameObject.GetComponent<InventoryManagement>().isEnabled = true;
+            }
         }
 
-        if (placedObject != null)
+        if (placedObject != null && occupied)
         {
             CheckObjectPickedUp();
         }
@@ -97,6 +102,7 @@ public class PutAction : NetworkBehaviour, SimpleAction
         if (result.Item1)
         {
             placedObject = playerInventory[result.Item2].element;
+
             UpdatePlacedObjectServerRpc(placedObject.GetComponent<NetworkObject>().NetworkObjectId);
 
             playerManager.gameObject.GetComponent<InventoryManagement>().HandleSlotShoot(result.Item2, true, placeholder);
@@ -164,18 +170,6 @@ public class PutAction : NetworkBehaviour, SimpleAction
         placedObject.GetComponent<WashAction>().progressSlider = progressSlider;
     }
 
-    void ChangeState()
-    {
-        if (IsServer)
-        {
-            ToggleOccupiedState();
-        }
-        else
-        {
-            ToggleOccupiedStateServerRpc();
-        }
-    }
-
     (bool, int) CheckForItemsInInventoryByTag(string tag)
     {
         bool res = false;
@@ -212,6 +206,18 @@ public class PutAction : NetworkBehaviour, SimpleAction
         }
     }
 
+    void ChangeState()
+    {
+        if (IsServer)
+        {
+            ToggleOccupiedState();
+        }
+        else
+        {
+            ToggleOccupiedStateServerRpc();
+        }
+    }
+
     private void ToggleOccupiedState()
     {
         isOccupied.Value = !isOccupied.Value;
@@ -223,16 +229,13 @@ public class PutAction : NetworkBehaviour, SimpleAction
     [ServerRpc(RequireOwnership = false)]
     private void ToggleOccupiedStateServerRpc()
     {
-        ToggleOccupiedState();
+        if (IsServer)
+        {
+            ToggleOccupiedState();
+        }
     }
 
-    private void OnOccupiedStateChanged(bool previousValue, bool newValue)
-    {
-        occupied = newValue;
-        interactable.enabled = !newValue;
-    }
-
-    [ClientRpc]
+    [ClientRpc(RequireOwnership = false)]
     private void OccupiedStateChangedClientRpc(bool newState)
     {
         occupied = newState;

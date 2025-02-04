@@ -97,7 +97,6 @@ public class TimePowerUpAction : NetworkBehaviour
     [ClientRpc(RequireOwnership = false)]
     private void CollectedStateChangedClientRpc(bool collidingIsHuman)
     {
-        isCollected.Value = true;
         collected = true;
 
         if (collected && !isActivated)
