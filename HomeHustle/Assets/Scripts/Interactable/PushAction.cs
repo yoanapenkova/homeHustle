@@ -19,7 +19,7 @@ public class PushAction : NetworkBehaviour, SimpleAction
     private bool isNear = false;
     private Transform playerTransform;
     private Rigidbody objectRigidbody;
-    private GameObject player;
+    private PlayerManager playerManager;
 
     // Start is called before the first frame update
     void Start()
@@ -37,16 +37,16 @@ public class PushAction : NetworkBehaviour, SimpleAction
     {
         if (!IsSpawned) return;
 
-        if (player == null)
+        if (playerManager == null)
         {
-            CheckForNetworkAndPlayerServerRpc();
+            CheckForNetworkAndPlayerServerRpc(NetworkManager.Singleton.LocalClientId);
         }
 
-        if (player != null && interactable.isOnWatch)
+        if (playerManager != null && interactable.isOnWatch)
         {
             UpdateInstructions();
 
-            playerTransform = player.transform;
+            playerTransform = playerManager.transform;
 
             float distance = Vector3.Distance(playerTransform.position, transform.position);
 
@@ -55,9 +55,9 @@ public class PushAction : NetworkBehaviour, SimpleAction
                 isNear = true;
                 if (Input.GetKeyDown(KeyCode.Q))
                 {
-                    player.GetComponent<Animator>().SetBool("Push",true);
-                    player.GetComponent<PlayerManager>().pushFX.gameObject.SetActive(true);
-                    player.GetComponent<PlayerManager>().pushFX.Play();
+                    playerManager.gameObject.GetComponent<Animator>().SetBool("Push",true);
+                    playerManager.pushFX.gameObject.SetActive(true);
+                    playerManager.pushFX.Play();
                     isPushing = true;
                 }
             }
@@ -65,8 +65,8 @@ public class PushAction : NetworkBehaviour, SimpleAction
             {
                 isNear = false;
                 isPushing = false;
-                player.GetComponent<PlayerManager>().pushFX.Stop();
-                player.GetComponent<PlayerManager>().pushFX.gameObject.SetActive(false);
+                playerManager.pushFX.Stop();
+                playerManager.pushFX.gameObject.SetActive(false);
             }
         }
     }
@@ -83,11 +83,13 @@ public class PushAction : NetworkBehaviour, SimpleAction
         if (isNear)
         {
             interactable.auxInstructionsText.text = actions[1];
+            interactable.auxInstructionsText.color = Color.white;
             interactable.auxKey.GetComponent<Image>().color = Color.white;
         }
         else
         {
             interactable.auxInstructionsText.text = actions[0];
+            interactable.auxInstructionsText.color = Color.grey;
             interactable.auxKey.GetComponent<Image>().color = Color.grey;
         }
     }
@@ -121,19 +123,30 @@ public class PushAction : NetworkBehaviour, SimpleAction
     }
 
     [ServerRpc(RequireOwnership = false)]
-    void CheckForNetworkAndPlayerServerRpc()
+    void CheckForNetworkAndPlayerServerRpc(ulong clientId)
     {
-        if (NetworkManager.Singleton.LocalClientId != null)
+        if (NetworkManager.Singleton.ConnectedClients.TryGetValue(clientId, out var client))
         {
-            // Get the player object for the specified client ID
-            if (NetworkManager.Singleton.ConnectedClients.TryGetValue(NetworkManager.Singleton.LocalClientId, out var client))
+            GameObject playerObject = client.PlayerObject.gameObject;
+
+            if (playerObject != null)
             {
-                player = client.PlayerObject.gameObject;
+                AssignPlayerManagerClientRpc(playerObject.GetComponent<NetworkObject>().NetworkObjectId, clientId);
             }
             else
             {
-                Debug.LogError($"Client ID {NetworkManager.Singleton.LocalClientId} not found!");
+                Debug.LogError($"PlayerManager not found on Client ID {clientId}");
             }
+        }
+    }
+
+    [ClientRpc]
+    void AssignPlayerManagerClientRpc(ulong playerObjectId, ulong clientId)
+    {
+        if (NetworkManager.Singleton.LocalClientId == clientId)
+        {
+            GameObject playerObject = NetworkManager.Singleton.SpawnManager.SpawnedObjects[playerObjectId].gameObject;
+            playerManager = playerObject.GetComponent<PlayerManager>();
         }
     }
 }

@@ -71,8 +71,7 @@ public class GameStats : NetworkBehaviour
         }
     }
 
-    [ServerRpc(RequireOwnership = false)]
-    public void ShowGameStatsServerRpc()
+    public void ShowGameStats()
     {
         endGameScreen.SetActive(true);
         tasksList.transform.SetParent(endGameScreen.transform);
@@ -98,13 +97,13 @@ public class GameStats : NetworkBehaviour
     [ServerRpc(RequireOwnership = false)]
     public void UpdateLostTimeHumansServerRpc(int newValue)
     {
-        lostTimeHumans.Value = newValue;
+        lostTimeHumans.Value += newValue;
     }
 
     [ServerRpc(RequireOwnership = false)]
     public void UpdateLostTimeObjectsServerRpc(int newValue)
     {
-        lostTimeObjects.Value = newValue;
+        lostTimeObjects.Value += newValue;
     }
 
     [ServerRpc(RequireOwnership = false)]

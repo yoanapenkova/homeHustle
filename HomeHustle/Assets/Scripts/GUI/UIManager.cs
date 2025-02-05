@@ -20,6 +20,10 @@ public class UIManager : NetworkBehaviour
     [SerializeField]
     private GameObject preGameScreen;
     [SerializeField]
+    private GameObject controlsScreen;
+    [SerializeField]
+    private GameObject controlsScreenBackground;
+    [SerializeField]
     private TMP_Text playersCounterText;
     [SerializeField]
     private TMP_Text startingGameText;
@@ -38,10 +42,6 @@ public class UIManager : NetworkBehaviour
     private Slider sliderHumans;
     [SerializeField]
     private Slider sliderObjects;
-    [SerializeField]
-    private ParticleSystem sparksHumans;
-    [SerializeField]
-    private ParticleSystem sparksObjects;
     [SerializeField]
     public int countdownDuration = 600;
     [SerializeField]
@@ -80,14 +80,14 @@ public class UIManager : NetworkBehaviour
         UpdatePlayerListUI(playerList);
 
         timeHumans = countdownDuration;
-        timeObjects = countdownDuration; 
+        timeObjects = countdownDuration;
     }
 
     private void Update()
     {
         if (timeHumans == 0 && timeObjects == 0)
         {
-            GameStats.Instance.ShowGameStatsServerRpc();
+            GameStats.Instance.ShowGameStats();
         }
     }
 
@@ -150,9 +150,10 @@ public class UIManager : NetworkBehaviour
         connectedPlayers.Value++;
         homeScreen.SetActive(false);
         preGameScreen.SetActive(true);
+        controlsScreen.SetActive(true);
 
-        Cursor.lockState = CursorLockMode.Locked;
-        Cursor.visible = false;
+        Cursor.lockState = CursorLockMode.None;
+        Cursor.visible = true;
     }
 
     public void OnPlayerCountChanged(int oldCount, int newCount)
@@ -206,7 +207,13 @@ public class UIManager : NetworkBehaviour
     public void GetHUD()
     {
         preGameScreen.SetActive(false);
+        controlsScreen.SetActive(false);
+        controlsScreen.GetComponent<RectTransform>().anchoredPosition = new Vector2(-200, controlsScreen.GetComponent<RectTransform>().anchoredPosition.y);
+        controlsScreenBackground.GetComponent<RectTransform>().anchoredPosition = new Vector2(250, controlsScreenBackground.GetComponent<RectTransform>().anchoredPosition.y);
         hudScreen.transform.localScale = hudScreenOriginalScale;
+
+        Cursor.lockState = CursorLockMode.Locked;
+        Cursor.visible = false;
 
         StartCoroutine(StartCountdownHumans());
         StartCoroutine(StartCountdownObjects());
@@ -214,9 +221,10 @@ public class UIManager : NetworkBehaviour
 
     private IEnumerator StartCountdownHumans()
     {
-        sparksHumans.Play();
-        while (timeHumans > 0)
+        while (true)
         {
+            if (timeHumans <=0) { timeHumans = 0; break; }
+
             int minutes = Mathf.FloorToInt(timeHumans / 60);
             int seconds = Mathf.FloorToInt(timeHumans % 60);
 
@@ -230,9 +238,10 @@ public class UIManager : NetworkBehaviour
 
     private IEnumerator StartCountdownObjects()
     {
-        sparksObjects.Play();
-        while (timeObjects > 0)
+        while (true)
         {
+            if (timeObjects <= 0) { timeObjects = 0; break; }
+
             int minutes = Mathf.FloorToInt(timeObjects / 60);
             int seconds = Mathf.FloorToInt(timeObjects % 60);
 

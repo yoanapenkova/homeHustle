@@ -87,13 +87,19 @@ public class GuessTheCardMinigame : NetworkBehaviour
         {
             panelOption.GetComponent<PanelOption>().element = null;
         }
-        foreach(GameObject card in cards)
+
+        for (int i = 0; i < panelOptions.Length; i++)
+        {
+            panelOptions[i].GetComponent<RectTransform>().anchoredPosition = originalPositionsOptions[i];
+        }
+        foreach (GameObject card in cards)
         {
             Color originalColorCard = cards[0].GetComponent<Image>().color;
             cards[0].GetComponent<Image>().color = new Color(originalColorCard.r, originalColorCard.g, originalColorCard.b, 0);
             card.SetActive(false);
         }
         isGameOver = false;
+        startGameButton.gameObject.SetActive(true);
     }
 
     public void HidePanel()
@@ -109,6 +115,7 @@ public class GuessTheCardMinigame : NetworkBehaviour
         {
             if (!isGameOver)
             {
+                startGameButton.gameObject.SetActive(false);
                 StartCoroutine(FadeInFadeOut());
                 isGameOver = true;
                 playerManager.points -= costPerObject;
@@ -215,6 +222,7 @@ public class GuessTheCardMinigame : NetworkBehaviour
 
     public void RandomizePositions(GameObject[] objects)
     {
+
         // Clone original positions for shuffling
         Vector3[] shuffledPositions = (Vector3[])originalPositionsOptions.Clone();
 
@@ -243,9 +251,9 @@ public class GuessTheCardMinigame : NetworkBehaviour
         // Assign the shuffled positions to the cards (objects)
         for (int i = 0; i < panelOptions.Length; i++)
         {
-            RectTransform rectTransform = panelOptions[i].GetComponent<RectTransform>();
-            rectTransform.anchoredPosition = shuffledPositions[i];
+            panelOptions[i].GetComponent<RectTransform>().anchoredPosition = originalPositionsOptions[i];
         }
+        originalPositionsOptions = shuffledPositions;
 
         // At this point, shuffledObjects holds the objects in their randomized order
         // You can now access shuffledObjects later if needed.

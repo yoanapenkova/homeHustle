@@ -54,6 +54,11 @@ public class WaterComponentAction : NetworkBehaviour, SimpleAction
     {
         if (!IsSpawned) return;
 
+        if (playerManager == null)
+        {
+            CheckForNetworkAndPlayerServerRpc(NetworkManager.Singleton.LocalClientId);
+        }
+
         if (interactable.isOnWatch)
         {
             UpdateInstructions();
@@ -63,11 +68,7 @@ public class WaterComponentAction : NetworkBehaviour, SimpleAction
                 Outcome();
             }
         }
-
-        if (playerManager == null)
-        {
-            CheckForNetworkAndPlayer();
-        }
+        
     }
 
     // Ensure that NetworkVariable changes are propagated to clients
@@ -248,28 +249,31 @@ public class WaterComponentAction : NetworkBehaviour, SimpleAction
         boilerPanelButton.interactable = !broken;
     }
 
-    void CheckForNetworkAndPlayer()
-    {
-        if (NetworkManager.Singleton.LocalClientId != null)
-        {
-            SearchPlayerManagerServerRpc(OwnerClientId);
-        }
-    }
-
     [ServerRpc(RequireOwnership = false)]
-    void SearchPlayerManagerServerRpc(ulong clientId)
+    void CheckForNetworkAndPlayerServerRpc(ulong clientId)
     {
-        if (clientId == NetworkManager.Singleton.LocalClientId)
+        if (NetworkManager.Singleton.ConnectedClients.TryGetValue(clientId, out var client))
         {
-            // Get the player object for the specified client ID
-            if (NetworkManager.Singleton.ConnectedClients.TryGetValue(clientId, out var client))
+            GameObject playerObject = client.PlayerObject.gameObject;
+
+            if (playerObject != null)
             {
-                playerManager = client.PlayerObject.gameObject.GetComponent<PlayerManager>();
+                AssignPlayerManagerClientRpc(playerObject.GetComponent<NetworkObject>().NetworkObjectId, clientId);
             }
             else
             {
-                Debug.LogError($"Client ID {clientId} not found!");
+                Debug.LogError($"PlayerManager not found on Client ID {clientId}");
             }
+        }
+    }
+
+    [ClientRpc]
+    void AssignPlayerManagerClientRpc(ulong playerObjectId, ulong clientId)
+    {
+        if (NetworkManager.Singleton.LocalClientId == clientId)
+        {
+            GameObject playerObject = NetworkManager.Singleton.SpawnManager.SpawnedObjects[playerObjectId].gameObject;
+            playerManager = playerObject.GetComponent<PlayerManager>();
         }
     }
 }

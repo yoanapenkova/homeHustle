@@ -74,8 +74,12 @@ public class GameManager : NetworkBehaviour
         Debug.Log("Game session ended. Reload in few instants.");
         IsGameActive = false;
 
-        // Reload the current scene
-        SceneManager.LoadScene(SceneManager.GetActiveScene().name);
+        // Close the game window
+#if UNITY_EDITOR
+        UnityEditor.EditorApplication.isPlaying = false; // Stop play mode in Unity Editor
+#else
+        Application.Quit(); // Close the built game
+#endif
     }
 
     [ServerRpc(RequireOwnership = false)]

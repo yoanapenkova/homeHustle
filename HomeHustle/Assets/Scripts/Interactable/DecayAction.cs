@@ -141,7 +141,6 @@ public class DecayAction : NetworkBehaviour, SimpleAction
 
     public void UpdateInstructions()
     {
-        Debug.Log(playerManager.isHuman);
         interactable.actionsInstructions.SetActive(true);
         interactable.auxKeyBackground.SetActive(!playerManager.isHuman);
         interactable.auxInstructionsText.text = actions[0];
@@ -150,11 +149,11 @@ public class DecayAction : NetworkBehaviour, SimpleAction
         {
             interactable.auxKey.GetComponent<Image>().color = Color.grey;
             interactable.auxInstructionsText.color = Color.grey;
-            interactable.auxNeededPoints.text = "cost: -" + costPerObject;
         } else
         {
             interactable.auxKey.GetComponent<Image>().color = Color.white;
             interactable.auxInstructionsText.color = Color.white;
+            interactable.auxNeededPoints.text = "cost: -" + costPerObject;
         }
     }
 

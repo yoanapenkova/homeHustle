@@ -30,13 +30,16 @@ public class PlugAction : NetworkBehaviour, SimpleAction
         {
             UpdateInstructions();
             
-            if (Input.GetKeyDown(KeyCode.E) && powerAction.powered)
+            if (Input.GetKeyDown(KeyCode.E))
             {
-                Outcome();
-            } else
-            {
-                string message = "Plugs have no power!";
-                UIManager.Instance.ShowFeedback(message);
+                if (powerAction.powered)
+                {
+                    Outcome();
+                } else
+                {
+                    string message = "Plugs have no power!";
+                    UIManager.Instance.ShowFeedback(message);
+                }
             }
         }
     }

@@ -51,7 +51,7 @@ public class TimePowerUpManager : NetworkBehaviour
             yield return new WaitForSeconds(spawnInterval);
 
             int spawnIndex = GetRandomFreeSpawnPoint();
-            if (spawnIndex != -1)
+            if (spawnIndex != -1 && GameManager.Instance.gameStarted)
             {
                 takenSpawnPoints[spawnIndex] = true;
 
@@ -74,6 +74,8 @@ public class TimePowerUpManager : NetworkBehaviour
             Destroy(powerUp);
 
             SubtractTimeBothTeamsClientRpc();
+            GameStats.Instance.UpdateLostTimeHumansServerRpc(20);
+            GameStats.Instance.UpdateLostTimeObjectsServerRpc(20);
         }
 
         takenSpawnPoints[spawnIndex] = false;

@@ -120,7 +120,7 @@ public class PlayerManager : NetworkBehaviour
         while (true)
         {
             yield return new WaitForSeconds(incrementInterval);
-            if (IsOwner)
+            if (IsOwner && GameManager.Instance.gameStarted)
             {
                 points += incrementAmount;
             }
