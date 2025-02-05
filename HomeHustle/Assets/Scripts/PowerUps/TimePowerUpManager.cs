@@ -46,18 +46,20 @@ public class TimePowerUpManager : NetworkBehaviour
 
     private IEnumerator SpawnPowerUpRoutine()
     {
-        while (true)
+        while (GameManager.Instance.IsGameActive)
         {
             yield return new WaitForSeconds(spawnInterval);
 
             int spawnIndex = GetRandomFreeSpawnPoint();
-            if (spawnIndex != -1 && GameManager.Instance.gameStarted)
+            if (spawnIndex != -1)
             {
                 takenSpawnPoints[spawnIndex] = true;
 
                 Transform spawnPoint = spawnPoints[spawnIndex];
                 Transform powerUp = Instantiate(powerUpPrefab, spawnPoint.position, spawnPoint.rotation);
                 powerUp.GetComponent<NetworkObject>().Spawn();
+
+                PlaySoundClientRpc();
 
                 StartCoroutine(HandlePowerUpLifetime(powerUp, spawnIndex));
             }
@@ -106,5 +108,11 @@ public class TimePowerUpManager : NetworkBehaviour
     {
         UIManager.Instance.timeHumans -= 20;
         UIManager.Instance.timeObjects -= 20;
+    }
+
+    [ClientRpc]
+    void PlaySoundClientRpc()
+    {
+        AudioManager.Instance.PlaySpecificSound(AudioManager.Instance.ticking);
     }
 }

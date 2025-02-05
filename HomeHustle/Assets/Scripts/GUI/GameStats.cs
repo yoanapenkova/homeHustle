@@ -73,11 +73,14 @@ public class GameStats : NetworkBehaviour
 
     public void ShowGameStats()
     {
+        Cursor.lockState = CursorLockMode.None;
+        Cursor.visible = true;
+
         endGameScreen.SetActive(true);
         tasksList.transform.SetParent(endGameScreen.transform);
 
-        float timePlayedHumans = (UIManager.Instance.countdownDuration - lostTimeHumans.Value) / (2 * UIManager.Instance.countdownDuration);
-        //float timePlayedObjects = 1 - timePlayedHumans;
+        float totalTime = (UIManager.Instance.countdownDuration - lostTimeHumans.Value) + (UIManager.Instance.countdownDuration - lostTimeObjects.Value);
+        float timePlayedHumans = (UIManager.Instance.countdownDuration - lostTimeHumans.Value) / (1f*totalTime);
 
         timePlayedSlider.value = timePlayedHumans;
 

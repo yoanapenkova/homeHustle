@@ -53,15 +53,19 @@ public class GameManager : NetworkBehaviour
                 Debug.Log("Game is starting!");
                 OnGameStarted?.Invoke();
             }
+            else if (gameStarted && !value)
+            {
+                gameStarted = value;
+                Debug.Log("Game is stopping!");
+            }
         }
     }
 
     public void StartGameSession()
     {
         UIManager.Instance.GetHUD();
-        TimePowerUpManager.Instance.PrepareSpawnPoints();
-
         IsGameActive = true;
+        TimePowerUpManager.Instance.PrepareSpawnPoints();
     }
 
     public void EndGameSession()

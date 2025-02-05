@@ -117,10 +117,10 @@ public class PlayerManager : NetworkBehaviour
 
     private IEnumerator IncrementPoints()
     {
-        while (true)
+        while (GameManager.Instance.IsGameActive)
         {
             yield return new WaitForSeconds(incrementInterval);
-            if (IsOwner && GameManager.Instance.gameStarted)
+            if (IsOwner)
             {
                 points += incrementAmount;
             }

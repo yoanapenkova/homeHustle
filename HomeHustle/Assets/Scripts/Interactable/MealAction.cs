@@ -62,13 +62,43 @@ public class MealAction : NetworkBehaviour, SimpleAction
 
     public void UpdateState()
     {
-        if (IsServer)
+        bool goodFood = true;
+        GameObject[] spoiledItems = GameObject.FindGameObjectsWithTag("Ingredient");
+        foreach (GameObject item in spoiledItems)
         {
-            ToggleEatenState();
+            DecayAction decayAction = item.GetComponent<DecayAction>();
+            if (decayAction != null)
+            {
+                if (decayAction.altered)
+                {
+                    goodFood = goodFood && !decayAction.altered;
+                }
+            }
+        }
+
+        float randomChance = 1f;
+        if (!goodFood)
+        {
+            randomChance = Random.Range(0f, 1f);
+        }
+
+        Debug.Log(randomChance);
+
+        if (randomChance > .5f)
+        {
+            if (IsServer)
+            {
+                ToggleEatenState();
+            }
+            else
+            {
+                ToggleEatenStateServerRpc();
+            }
         }
         else
         {
-            ToggleEatenStateServerRpc();
+            string message = "sorry buddy, check the fridge for spoiled food :(";
+            UIManager.Instance.ShowFeedback(message);
         }
     }
 

@@ -15,6 +15,7 @@ TagManager:
   - Shower
   - Plate
   - Placemat
+  - Ingredient
   layers:
   - Default
   - TransparentFX

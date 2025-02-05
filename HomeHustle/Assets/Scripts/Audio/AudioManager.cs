@@ -25,6 +25,7 @@ public class AudioManager : MonoBehaviour
     public AudioClip evilLaugh;
     public AudioClip sadTrombone;
     public AudioClip yeah;
+    public AudioClip ticking;
 
     private void Awake()
     {
@@ -56,7 +57,7 @@ public class AudioManager : MonoBehaviour
     {
         ambientSound.clip = clip;
         ambientSound.loop = true;
-        //ambientSound.Play();
+        ambientSound.Play();
     }
 
     public void PlaySpecificSound(AudioClip clip)

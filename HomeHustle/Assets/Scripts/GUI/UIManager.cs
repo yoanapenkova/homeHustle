@@ -85,8 +85,9 @@ public class UIManager : NetworkBehaviour
 
     private void Update()
     {
-        if (timeHumans == 0 && timeObjects == 0)
+        if (timeHumans <= 0 && timeObjects <= 0 && GameManager.Instance.IsGameActive)
         {
+            GameManager.Instance.IsGameActive = false;
             GameStats.Instance.ShowGameStats();
         }
     }

@@ -8,6 +8,7 @@ using Unity.Services.Relay.Models;
 using TMPro;
 using Unity.Netcode.Transports.UTP;
 using Unity.Networking.Transport.Relay;
+using System.Collections;
 
 public class RelayConfig : NetworkBehaviour
 {
@@ -27,6 +28,12 @@ public class RelayConfig : NetworkBehaviour
     [SerializeField]
     private TMP_Text joinCodeText;
 
+    [SerializeField]
+    private TMP_Text feedbackText;
+    public float feedbackDisplayDuration = 2f; // Duration to keep the text fully visible
+    public float feedbackFadeDuration = 2f;    // Duration for the fading effect
+    private Coroutine fadeCoroutine; // Store the current coroutine
+
     [Header("Player Prefabs")]
     [SerializeField]
     private GameObject[] playerPrefabs; // Array to store different player prefabs
@@ -36,11 +43,9 @@ public class RelayConfig : NetworkBehaviour
     {
         hostButton.onClick.AddListener(() => {
             CreateRelay();
-            UIManager.Instance.GetPreScreen();
         });
         clientButton.onClick.AddListener(() => {
             JoinRelay(codeInput.text);
-            UIManager.Instance.GetPreScreen();
         });
     }
 
@@ -84,6 +89,8 @@ public class RelayConfig : NetworkBehaviour
             NetworkManager.Singleton.OnClientConnectedCallback += UIManager.Instance.OnClientConnected;
             NetworkManager.Singleton.OnClientDisconnectCallback += UIManager.Instance.OnClientDisconnected;
             UIManager.Instance.connectedPlayers.OnValueChanged += UIManager.Instance.OnPlayerCountChanged;
+
+            UIManager.Instance.GetPreScreen();
         } catch (RelayServiceException e)
         {
             Debug.Log(e);
@@ -118,6 +125,14 @@ public class RelayConfig : NetworkBehaviour
 
     private async void JoinRelay(string joinCode)
     {
+        // Check if joinCode is not empty or null
+        if (string.IsNullOrEmpty(joinCode))
+        {
+            // Provide feedback that the input is empty
+            ShowFeedback();
+            return;
+        }
+
         try
         {
             Debug.Log("Joining Relay with code: " + joinCode);
@@ -131,17 +146,52 @@ public class RelayConfig : NetworkBehaviour
             NetworkManager.Singleton.OnClientConnectedCallback += UIManager.Instance.OnClientConnected;
             NetworkManager.Singleton.OnClientDisconnectCallback += UIManager.Instance.OnClientDisconnected;
             UIManager.Instance.connectedPlayers.OnValueChanged += UIManager.Instance.OnPlayerCountChanged;
+
+            UIManager.Instance.GetPreScreen();
         }
         catch (RelayServiceException e)
         {
             Debug.Log(e);
+            ShowFeedback();
         }
-        
+    }
+
+    public void ShowFeedback()
+    {
+        if (fadeCoroutine != null)
+        {
+            StopCoroutine(fadeCoroutine);
+        }
+
+        feedbackText.color = new Color(feedbackText.color.r, feedbackText.color.g, feedbackText.color.b, 1f);
+        feedbackText.gameObject.SetActive(true);
+
+        fadeCoroutine = StartCoroutine(FadeOutText());
+    }
+
+    private IEnumerator FadeOutText()
+    {
+        yield return new WaitForSeconds(feedbackDisplayDuration);
+
+        float elapsedTime = 0f;
+        Color originalColor = feedbackText.color;
+
+        while (elapsedTime < feedbackFadeDuration)
+        {
+            elapsedTime += Time.deltaTime;
+            float alpha = Mathf.Lerp(1f, 0f, elapsedTime / feedbackFadeDuration);
+            feedbackText.color = new Color(originalColor.r, originalColor.g, originalColor.b, alpha);
+            yield return null;
+        }
+
+        feedbackText.color = new Color(originalColor.r, originalColor.g, originalColor.b, 0f);
+        feedbackText.gameObject.SetActive(false);
+        fadeCoroutine = null;
     }
 
     private void OnDisable()
     {
-        if (NetworkManager != null)
+        if (NetworkManager.Singleton != null)
         {
             NetworkManager.Singleton.OnClientConnectedCallback -= UIManager.Instance.OnClientConnected;
             NetworkManager.Singleton.OnClientDisconnectCallback -= UIManager.Instance.OnClientDisconnected;
