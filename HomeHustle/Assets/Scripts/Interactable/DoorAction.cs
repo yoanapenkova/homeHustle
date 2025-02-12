@@ -137,12 +137,14 @@ public class DoorAction : NetworkBehaviour, SimpleAction
     private void OnDoorStateChanged(bool previousValue, bool newValue)
     {
         animator.SetBool("isOpening", newValue);
+        opened = newValue;
     }
 
     [ClientRpc]
     private void DoorStateChangedClientRpc(bool newState)
     {
         animator.SetBool("isOpening", newState);
+        opened = newState;
     }
 
     

@@ -30,8 +30,6 @@ public class StoreAction : NetworkBehaviour
 
         if (freeSlot != null)
         {
-            Debug.Log("BEFORE CONTAINER ID " + containerId);
-            Debug.Log("BEFORE ITEM ID " + inventorySlotItemId);
             StoreObjectLocalServerRpc(containerId, inventorySlotItemId);
             AddItemToContainerInventoryServerRpc(freeSlot.GetComponent<NetworkObject>().NetworkObjectId, inventorySlotItemId, NetworkManager.Singleton.LocalClientId, isServerRequesting);
             inventorySlot.element = null;
@@ -47,9 +45,6 @@ public class StoreAction : NetworkBehaviour
     [ServerRpc(RequireOwnership = false)]
     void StoreObjectLocalServerRpc(ulong objectId, ulong itemId)
     {
-        Debug.Log("AFTER " + objectId);
-        Debug.Log("AFTER " + itemId);
-        
         if (NetworkManager.Singleton.SpawnManager.SpawnedObjects.TryGetValue(objectId, out var container))
         {
             GameObject containerObject = container.gameObject;
@@ -101,14 +96,11 @@ public class StoreAction : NetworkBehaviour
     [ClientRpc]
     void addItemOnClientSideClientRpc(ulong containerSlotId, ulong itemId, ulong clientId, bool isServer)
     {
-        if (isServer || ((clientId == NetworkManager.Singleton.LocalClientId) && !isServer))
-        {
-            InventorySlot containerSlotObject = NetworkManager.Singleton.SpawnManager.SpawnedObjects[containerSlotId].gameObject.GetComponent<InventorySlot>();
-            GameObject itemObject = NetworkManager.Singleton.SpawnManager.SpawnedObjects[itemId].gameObject;
+        InventorySlot containerSlotObject = NetworkManager.Singleton.SpawnManager.SpawnedObjects[containerSlotId].gameObject.GetComponent<InventorySlot>();
+        GameObject itemObject = NetworkManager.Singleton.SpawnManager.SpawnedObjects[itemId].gameObject;
 
-            containerSlotObject.element = itemObject;
-            containerSlotObject.elementIcon = itemObject.GetComponent<PickUpAction>().imagePrefab;
-        }
+        containerSlotObject.element = itemObject;
+        containerSlotObject.elementIcon = itemObject.GetComponent<PickUpAction>().imagePrefab;
     }
 
     private InventorySlot getFirstFreeSlot()
