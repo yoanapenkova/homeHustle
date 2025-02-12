@@ -64,13 +64,15 @@ public class TimePowerUpAction : NetworkBehaviour
             {
                 if (player.IsOwner) // Check if this is the local player
                 {
-                    if (collidingPlayerObject.GetComponent<PlayerManager>().isHuman)
+                    if (collidingPlayerObject.isHuman)
                     {
+                        Debug.Log("Taken by humans team!");
                         UIManager.Instance.timeObjects -= 10;
                         GameStats.Instance.UpdateLostTimeObjectsServerRpc(10);
                     }
                     else
                     {
+                        Debug.Log("Taken by objects team!");
                         UIManager.Instance.timeHumans -= 10;
                         GameStats.Instance.UpdateLostTimeHumansServerRpc(10);
                     }

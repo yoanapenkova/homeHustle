@@ -130,6 +130,11 @@ public class StealAction : NetworkBehaviour, SimpleAction
                 Cursor.visible = false;
             }
             isNear = false;
+
+            for (int i = 0; i < containerInventorySlots.Length; i++)
+            {
+                containerInventorySlots[i] = null;
+            }
         }
     }
 

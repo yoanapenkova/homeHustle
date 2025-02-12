@@ -24,8 +24,9 @@ public class PanelOption : NetworkBehaviour
 
     void updateAppearance()
     {
-        if (element != null && !occupied)
+        if (element != null)
         {
+            gameObject.GetComponent<Image>().sprite = null;
             gameObject.GetComponent<Image>().sprite = elementIcon.sprite;
             Color currentColor = gameObject.GetComponent<Image>().color;
             currentColor.a = 1;
